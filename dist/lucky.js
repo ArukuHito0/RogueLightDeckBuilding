@@ -108,6 +108,7 @@ case 'role_five':add('playZeros');break;
 return a;}
 function luckyAttachFrame(tasks,frame){return tasks.map(t=>({...t,frame}));}
 function luckyBegin(r,id,options={}){const l=luckyState(r),c=combatCard(id);if(c&&options.free&&typeof swampRejectAuto==='function'&&swampRejectAuto(r,c)){r.discard.push(id);return false;}if(!c||(!options.free&&r.energy<c.cost))return false;const paid=options.free?0:c.cost;if(!options.free)r.energy-=paid;
+ if(typeof activateCardMark==='function')activateCardMark(r,id);
 if(typeof swampCardUsed==='function')swampCardUsed(r,c,options);
 const frame=++l.serial;const ctx={id,card:{...c,fx:{...c.fx}},target:options.target??target,paid,suppress:!!options.suppress,forceExhaust:!!options.forceExhaust,folded:!!options.folded,guarantee:!!(c.fx.slot&&l.nextGuarantee),double:c.fx.slot?l.nextDouble||1:1,penalty:l.nextDouble?effectFactor(r):0};
 if(c.fx.slot){if(l.nextFree)l.nextFree--;if(l.nextGuarantee){l.nextGuarantee=0;l.guaranteeCost=0;}l.nextDouble=0;}

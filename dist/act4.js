@@ -33,9 +33,72 @@ const forestBossBase=bossPlan;bossPlan=function(r){if(r.act===4)return planFores
 const forestSnowBase=snowAction;snowAction=function(r,e){if(e.act4)return forestExecute(r,e);return forestSnowBase(r,e);};
 const forestAbilityBase=enemyAbilities;enemyAbilities=function(e){if(!e.act4)return forestAbilityBase(e);if(e.act4Kind==='tree')return [['寄生の根','生存中の宿主に芽吹きを与え、倒れた宿主を再生する。本体を倒すと戦闘終了。']];if(e.act4Kind==='colony')return [['接ぎ木','3番目の行動後、倒れた枝を1本再生する。本体を倒すと戦闘終了。']];return [];};
 const forestAbilityHTMLBase=enemyAbilitiesHTML;enemyAbilitiesHTML=function(e){const html=forestAbilityHTMLBase(e);return e.act4Kind==='tree'?html.replace('enemy-abilities ', 'enemy-abilities boss-abilities '):html;};
-const forestStatusBase=enemyStatusHTML;enemyStatusHTML=function(e){let html=forestStatusBase(e);if(e.act4&&['moth','flower','deer','queen','root','bloom'].includes(e.act4Kind))html+=statusEffectHTML('芽吹き',e.bud||0);return html;};
+const forestStatusBase=enemyStatusHTML;enemyStatusHTML=function(e){let html=forestStatusBase(e);if(e.erosion>0)html+=statusEffectHTML('浸食',e.erosion);if(e.act4&&['moth','flower','deer','queen','root','bloom'].includes(e.act4Kind))html+=statusEffectHTML('芽吹き',e.bud||0);return html;};
 const forestIntentBase=intent;intent=function(e){if(!e.act4)return forestIntentBase(e);if(e.hunterStun||e.intent==='stunned')return '<strong>⏸ スタン</strong>';const a=e.snowAction||{},r=S.run;let d=enemyAttack(e);if(e.weak)d=Math.floor(d*.7);d=hunterAttackDamage(r,r,d);return [a.d!=null?'<strong>⚔ '+d+(a.h>1?' × '+a.h:'')+'</strong>':'',a.b?'<strong>◇ '+a.b+'</strong>':'',a.bud?intentStatus('芽吹き',a.bud):'',a.hostsBud?intentStatus('芽吹き',a.hostsBud)+'<small>各宿主</small>':'',a.healAll!=null?'<strong>✚ '+a.healAll+'</strong><small>敵全体</small>':'',a.healTree?'<strong>✚ '+a.heal+'</strong><small>母樹</small>':'',a.summon?'<strong>幼虫 ×'+a.count+'</strong>':'',a.revive?'<strong>再生 ×'+(r.enemies.some(x=>x.hp<=0&&(a.revive==='branch'?x.act4Kind==='branch':['root','bloom'].includes(x.act4Kind)))?1:0)+'</strong>':'',a.s?intentStatus('筋力',a.s):'',a.wait?'<strong>—</strong>':''].join('');};
-const forestBattleBase=battle;battle=function(){const html=forestBattleBase();return S.run?.act===4?html.replace(/<h2>[^<]*<\/h2>/,'<h2>'+(S.run.kind==='boss'?'万骸の母樹':S.run.kind==='elite'?'寄生樹海の強敵':'寄生樹海')+'</h2>'):html;};
+
+// 刻印は戦闘中のカードIDごとに1つだけ保持する。
+keywords.刻印='カード1枚に付く追加効果。1枚につき1つまで。';
+keywords.寄生='このカードを使用するたび、使用者が表示数分の浸食を得る。戦闘終了時に消える。';
+keywords.浸食='自身のターン終了時、浸食が現在HP以上なら死亡する。';
+INFO_STATUS_KEYS.push('浸食');
+
+function applyCardMark(r,pile,index,mark){
+  if(r?.mode!=='battle'||!['hand','draw','discard','exhausted'].includes(pile))return false;
+  if(mark?.kind!=='parasitism'||!Number.isSafeInteger(mark.amount)||mark.amount<=0)return false;
+  let id=r[pile]?.[index];
+  if(!C[id]||r.cardMarks?.[id])return false;
+  if(id>=0){
+    const entry={id:nextBattleCardId(r),origin:id};
+    (r.battleCards??=[]).push(entry);
+    hydrateBattleCard(entry);
+    id=r[pile][index]=entry.id;
+  }
+  (r.cardMarks??={})[id]={kind:mark.kind,amount:mark.amount};
+  return true;
+}
+
+function activateCardMark(r,id){
+  const mark=r.cardMarks?.[id];
+  if(mark?.kind==='parasitism')r.erosion=(r.erosion||0)+mark.amount;
+}
+
+function resolveErosion(r,entity){
+  if(entity.hp<=0||!(entity.erosion>=entity.hp))return false;
+  entity.hp=0;
+  if(entity!==r)onAct4Damage(r,entity,0,false);
+  return true;
+}
+
+const forestMarkEvolveBase=evolveCardInstance;
+evolveCardInstance=function(r,id,reverse=false){
+  const next=forestMarkEvolveBase(r,id,reverse);
+  const mark=r.cardMarks?.[id];
+  if(mark&&next!==id){
+    r.cardMarks[next]=mark;
+    delete r.cardMarks[id];
+  }
+  return next;
+};
+
+const forestMarkCardBase=card;
+card=function(id,action='',extra=''){
+  const html=forestMarkCardBase(id,action,extra);
+  const mark=S.run?.mode==='battle'?S.run.cardMarks?.[id]:null;
+  if(mark?.kind!=='parasitism')return html;
+  return html.replace('<div class="art">','<span class="status-help" tabindex="0">寄生 '+mark.amount+'<aside class="tooltip">'+keywords.寄生+'</aside></span><div class="art">');
+};
+
+const forestMarkVictoryBase=victory;
+victory=function(){
+  const r=S.run;
+  if(r?.mode==='battle'&&r.enemies?.every(e=>e.hp<=0)){
+    delete r.cardMarks;
+    delete r.erosion;
+  }
+  return forestMarkVictoryBase();
+};
+
+const forestBattleBase=battle;battle=function(){let html=forestBattleBase();if(S.run?.erosion>0)html=html.replace('<div class="player-status">','<div class="player-status">'+statusEffectHTML('浸食',S.run.erosion));return S.run?.act===4?html.replace(/<h2>[^<]*<\/h2>/,'<h2>'+(S.run.kind==='boss'?'万骸の母樹':S.run.kind==='elite'?'寄生樹海の強敵':'寄生樹海')+'</h2>'):html;};
 const forestArtBase=destinationArt;destinationArt=function(id){if(id!==4)return forestArtBase(id);return '<svg viewBox="0 0 700 540" role="img" aria-label="寄生植物と骸に覆われた母樹"><rect width="700" height="540" fill="#14251e"/><circle cx="480" cy="130" r="80" fill="#a3b789" opacity=".12"/><g fill="#243d2c"><path d="M0 420L40 130 75 205 95 48 130 235 175 145 205 430ZM490 430L520 165 550 220 580 55 610 210 650 90 700 420Z"/></g><path d="M240 500L296 330 230 240 175 210 235 165 195 85 300 130 350 35 410 115 500 70 475 175 540 230 440 310 420 435 510 510 390 470 335 400 305 475Z" fill="#3b5134" stroke="#78805a" stroke-width="4"/><g fill="#a5a079"><ellipse cx="300" cy="278" rx="20" ry="28"/><ellipse cx="400" cy="245" rx="17" ry="23"/><ellipse cx="360" cy="175" rx="15" ry="20"/></g><g fill="#1a271f"><circle cx="292" cy="276" r="5"/><circle cx="307" cy="276" r="5"/><circle cx="394" cy="243" r="4"/><circle cx="407" cy="243" r="4"/></g><path d="M0 530Q160 430 300 500L350 470 430 500Q560 445 700 520" fill="none" stroke="#586642" stroke-width="14"/></svg>';};
 if(S.run?.act===4&&S.run.mode==='battle')planForest(S.run);
 if(!globalThis.ASHBOUND_HEADLESS)render();

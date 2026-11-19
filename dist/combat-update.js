@@ -76,7 +76,7 @@ exhaustCard=function(r,id,trigger=true){(r.exhausted??=[]).push(id);if(trigger){
 onCardResolved=function(r,c){if(c.cost===0&&hasRelic('zero_block',r))gainBlock(r,1,'relic')};
 // Reset persistent-in-battle engines between encounters, including resumed runs.
 const newBattle31=choose;choose=function(type){let r=S.run;if(!r)return;let wasBattle=r.mode==='battle';newBattle31(type);if(S.run===r&&r.mode==='battle'&&!wasBattle){for(const k of ['burn','rage','thornShield','thorns','thornGarden','forge','strikeBonus','hpLossCount','exhaustStrength','damageCount','passionHp','exhaustStrengthCount','poisonAura','poisonCoat','nextAttackBonus','bloodBlessing'])r[k]=0;r.bloodBlessingTurn=null;r.enemyPhase=false;r.specialUses={};r.battleCards=[];r.callTurn=0;render()}};
-base.play=function(i,options={}){let r=S.run,c=combatCard(r?.hand[i]);if(c&&options.free&&typeof swampRejectAuto==='function'&&swampRejectAuto(r,c)){r.hand.splice(i,1);r.discard.push(c.id);return;}if(!c||c.retired||(!options.free&&r.energy<c.cost)||r.pendingChoice||r.hunterChoice||r.pendingDiscard||r.potionTarget!=null||!canPlayHunterCard(c,r))return;let attackHpLoss=0;let paidCost=options.free?0:c.cost;let f=c.fx,wasHeartbeat=r.heartbeat,str=r.str,preExcluded=[...(r.exhausted||[])];target=r.enemies[target]?.hp>0?target:r.enemies.findIndex(e=>e.hp>0);let hadPoison=(r.enemies[target]?.poison||0)>0;r.energy-=paidCost;r.hand.splice(i,1);if(typeof swampCardUsed==='function')swampCardUsed(r,c,options);
+base.play=function(i,options={}){let r=S.run,c=combatCard(r?.hand[i]);if(c&&options.free&&typeof swampRejectAuto==='function'&&swampRejectAuto(r,c)){r.hand.splice(i,1);r.discard.push(c.id);return;}if(!c||c.retired||(!options.free&&r.energy<c.cost)||r.pendingChoice||r.hunterChoice||r.pendingDiscard||r.potionTarget!=null||!canPlayHunterCard(c,r))return;let attackHpLoss=0;let paidCost=options.free?0:c.cost;let f=c.fx,wasHeartbeat=r.heartbeat,str=r.str,preExcluded=[...(r.exhausted||[])];target=r.enemies[target]?.hp>0?target:r.enemies.findIndex(e=>e.hp>0);let hadPoison=(r.enemies[target]?.poison||0)>0;r.energy-=paidCost;r.hand.splice(i,1);if(typeof activateCardMark==='function')activateCardMark(r,c.id);if(typeof swampCardUsed==='function')swampCardUsed(r,c,options);
  if(isAttackCard50(c)){f.attackBonus=r.nextAttackBonus||0;r.nextAttackBonus=0;}
  if(f.hpLoss&&!f.lossAfterBlock)loseHP(r,f.hpLoss);
  if(r.hp<=0){resolvePlayedCardPile(r,c,false);render();return}
@@ -126,7 +126,7 @@ applyTurnStartBuffs=function(r){r.enemyPhase=false;r.damageCount=0;const {poison
  if(plate>0&&r.plate>0){gainBlock(r,plate,'passive');r.plate--}if(regen>0&&r.regen>0){healHP(r,regen);r.regen--}
 };
 endTurn=async function(){let r=S.run;if(busy||page!=='battle'||r.pendingChoice||r.hunterChoice||r.pendingDiscard||r.potionTarget!=null)return;busy=true;
- try{hunterPlayerTurnEnd(r);if(r.hp<=0){await animateEntity('player','death');finish(false);return;}r.enemyPhase=true;r.poisonCoat=0;expireGeneratedCards(r);r.str-=r.tempStr||0;r.agility=(r.agility||0)-(r.tempAgility||0);r.tempStr=0;r.tempAgility=0;r.discard.push(...r.hand);r.hand=[];
+ try{hunterPlayerTurnEnd(r);if(typeof resolveErosion==='function')resolveErosion(r,r);if(r.hp<=0){await animateEntity('player','death');finish(false);return;}r.enemyPhase=true;r.poisonCoat=0;expireGeneratedCards(r);r.str-=r.tempStr||0;r.agility=(r.agility||0)-(r.tempAgility||0);r.tempStr=0;r.tempAgility=0;r.discard.push(...r.hand);r.hand=[];
  for(let i=0;i<r.enemies.length;i++){let e=r.enemies[i];if(e.hp<=0||e.summonedTurn===r.turn)continue;if(!e.retainBlock&&!e.reading)e.block=0;
  for(let tick=0;tick<(r.poisonDouble===true?2:r.poisonDouble||1)&&e.hp>0;tick++)if(e.poison){let n=e.poison;e.poison--;dealDamage(e,n,{ignoreBlock:true});await animateEntity(i,'hit',n)}
  if(e.hp<=0){await animateEntity(i,'death');continue}
@@ -134,6 +134,7 @@ endTurn=async function(){let r=S.run;if(busy||page!=='battle'||r.pendingChoice||
  if(!actionStunned&&e.act2&&(e.intent==='attack'||e.intent==='guard')&&e.hp>0&&r.hp>0)snowAction(r,e);
  hunterEnemyActionEnd(r,e);
  if(e.boss&&typeof finishKingAction==='function')finishKingAction(r,e,actionStunned);
+ if(typeof resolveErosion==='function'&&resolveErosion(r,e))await animateEntity(i,'death');
  if(r.hp<=0){await animateEntity('player','death');busy=false;finish(false);return}}
  if(r.enemies.every(e=>e.hp<=0)){busy=false;victory();return}
  r.turn++;r.rage=0;r.thornShield=0;if(!r.retainBlock)r.block=0;for(let x of r.relics)if(x.type==='b')gainBlock(r,3,'relic');r.energy=r.energyMax||3;if(typeof goldBeginTurn==='function')goldBeginTurn(r);applyTurnStartBuffs(r);
