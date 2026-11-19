@@ -1,0 +1,48 @@
+const {workerHarness}=require('./ai-stage1.cjs'),vm=require('vm'),assert=require('assert');
+(async()=>{const h=workerHarness();await h.run('hunter-v52');h.context.assert=assert;await vm.runInContext(`(async()=>{
+render=()=>save();animateEntity=async()=>{};
+const id=n=>HUNTER_IDS[n],starter=[0,0,0,1,1,1,2,2,2,3];
+function reset(effects=[]){S.run={characterId:'hunter',hp:1000,max:1000,block:0,str:0,agility:0,energy:99,energyMax:3,turn:1,hand:[],draw:[0,1,2,3,4,5],discard:[],exhausted:[],enemies:[{hp:10000,max:10000,block:0,poison:0,atk:10,intent:'attack',hits:1}],deck:[0,1],mode:'battle',kind:'fight',relics:[],carriedRelic:{effects},battleCards:[],generatedCards:[],potions:[]};page='battle';busy=false;target=0;return S.run;}
+function use(n){const r=S.run;r.hand.push(typeof n==='number'?n:id(n));base.play(r.hand.length-1);}
+assert.equal(HUNTER_ROWS.length,78);assert.equal(new Set(Object.values(HUNTER_IDS)).size,78);
+let r=reset();assert(C.filter(c=>allowedRunCard(c,r)).every(c=>c.characterId==='hunter'&&!c.evolution));assert(!allowedRunCard(C[19],r));assert(!allowedRunCard(C[id('噛みつき')],r));r.characterId='wanderer';assert(!allowedRunCard(C[id('牙')],r));assert(allowedRunCard(C[19],r));assert(!packPool().some(c=>c.characterId==='hunter'));
+// Save-independent character inventories; decks and five presets are separate.
+S.run=null;S.selectedCharacter='wanderer';S.deck=[...starter];S.deckSets=Array(5).fill(null);S.deckSetMeta=Array.from({length:5},(_,i)=>({name:'set '+i,relicId:null}));storeCharacterProfile();const shared=S.collection;selectCharacter('hunter');assert.equal(S.collection,shared);S.deck=[0,1];S.deckSets[0]=[0,1];save();selectCharacter('wanderer');assert.deepEqual(Array.from(S.deck),starter);assert.equal(S.deckSets[0],null);selectCharacter('hunter');assert.deepEqual(Array.from(S.deck),[0,1]);assert.deepEqual(Array.from(S.deckSets[0]),[0,1]);S.deck=[...starter];S.relicQueue=[];S.relicReroll=null;S.equippedRelicId=null;startSelectedCharacter();assert.equal(S.run.hp,80);assert.equal(S.run.max,80);assert.equal(S.run.characterId,'hunter');
+// Evolution changes one instance and leaves the original run deck untouched.
+r=reset();r.deck=[id('牙'),id('牙')];use('牙');assert.equal(r.enemies[0].hp,9996);assert.equal(r.evolutionCount,1);assert.equal(C[r.discard[0]].name,'噛みつき');assert.equal(evolvedCardCount(r),1);assert.deepEqual(Array.from(r.deck),[id('牙'),id('牙')]);r.hand.push(r.discard.pop());base.play(0);assert.equal(r.enemies[0].hp,9988);assert.equal(C[r.discard[0]].name,'大喰らい');assert.equal(r.evolutionCount,2);assert.equal(evolvedCardCount(r),1);
+r=reset();use('過程');use('成長');for(let i=0;i<4;i++)use('牙');assert.equal(r.block,32);assert.equal(r.str,1);assert.equal(r.evolutionCount,4);assert(!r.exhausted.includes(id('過程')));use('進化の牙');assert.equal(r.enemies[0].hp,9974);use('進化の鱗');assert.equal(r.block,40);
+r=reset();use('牙');use('食物連鎖');assert.equal(r.enemies[0].hp,9983);
+r=reset();r.hand=[id('牙'),id('爪')];use('歴史的瞬間');assert.equal(r.hunterChoice.kind,'evolve');chooseHunterCard(0);assert.equal(C[r.hand[0]].name,'大喰らい');assert(!hunterChoiceCandidates(r).some(x=>x.index===0));chooseHunterCard(1);assert(!r.hunterChoice);assert.equal(C[r.hand[1]].name,'獣王の爪');use('退化');chooseHunterCard(0);assert.equal(C[r.hand[0]].name,'噛みつき');assert.equal(r.evolutionCount,4);
+r=reset();r.hand=[id('牙')];use('歴史的瞬間');skipHunterChoice();assert(!r.hunterChoice);assert.equal(C[r.hand[0]].name,'牙');
+r=reset();r.draw=[id('牙'),id('鱗'),id('嗅覚')];use('本能');assert.equal(r.hunterChoice.kind,'search');chooseHunterCard(1);assert.equal(r.hand[0],id('鱗'));assert.equal(r.draw.length,2);
+r=reset();r.hand=[id('噛みつき'),id('硬い鱗'),0];r.energy=5;use('進化論');assert.equal(r.energy,6);assert(r.energyLocked);gainEnergy(r,2);assert.equal(r.energy,6);r.heartbeat=true;r.heartbeatCount=3;use(1);assert.equal(r.energy,5);r.turn++;applyTurnStartBuffs(r);gainEnergy(r,2);assert.equal(r.energy,7);
+// Laceration requires an attack that actually reduces HP; each hit triggers once.
+r=reset();r.enemies[0].laceration=3;use('地団駄');assert.equal(r.enemies[0].hp,9980);r.enemies[0].block=50;use('地団駄');assert.equal(r.enemies[0].hp,9980);dealDamage(r.enemies[0],2,{ignoreBlock:true});assert.equal(r.enemies[0].hp,9978);
+r=reset();use('残虐');use('抉る爪');assert.equal(r.enemies[0].laceration,3);assert.equal(r.enemies[0].hp,9995);use('傷の追撃');assert.equal(r.enemies[0].laceration,7);use('腐食');use('地団駄');assert.equal(r.enemies[0].hp,9920);decayHunterStatus(r,r.enemies[0]);assert.equal(r.enemies[0].laceration,5);
+r=reset();use('傷を裂く');assert.equal(r.hand.length,0);use('傷を裂く');assert.equal(r.hand.length,1);
+r=reset();use('痛み分け');dealDamage(r,10,{attack:true,attacker:r.enemies[0]});assert.equal(r.hp,988);assert.equal(r.laceration,2);assert.equal(r.enemies[0].laceration,2);
+r=reset();use('逆立つ鱗');r.block=100;dealDamage(r,10,{attack:true,attacker:r.enemies[0]});assert.equal(r.enemies[0].laceration,1);assert.equal(r.hp,1000);
+r=reset();use('獣の狩り');r.turn++;applyTurnStartBuffs(r);assert.equal(r.hp,999);assert.equal(r.enemies[0].laceration,1);
+r=reset();r.enemies.push({...r.enemies[0]});use('風切り');assert.equal(r.enemies.reduce((n,e)=>n+(e.laceration||0),0),4);
+r=reset();r.energy=3;use('切り刻む');assert.equal(r.energy,0);assert.equal(r.enemies[0].laceration,4);
+r=reset();r.enemies[0].laceration=1;use('刻み裂く');assert.equal(r.enemies[0].laceration,5);hunterPlayerTurnEnd(r);assert.equal(r.enemies[0].laceration,1);
+r=reset();use('集中攻撃');assert.equal(r.enemies[0].hp,10000);r.enemies[0].laceration=2;use('集中攻撃');assert.equal(r.enemies[0].hp,9988);
+// Vulnerability is attack-only, duration-based, with territory increasing its rate.
+r=reset();use('睨み');use('切断');assert.equal(r.enemies[0].hp,9976);assert.equal(r.enemies[0].vulnerable,3);dealDamage(r.enemies[0],4);assert.equal(r.enemies[0].hp,9972);use('縄張り');use('切断');assert.equal(r.enemies[0].hp,9944);decayHunterStatus(r,r.enemies[0]);assert.equal(r.enemies[0].vulnerable,2);
+r=reset();r.exhaustEngine=1;r.exhaustStrength=1;use('追跡');assert(isSpecialCard(C[id('追跡')]));assert.deepEqual(Array.from(cardCategories(C[id('追跡')])),['特殊']);assert.equal(r.specialUses[id('追跡')],1);assert(!r.discard.includes(id('追跡')));assert(!r.exhausted.includes(id('追跡')));assert.equal(r.block,0);assert.equal(r.exhaustStrengthCount||0,0);use('睨み');assert.equal(r.hand.length,1);r.turn++;applyTurnStartBuffs(r);use('睨み');assert.equal(r.hand.length,2);assert.equal(r.tracking,1);
+r=reset();use('眼光');assert.equal(r.enemies[0].vulnerable,2);assert.equal(r.str,2);use('追い打ち');assert.equal(r.enemies[0].vulnerable,4);use('奇襲');assert.equal(r.enemies[0].laceration,2);use('観察');assert.equal(r.hand.length,2);
+r=reset();r.enemies[0].block=29;use('弱点作成');assert.equal(r.enemies[0].vulnerable,4);use('誘導');assert.equal(r.block,14);
+r=reset();r.energy=2;use('襲撃');assert.equal(r.enemies[0].hp,9992);assert.equal(r.energy,0);use('襲撃');assert.equal(r.enemies[0].hp,9992);
+r=reset();use('仕組まれた罠');assert.equal(r.enemies[0].intent,'stunned');await endTurn();assert.equal(r.hp,1000);
+r=reset();use('突進');assert.equal(r.enemies[0].intent,'stunned');assert.equal(C[r.discard[0]].name,'猛進');
+r=reset();use('麻痺毒');assert.equal(enemyAttack(r.enemies[0]),6);await endTurn();assert.equal(r.hp,994);assert.equal(r.enemies[0].str,0);
+r=reset();r.hp=301;use('手負いの一撃');assert.equal(r.enemies[0].hp,10000);r.hand=[];r.hp=300;use('手負いの一撃');assert.equal(r.enemies[0].hp,9950);
+r=reset();use('滑空');r.block=0;assert.equal(forecastDamage(r),7);await endTurn();assert.equal(r.hp,993);assert.equal(r.damageReduction,0);
+r=reset();use('飛行');r.block=0;await endTurn();assert.equal(r.hp,995);
+// Every reward and generation route enforces the character owner and excludes evolution forms.
+for(const characterId of ['hunter','wanderer']){r=reset();r.characterId=characterId;r.deck=[0,1];for(let i=0;i<20;i++){assert(sampleRunCards(.4).every(k=>C[k].characterId===characterId&&!C[k].evolution));assert(creationCandidates(r).every(c=>c.characterId===characterId&&!c.evolution));for(const pack of getRunPacks(r))assert(rollShopPack(r,pack).every(k=>C[k].characterId===characterId&&!C[k].evolution));r.chest={};prepareChest(r);assert(r.chest.cards.every(k=>C[k].characterId===characterId&&!C[k].evolution));}}
+for(const characterId of ['hunter','wanderer']){S.run=null;page='home';selectCharacter(characterId);S.deck=[...starter];S.relicQueue=[];S.relicReroll=null;S.relicVault=[{id:'starting-test',name:'test',icon:'◈',effects:['start_cards']}];S.equippedRelicId='starting-test';startSelectedCharacter();assert.equal(S.run.deck.length,12);assert(S.run.deck.filter(k=>C[k].runOnly).every(k=>C[k].characterId===characterId&&!C[k].evolution));}S.equippedRelicId=null;
+// Every form resolves without errors, targets use the shared combat pipeline.
+for(const c of C.filter(c=>c.characterId==='hunter')){r=reset();r.hp=300;r.enemies[0].vulnerable=4;r.enemies[0].laceration=4;r.hand=[id('牙'),id('噛みつき')];use(c.id);if(r.hunterChoice){if(r.hunterChoice.kind==='evolve')skipHunterChoice();else chooseHunterCard(hunterChoiceCandidates(r)[0].index);}assert(Number.isFinite(r.hp),c.name);assert(Number.isFinite(r.energy),c.name);assert(Number.isFinite(r.enemies[0].hp),c.name);}
+r=reset();r.deck=[id('牙'),id('鱗'),0,1,2];use('牙');use('追跡');r.mode=page='map';choose('fight');assert.equal(r.evolutionCount,0);assert.equal(r.tracking,0);assert.equal(r.battleCards.length,0);assert([...r.hand,...r.draw,...r.discard].includes(id('牙')));
+})()`,h.context);console.log('PASS v52: all 78 hunter cards, profiles/shared inventory, separate pools, evolution/choices, X/energy lock, laceration/vulnerability, powers, stun, reduction and next-battle reset');})().catch(e=>{console.error(e);process.exit(1)});

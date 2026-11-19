@@ -1,0 +1,13 @@
+const {workerHarness}=require('./ai-stage1.cjs'),vm=require('vm'),assert=require('assert');
+(async()=>{const h=workerHarness();await h.run('display-v57');h.context.assert=assert;vm.runInContext(`
+render=()=>{};const events=[];recordDamageEvent=(unit,amount,kind='',channel='hp')=>events.push({amount,kind,channel});
+S.run={characterId:'hunter',hp:90,max:90,str:0,energy:20,turn:1,block:0,hand:[],draw:[],discard:[],exhausted:[],deck:[],relics:[],battleCards:[],enemies:[{hp:100,max:100,block:0,laceration:2}]};page='battle';target=0;busy=false;
+const r=S.run,e=r.enemies[0];cardAttack(e,4);cardAttack(e,4);assert.deepEqual(events.map(x=>x.amount),[4,2,4,2]);assert.deepEqual(events.map(x=>x.kind),['','裂傷','','裂傷']);events.length=0;r.bleedRepeat=1;cardAttack(e,3);assert.deepEqual(events.map(x=>x.amount),[3,2,2]);events.length=0;e.block=100;cardAttack(e,3);assert.equal(events.length,1);assert.equal(events[0].channel,'block');events.length=0;e.block=0;e.hp=1;cardAttack(e,99);assert.deepEqual(events.map(x=>x.amount),[1]);
+assert.deepEqual(JSON.parse(JSON.stringify(normalizeDisplay({text:900,ui:0,zoom:20}))),{text:140,ui:80,zoom:50});updateDisplay('text',125);assert.equal(displayPrefs.text,125);assert.equal(JSON.parse(localStorage.getItem('ashbound-display')).text,125);updateDisplay('ui',90);assert.equal(displayPrefs.text,125);assert.equal(displayPrefs.ui,90);
+`,h.context);console.log('PASS v57: per-hit and repeated laceration events, block/lethal limits, independent display ranges and saved preferences');})().catch(e=>{console.error(e);process.exit(1)});
+// Exercise the real presentation queue without requiring browser animation support.
+{
+const fs=require('fs'),timers=[],labels=[],prefs=new Map(),style={setProperty(){}};
+const context={console,Date:{now:()=>1000},setTimeout:(fn,ms)=>timers.push({fn,ms}),localStorage:{getItem:k=>prefs.get(k),setItem:(k,v)=>prefs.set(k,v)},S:{run:{enemies:[]}},document:{documentElement:{style},createElement:()=>({style:{},remove(){}}),body:{append:el=>labels.push(el)},querySelector:()=>({getBoundingClientRect:()=>({left:10,top:20,width:80,height:120})}),getElementById:()=>null}};
+vm.createContext(context);vm.runInContext(fs.readFileSync('dist/display.js','utf8'),context);labels.length=0;vm.runInContext(`const foe={};S.run.enemies=[foe];recordDamageEvent(foe,4);recordDamageEvent(foe,2,'裂傷');recordDamageEvent(foe,4);recordDamageEvent(foe,5,'','block');`,context);assert.deepEqual(timers.map(t=>t.ms),[0,140,280,420]);timers.slice(0,4).forEach(t=>t.fn());assert.deepEqual(labels.map(x=>x.textContent),['4','裂傷 2','4','5']);assert(labels[3].className.includes('block-damage'));console.log('PASS v57: actual float queue preserves per-hit values and staggered order');
+}

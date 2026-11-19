@@ -1,0 +1,7336 @@
+{
+  "rules": "v37",
+  "seedPrefix": "v38-validation",
+  "axis": "poison",
+  "data": [
+    {
+      "version": "v37",
+      "trials": 50,
+      "wins": 10,
+      "progress": 9.58,
+      "causes": {
+        "HP枯渇（回復不足）": 21,
+        "ボスの高威力攻撃": 12,
+        "ビルド未完成": 6,
+        "防御不足": 1
+      },
+      "runs": [
+        {
+          "seed": "v38-validation-0",
+          "outcome": "win",
+          "floor": 10,
+          "starter": [
+            {
+              "id": 6,
+              "name": "鉄壁"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 82,
+              "name": "ブーメラン"
+            },
+            {
+              "id": 79,
+              "name": "緊急回避"
+            },
+            {
+              "id": 8,
+              "name": "大剣"
+            },
+            {
+              "id": 3,
+              "name": "双剣"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 56,
+              "name": "探索"
+            },
+            {
+              "id": 14,
+              "name": "毒霧"
+            },
+            {
+              "id": 5,
+              "name": "猛毒の刃"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 7,
+              "name": "戦術"
+            },
+            {
+              "id": 11,
+              "name": "吸血"
+            }
+          ],
+          "traceHash": "92d84241",
+          "counts": {
+            "frontDamage": 3,
+            "frontBlock": 2,
+            "scaling": 7,
+            "draw": 7,
+            "block": 6,
+            "heal": 1,
+            "selfHarm": 1
+          }
+        },
+        {
+          "seed": "v38-validation-1",
+          "outcome": "win",
+          "floor": 10,
+          "starter": [
+            {
+              "id": 6,
+              "name": "鉄壁"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 82,
+              "name": "ブーメラン"
+            },
+            {
+              "id": 79,
+              "name": "緊急回避"
+            },
+            {
+              "id": 8,
+              "name": "大剣"
+            },
+            {
+              "id": 3,
+              "name": "双剣"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 56,
+              "name": "探索"
+            },
+            {
+              "id": 14,
+              "name": "毒霧"
+            },
+            {
+              "id": 5,
+              "name": "猛毒の刃"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 7,
+              "name": "戦術"
+            },
+            {
+              "id": 11,
+              "name": "吸血"
+            }
+          ],
+          "traceHash": "795d64c4",
+          "counts": {
+            "frontDamage": 4,
+            "frontBlock": 2,
+            "scaling": 9,
+            "draw": 7,
+            "block": 4,
+            "heal": 1,
+            "selfHarm": 1
+          }
+        },
+        {
+          "seed": "v38-validation-2",
+          "outcome": "loss",
+          "floor": 10,
+          "starter": [
+            {
+              "id": 6,
+              "name": "鉄壁"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 82,
+              "name": "ブーメラン"
+            },
+            {
+              "id": 79,
+              "name": "緊急回避"
+            },
+            {
+              "id": 8,
+              "name": "大剣"
+            },
+            {
+              "id": 3,
+              "name": "双剣"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 56,
+              "name": "探索"
+            },
+            {
+              "id": 14,
+              "name": "毒霧"
+            },
+            {
+              "id": 5,
+              "name": "猛毒の刃"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 7,
+              "name": "戦術"
+            },
+            {
+              "id": 11,
+              "name": "吸血"
+            }
+          ],
+          "traceHash": "aad5d1c6",
+          "counts": {
+            "frontDamage": 4,
+            "frontBlock": 4,
+            "scaling": 6,
+            "draw": 7,
+            "block": 7,
+            "heal": 1,
+            "selfHarm": 2
+          }
+        },
+        {
+          "seed": "v38-validation-3",
+          "outcome": "loss",
+          "floor": 8,
+          "starter": [
+            {
+              "id": 6,
+              "name": "鉄壁"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 82,
+              "name": "ブーメラン"
+            },
+            {
+              "id": 79,
+              "name": "緊急回避"
+            },
+            {
+              "id": 8,
+              "name": "大剣"
+            },
+            {
+              "id": 3,
+              "name": "双剣"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 56,
+              "name": "探索"
+            },
+            {
+              "id": 14,
+              "name": "毒霧"
+            },
+            {
+              "id": 5,
+              "name": "猛毒の刃"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 7,
+              "name": "戦術"
+            },
+            {
+              "id": 11,
+              "name": "吸血"
+            }
+          ],
+          "traceHash": "e15f2127",
+          "counts": {
+            "frontDamage": 4,
+            "frontBlock": 5,
+            "scaling": 6,
+            "draw": 7,
+            "block": 7,
+            "heal": 1,
+            "selfHarm": 1
+          }
+        },
+        {
+          "seed": "v38-validation-4",
+          "outcome": "loss",
+          "floor": 10,
+          "starter": [
+            {
+              "id": 6,
+              "name": "鉄壁"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 82,
+              "name": "ブーメラン"
+            },
+            {
+              "id": 79,
+              "name": "緊急回避"
+            },
+            {
+              "id": 8,
+              "name": "大剣"
+            },
+            {
+              "id": 3,
+              "name": "双剣"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 56,
+              "name": "探索"
+            },
+            {
+              "id": 14,
+              "name": "毒霧"
+            },
+            {
+              "id": 5,
+              "name": "猛毒の刃"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 7,
+              "name": "戦術"
+            },
+            {
+              "id": 11,
+              "name": "吸血"
+            }
+          ],
+          "traceHash": "2b809940",
+          "counts": {
+            "frontDamage": 4,
+            "frontBlock": 5,
+            "scaling": 8,
+            "draw": 6,
+            "block": 7,
+            "heal": 1,
+            "selfHarm": 2
+          }
+        },
+        {
+          "seed": "v38-validation-5",
+          "outcome": "win",
+          "floor": 10,
+          "starter": [
+            {
+              "id": 6,
+              "name": "鉄壁"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 82,
+              "name": "ブーメラン"
+            },
+            {
+              "id": 79,
+              "name": "緊急回避"
+            },
+            {
+              "id": 8,
+              "name": "大剣"
+            },
+            {
+              "id": 3,
+              "name": "双剣"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 56,
+              "name": "探索"
+            },
+            {
+              "id": 14,
+              "name": "毒霧"
+            },
+            {
+              "id": 5,
+              "name": "猛毒の刃"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 7,
+              "name": "戦術"
+            },
+            {
+              "id": 11,
+              "name": "吸血"
+            }
+          ],
+          "traceHash": "b68a7a52",
+          "counts": {
+            "frontDamage": 3,
+            "frontBlock": 3,
+            "scaling": 8,
+            "draw": 9,
+            "block": 6,
+            "heal": 1,
+            "selfHarm": 1
+          }
+        },
+        {
+          "seed": "v38-validation-6",
+          "outcome": "loss",
+          "floor": 10,
+          "starter": [
+            {
+              "id": 6,
+              "name": "鉄壁"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 82,
+              "name": "ブーメラン"
+            },
+            {
+              "id": 79,
+              "name": "緊急回避"
+            },
+            {
+              "id": 8,
+              "name": "大剣"
+            },
+            {
+              "id": 3,
+              "name": "双剣"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 56,
+              "name": "探索"
+            },
+            {
+              "id": 14,
+              "name": "毒霧"
+            },
+            {
+              "id": 5,
+              "name": "猛毒の刃"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 7,
+              "name": "戦術"
+            },
+            {
+              "id": 11,
+              "name": "吸血"
+            }
+          ],
+          "traceHash": "7631f7a5",
+          "counts": {
+            "frontDamage": 4,
+            "frontBlock": 3,
+            "scaling": 4,
+            "draw": 4,
+            "block": 5,
+            "heal": 1,
+            "selfHarm": 2
+          }
+        },
+        {
+          "seed": "v38-validation-7",
+          "outcome": "loss",
+          "floor": 10,
+          "starter": [
+            {
+              "id": 6,
+              "name": "鉄壁"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 82,
+              "name": "ブーメラン"
+            },
+            {
+              "id": 79,
+              "name": "緊急回避"
+            },
+            {
+              "id": 8,
+              "name": "大剣"
+            },
+            {
+              "id": 3,
+              "name": "双剣"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 56,
+              "name": "探索"
+            },
+            {
+              "id": 14,
+              "name": "毒霧"
+            },
+            {
+              "id": 5,
+              "name": "猛毒の刃"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 7,
+              "name": "戦術"
+            },
+            {
+              "id": 11,
+              "name": "吸血"
+            }
+          ],
+          "traceHash": "a993c2a6",
+          "counts": {
+            "frontDamage": 4,
+            "frontBlock": 2,
+            "scaling": 12,
+            "draw": 6,
+            "block": 9,
+            "heal": 1,
+            "selfHarm": 1
+          }
+        },
+        {
+          "seed": "v38-validation-8",
+          "outcome": "loss",
+          "floor": 10,
+          "starter": [
+            {
+              "id": 6,
+              "name": "鉄壁"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 82,
+              "name": "ブーメラン"
+            },
+            {
+              "id": 79,
+              "name": "緊急回避"
+            },
+            {
+              "id": 8,
+              "name": "大剣"
+            },
+            {
+              "id": 3,
+              "name": "双剣"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 56,
+              "name": "探索"
+            },
+            {
+              "id": 14,
+              "name": "毒霧"
+            },
+            {
+              "id": 5,
+              "name": "猛毒の刃"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 7,
+              "name": "戦術"
+            },
+            {
+              "id": 11,
+              "name": "吸血"
+            }
+          ],
+          "traceHash": "58c31125",
+          "counts": {
+            "frontDamage": 4,
+            "frontBlock": 2,
+            "scaling": 7,
+            "draw": 6,
+            "block": 4,
+            "heal": 1,
+            "selfHarm": 1
+          }
+        },
+        {
+          "seed": "v38-validation-9",
+          "outcome": "loss",
+          "floor": 10,
+          "starter": [
+            {
+              "id": 6,
+              "name": "鉄壁"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 82,
+              "name": "ブーメラン"
+            },
+            {
+              "id": 79,
+              "name": "緊急回避"
+            },
+            {
+              "id": 8,
+              "name": "大剣"
+            },
+            {
+              "id": 3,
+              "name": "双剣"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 56,
+              "name": "探索"
+            },
+            {
+              "id": 14,
+              "name": "毒霧"
+            },
+            {
+              "id": 5,
+              "name": "猛毒の刃"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 7,
+              "name": "戦術"
+            },
+            {
+              "id": 11,
+              "name": "吸血"
+            }
+          ],
+          "traceHash": "09187057",
+          "counts": {
+            "frontDamage": 3,
+            "frontBlock": 3,
+            "scaling": 9,
+            "draw": 6,
+            "block": 5,
+            "heal": 1,
+            "selfHarm": 1
+          }
+        },
+        {
+          "seed": "v38-validation-10",
+          "outcome": "loss",
+          "floor": 10,
+          "starter": [
+            {
+              "id": 6,
+              "name": "鉄壁"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 82,
+              "name": "ブーメラン"
+            },
+            {
+              "id": 79,
+              "name": "緊急回避"
+            },
+            {
+              "id": 8,
+              "name": "大剣"
+            },
+            {
+              "id": 3,
+              "name": "双剣"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 56,
+              "name": "探索"
+            },
+            {
+              "id": 14,
+              "name": "毒霧"
+            },
+            {
+              "id": 5,
+              "name": "猛毒の刃"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 7,
+              "name": "戦術"
+            },
+            {
+              "id": 11,
+              "name": "吸血"
+            }
+          ],
+          "traceHash": "6fadb2e7",
+          "counts": {
+            "frontDamage": 4,
+            "frontBlock": 4,
+            "scaling": 10,
+            "draw": 8,
+            "block": 6,
+            "heal": 1,
+            "selfHarm": 1
+          }
+        },
+        {
+          "seed": "v38-validation-11",
+          "outcome": "loss",
+          "floor": 10,
+          "starter": [
+            {
+              "id": 6,
+              "name": "鉄壁"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 82,
+              "name": "ブーメラン"
+            },
+            {
+              "id": 79,
+              "name": "緊急回避"
+            },
+            {
+              "id": 8,
+              "name": "大剣"
+            },
+            {
+              "id": 3,
+              "name": "双剣"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 56,
+              "name": "探索"
+            },
+            {
+              "id": 14,
+              "name": "毒霧"
+            },
+            {
+              "id": 5,
+              "name": "猛毒の刃"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 7,
+              "name": "戦術"
+            },
+            {
+              "id": 11,
+              "name": "吸血"
+            }
+          ],
+          "traceHash": "c356719e",
+          "counts": {
+            "frontDamage": 4,
+            "frontBlock": 3,
+            "scaling": 8,
+            "draw": 7,
+            "block": 5,
+            "heal": 1,
+            "selfHarm": 1
+          }
+        },
+        {
+          "seed": "v38-validation-12",
+          "outcome": "loss",
+          "floor": 10,
+          "starter": [
+            {
+              "id": 6,
+              "name": "鉄壁"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 82,
+              "name": "ブーメラン"
+            },
+            {
+              "id": 79,
+              "name": "緊急回避"
+            },
+            {
+              "id": 8,
+              "name": "大剣"
+            },
+            {
+              "id": 3,
+              "name": "双剣"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 56,
+              "name": "探索"
+            },
+            {
+              "id": 14,
+              "name": "毒霧"
+            },
+            {
+              "id": 5,
+              "name": "猛毒の刃"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 7,
+              "name": "戦術"
+            },
+            {
+              "id": 11,
+              "name": "吸血"
+            }
+          ],
+          "traceHash": "3bdc3333",
+          "counts": {
+            "frontDamage": 3,
+            "frontBlock": 5,
+            "scaling": 6,
+            "draw": 8,
+            "block": 7,
+            "heal": 1,
+            "selfHarm": 1
+          }
+        },
+        {
+          "seed": "v38-validation-13",
+          "outcome": "loss",
+          "floor": 8,
+          "starter": [
+            {
+              "id": 6,
+              "name": "鉄壁"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 82,
+              "name": "ブーメラン"
+            },
+            {
+              "id": 79,
+              "name": "緊急回避"
+            },
+            {
+              "id": 8,
+              "name": "大剣"
+            },
+            {
+              "id": 3,
+              "name": "双剣"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 56,
+              "name": "探索"
+            },
+            {
+              "id": 14,
+              "name": "毒霧"
+            },
+            {
+              "id": 5,
+              "name": "猛毒の刃"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 7,
+              "name": "戦術"
+            },
+            {
+              "id": 11,
+              "name": "吸血"
+            }
+          ],
+          "traceHash": "0f939e9d",
+          "counts": {
+            "frontDamage": 4,
+            "frontBlock": 2,
+            "scaling": 6,
+            "draw": 4,
+            "block": 7,
+            "heal": 1,
+            "selfHarm": 1
+          }
+        },
+        {
+          "seed": "v38-validation-14",
+          "outcome": "loss",
+          "floor": 10,
+          "starter": [
+            {
+              "id": 6,
+              "name": "鉄壁"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 82,
+              "name": "ブーメラン"
+            },
+            {
+              "id": 79,
+              "name": "緊急回避"
+            },
+            {
+              "id": 8,
+              "name": "大剣"
+            },
+            {
+              "id": 3,
+              "name": "双剣"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 56,
+              "name": "探索"
+            },
+            {
+              "id": 14,
+              "name": "毒霧"
+            },
+            {
+              "id": 5,
+              "name": "猛毒の刃"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 7,
+              "name": "戦術"
+            },
+            {
+              "id": 11,
+              "name": "吸血"
+            }
+          ],
+          "traceHash": "3dcb44d2",
+          "counts": {
+            "frontDamage": 3,
+            "frontBlock": 3,
+            "scaling": 9,
+            "draw": 6,
+            "block": 7,
+            "heal": 1,
+            "selfHarm": 1
+          }
+        },
+        {
+          "seed": "v38-validation-15",
+          "outcome": "loss",
+          "floor": 8,
+          "starter": [
+            {
+              "id": 6,
+              "name": "鉄壁"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 82,
+              "name": "ブーメラン"
+            },
+            {
+              "id": 79,
+              "name": "緊急回避"
+            },
+            {
+              "id": 8,
+              "name": "大剣"
+            },
+            {
+              "id": 3,
+              "name": "双剣"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 56,
+              "name": "探索"
+            },
+            {
+              "id": 14,
+              "name": "毒霧"
+            },
+            {
+              "id": 5,
+              "name": "猛毒の刃"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 7,
+              "name": "戦術"
+            },
+            {
+              "id": 11,
+              "name": "吸血"
+            }
+          ],
+          "traceHash": "bed0a787",
+          "counts": {
+            "frontDamage": 4,
+            "frontBlock": 2,
+            "scaling": 8,
+            "draw": 5,
+            "block": 5,
+            "heal": 1,
+            "selfHarm": 2
+          }
+        },
+        {
+          "seed": "v38-validation-16",
+          "outcome": "loss",
+          "floor": 8,
+          "starter": [
+            {
+              "id": 6,
+              "name": "鉄壁"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 82,
+              "name": "ブーメラン"
+            },
+            {
+              "id": 79,
+              "name": "緊急回避"
+            },
+            {
+              "id": 8,
+              "name": "大剣"
+            },
+            {
+              "id": 3,
+              "name": "双剣"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 56,
+              "name": "探索"
+            },
+            {
+              "id": 14,
+              "name": "毒霧"
+            },
+            {
+              "id": 5,
+              "name": "猛毒の刃"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 7,
+              "name": "戦術"
+            },
+            {
+              "id": 11,
+              "name": "吸血"
+            }
+          ],
+          "traceHash": "6cc5b987",
+          "counts": {
+            "frontDamage": 3,
+            "frontBlock": 4,
+            "scaling": 6,
+            "draw": 7,
+            "block": 6,
+            "heal": 1,
+            "selfHarm": 1
+          }
+        },
+        {
+          "seed": "v38-validation-17",
+          "outcome": "loss",
+          "floor": 10,
+          "starter": [
+            {
+              "id": 6,
+              "name": "鉄壁"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 82,
+              "name": "ブーメラン"
+            },
+            {
+              "id": 79,
+              "name": "緊急回避"
+            },
+            {
+              "id": 8,
+              "name": "大剣"
+            },
+            {
+              "id": 3,
+              "name": "双剣"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 56,
+              "name": "探索"
+            },
+            {
+              "id": 14,
+              "name": "毒霧"
+            },
+            {
+              "id": 5,
+              "name": "猛毒の刃"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 7,
+              "name": "戦術"
+            },
+            {
+              "id": 11,
+              "name": "吸血"
+            }
+          ],
+          "traceHash": "a9fa7a54",
+          "counts": {
+            "frontDamage": 4,
+            "frontBlock": 5,
+            "scaling": 7,
+            "draw": 7,
+            "block": 8,
+            "heal": 1,
+            "selfHarm": 2
+          }
+        },
+        {
+          "seed": "v38-validation-18",
+          "outcome": "loss",
+          "floor": 7,
+          "starter": [
+            {
+              "id": 6,
+              "name": "鉄壁"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 82,
+              "name": "ブーメラン"
+            },
+            {
+              "id": 79,
+              "name": "緊急回避"
+            },
+            {
+              "id": 8,
+              "name": "大剣"
+            },
+            {
+              "id": 3,
+              "name": "双剣"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 56,
+              "name": "探索"
+            },
+            {
+              "id": 14,
+              "name": "毒霧"
+            },
+            {
+              "id": 5,
+              "name": "猛毒の刃"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 7,
+              "name": "戦術"
+            },
+            {
+              "id": 11,
+              "name": "吸血"
+            }
+          ],
+          "traceHash": "b3f76487",
+          "counts": {
+            "frontDamage": 3,
+            "frontBlock": 2,
+            "scaling": 8,
+            "draw": 5,
+            "block": 4,
+            "heal": 1,
+            "selfHarm": 1
+          }
+        },
+        {
+          "seed": "v38-validation-19",
+          "outcome": "loss",
+          "floor": 8,
+          "starter": [
+            {
+              "id": 6,
+              "name": "鉄壁"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 82,
+              "name": "ブーメラン"
+            },
+            {
+              "id": 79,
+              "name": "緊急回避"
+            },
+            {
+              "id": 8,
+              "name": "大剣"
+            },
+            {
+              "id": 3,
+              "name": "双剣"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 56,
+              "name": "探索"
+            },
+            {
+              "id": 14,
+              "name": "毒霧"
+            },
+            {
+              "id": 5,
+              "name": "猛毒の刃"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 7,
+              "name": "戦術"
+            },
+            {
+              "id": 11,
+              "name": "吸血"
+            }
+          ],
+          "traceHash": "cefd90bb",
+          "counts": {
+            "frontDamage": 5,
+            "frontBlock": 3,
+            "scaling": 8,
+            "draw": 8,
+            "block": 5,
+            "heal": 1,
+            "selfHarm": 2
+          }
+        },
+        {
+          "seed": "v38-validation-20",
+          "outcome": "loss",
+          "floor": 10,
+          "starter": [
+            {
+              "id": 6,
+              "name": "鉄壁"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 82,
+              "name": "ブーメラン"
+            },
+            {
+              "id": 79,
+              "name": "緊急回避"
+            },
+            {
+              "id": 8,
+              "name": "大剣"
+            },
+            {
+              "id": 3,
+              "name": "双剣"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 56,
+              "name": "探索"
+            },
+            {
+              "id": 14,
+              "name": "毒霧"
+            },
+            {
+              "id": 5,
+              "name": "猛毒の刃"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 7,
+              "name": "戦術"
+            },
+            {
+              "id": 11,
+              "name": "吸血"
+            }
+          ],
+          "traceHash": "5d1dbf54",
+          "counts": {
+            "frontDamage": 3,
+            "frontBlock": 3,
+            "scaling": 7,
+            "draw": 4,
+            "block": 5,
+            "heal": 1,
+            "selfHarm": 2
+          }
+        },
+        {
+          "seed": "v38-validation-21",
+          "outcome": "win",
+          "floor": 10,
+          "starter": [
+            {
+              "id": 6,
+              "name": "鉄壁"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 82,
+              "name": "ブーメラン"
+            },
+            {
+              "id": 79,
+              "name": "緊急回避"
+            },
+            {
+              "id": 8,
+              "name": "大剣"
+            },
+            {
+              "id": 3,
+              "name": "双剣"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 56,
+              "name": "探索"
+            },
+            {
+              "id": 14,
+              "name": "毒霧"
+            },
+            {
+              "id": 5,
+              "name": "猛毒の刃"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 7,
+              "name": "戦術"
+            },
+            {
+              "id": 11,
+              "name": "吸血"
+            }
+          ],
+          "traceHash": "c18cdfee",
+          "counts": {
+            "frontDamage": 4,
+            "frontBlock": 2,
+            "scaling": 10,
+            "draw": 6,
+            "block": 5,
+            "heal": 1,
+            "selfHarm": 1
+          }
+        },
+        {
+          "seed": "v38-validation-22",
+          "outcome": "loss",
+          "floor": 10,
+          "starter": [
+            {
+              "id": 6,
+              "name": "鉄壁"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 82,
+              "name": "ブーメラン"
+            },
+            {
+              "id": 79,
+              "name": "緊急回避"
+            },
+            {
+              "id": 8,
+              "name": "大剣"
+            },
+            {
+              "id": 3,
+              "name": "双剣"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 56,
+              "name": "探索"
+            },
+            {
+              "id": 14,
+              "name": "毒霧"
+            },
+            {
+              "id": 5,
+              "name": "猛毒の刃"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 7,
+              "name": "戦術"
+            },
+            {
+              "id": 11,
+              "name": "吸血"
+            }
+          ],
+          "traceHash": "69a82871",
+          "counts": {
+            "frontDamage": 4,
+            "frontBlock": 4,
+            "scaling": 7,
+            "draw": 7,
+            "block": 7,
+            "heal": 1,
+            "selfHarm": 2
+          }
+        },
+        {
+          "seed": "v38-validation-23",
+          "outcome": "loss",
+          "floor": 10,
+          "starter": [
+            {
+              "id": 6,
+              "name": "鉄壁"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 82,
+              "name": "ブーメラン"
+            },
+            {
+              "id": 79,
+              "name": "緊急回避"
+            },
+            {
+              "id": 8,
+              "name": "大剣"
+            },
+            {
+              "id": 3,
+              "name": "双剣"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 56,
+              "name": "探索"
+            },
+            {
+              "id": 14,
+              "name": "毒霧"
+            },
+            {
+              "id": 5,
+              "name": "猛毒の刃"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 7,
+              "name": "戦術"
+            },
+            {
+              "id": 11,
+              "name": "吸血"
+            }
+          ],
+          "traceHash": "d8b94783",
+          "counts": {
+            "frontDamage": 3,
+            "frontBlock": 2,
+            "scaling": 7,
+            "draw": 5,
+            "block": 4,
+            "heal": 1,
+            "selfHarm": 1
+          }
+        },
+        {
+          "seed": "v38-validation-24",
+          "outcome": "loss",
+          "floor": 10,
+          "starter": [
+            {
+              "id": 6,
+              "name": "鉄壁"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 82,
+              "name": "ブーメラン"
+            },
+            {
+              "id": 79,
+              "name": "緊急回避"
+            },
+            {
+              "id": 8,
+              "name": "大剣"
+            },
+            {
+              "id": 3,
+              "name": "双剣"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 56,
+              "name": "探索"
+            },
+            {
+              "id": 14,
+              "name": "毒霧"
+            },
+            {
+              "id": 5,
+              "name": "猛毒の刃"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 7,
+              "name": "戦術"
+            },
+            {
+              "id": 11,
+              "name": "吸血"
+            }
+          ],
+          "traceHash": "33d55574",
+          "counts": {
+            "frontDamage": 4,
+            "frontBlock": 4,
+            "scaling": 6,
+            "draw": 6,
+            "block": 7,
+            "heal": 1,
+            "selfHarm": 1
+          }
+        },
+        {
+          "seed": "v38-validation-25",
+          "outcome": "loss",
+          "floor": 10,
+          "starter": [
+            {
+              "id": 6,
+              "name": "鉄壁"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 82,
+              "name": "ブーメラン"
+            },
+            {
+              "id": 79,
+              "name": "緊急回避"
+            },
+            {
+              "id": 8,
+              "name": "大剣"
+            },
+            {
+              "id": 3,
+              "name": "双剣"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 56,
+              "name": "探索"
+            },
+            {
+              "id": 14,
+              "name": "毒霧"
+            },
+            {
+              "id": 5,
+              "name": "猛毒の刃"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 7,
+              "name": "戦術"
+            },
+            {
+              "id": 11,
+              "name": "吸血"
+            }
+          ],
+          "traceHash": "d7bb5547",
+          "counts": {
+            "frontDamage": 4,
+            "frontBlock": 2,
+            "scaling": 12,
+            "draw": 7,
+            "block": 6,
+            "heal": 1,
+            "selfHarm": 1
+          }
+        },
+        {
+          "seed": "v38-validation-26",
+          "outcome": "loss",
+          "floor": 10,
+          "starter": [
+            {
+              "id": 6,
+              "name": "鉄壁"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 82,
+              "name": "ブーメラン"
+            },
+            {
+              "id": 79,
+              "name": "緊急回避"
+            },
+            {
+              "id": 8,
+              "name": "大剣"
+            },
+            {
+              "id": 3,
+              "name": "双剣"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 56,
+              "name": "探索"
+            },
+            {
+              "id": 14,
+              "name": "毒霧"
+            },
+            {
+              "id": 5,
+              "name": "猛毒の刃"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 7,
+              "name": "戦術"
+            },
+            {
+              "id": 11,
+              "name": "吸血"
+            }
+          ],
+          "traceHash": "8bb82bbb",
+          "counts": {
+            "frontDamage": 3,
+            "frontBlock": 3,
+            "scaling": 7,
+            "draw": 6,
+            "block": 5,
+            "heal": 1,
+            "selfHarm": 1
+          }
+        },
+        {
+          "seed": "v38-validation-27",
+          "outcome": "win",
+          "floor": 10,
+          "starter": [
+            {
+              "id": 6,
+              "name": "鉄壁"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 82,
+              "name": "ブーメラン"
+            },
+            {
+              "id": 79,
+              "name": "緊急回避"
+            },
+            {
+              "id": 8,
+              "name": "大剣"
+            },
+            {
+              "id": 3,
+              "name": "双剣"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 56,
+              "name": "探索"
+            },
+            {
+              "id": 14,
+              "name": "毒霧"
+            },
+            {
+              "id": 5,
+              "name": "猛毒の刃"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 7,
+              "name": "戦術"
+            },
+            {
+              "id": 11,
+              "name": "吸血"
+            }
+          ],
+          "traceHash": "33f88fe6",
+          "counts": {
+            "frontDamage": 3,
+            "frontBlock": 5,
+            "scaling": 8,
+            "draw": 7,
+            "block": 8,
+            "heal": 1,
+            "selfHarm": 1
+          }
+        },
+        {
+          "seed": "v38-validation-28",
+          "outcome": "loss",
+          "floor": 7,
+          "starter": [
+            {
+              "id": 6,
+              "name": "鉄壁"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 82,
+              "name": "ブーメラン"
+            },
+            {
+              "id": 79,
+              "name": "緊急回避"
+            },
+            {
+              "id": 8,
+              "name": "大剣"
+            },
+            {
+              "id": 3,
+              "name": "双剣"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 56,
+              "name": "探索"
+            },
+            {
+              "id": 14,
+              "name": "毒霧"
+            },
+            {
+              "id": 5,
+              "name": "猛毒の刃"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 7,
+              "name": "戦術"
+            },
+            {
+              "id": 11,
+              "name": "吸血"
+            }
+          ],
+          "traceHash": "f8c72e41",
+          "counts": {
+            "frontDamage": 3,
+            "frontBlock": 2,
+            "scaling": 7,
+            "draw": 4,
+            "block": 4,
+            "heal": 1,
+            "selfHarm": 1
+          }
+        },
+        {
+          "seed": "v38-validation-29",
+          "outcome": "loss",
+          "floor": 10,
+          "starter": [
+            {
+              "id": 6,
+              "name": "鉄壁"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 82,
+              "name": "ブーメラン"
+            },
+            {
+              "id": 79,
+              "name": "緊急回避"
+            },
+            {
+              "id": 8,
+              "name": "大剣"
+            },
+            {
+              "id": 3,
+              "name": "双剣"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 56,
+              "name": "探索"
+            },
+            {
+              "id": 14,
+              "name": "毒霧"
+            },
+            {
+              "id": 5,
+              "name": "猛毒の刃"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 7,
+              "name": "戦術"
+            },
+            {
+              "id": 11,
+              "name": "吸血"
+            }
+          ],
+          "traceHash": "5e88399c",
+          "counts": {
+            "frontDamage": 4,
+            "frontBlock": 3,
+            "scaling": 10,
+            "draw": 8,
+            "block": 6,
+            "heal": 1,
+            "selfHarm": 2
+          }
+        },
+        {
+          "seed": "v38-validation-30",
+          "outcome": "loss",
+          "floor": 10,
+          "starter": [
+            {
+              "id": 6,
+              "name": "鉄壁"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 82,
+              "name": "ブーメラン"
+            },
+            {
+              "id": 79,
+              "name": "緊急回避"
+            },
+            {
+              "id": 8,
+              "name": "大剣"
+            },
+            {
+              "id": 3,
+              "name": "双剣"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 56,
+              "name": "探索"
+            },
+            {
+              "id": 14,
+              "name": "毒霧"
+            },
+            {
+              "id": 5,
+              "name": "猛毒の刃"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 7,
+              "name": "戦術"
+            },
+            {
+              "id": 11,
+              "name": "吸血"
+            }
+          ],
+          "traceHash": "21505a95",
+          "counts": {
+            "frontDamage": 3,
+            "frontBlock": 2,
+            "scaling": 7,
+            "draw": 6,
+            "block": 4,
+            "heal": 1,
+            "selfHarm": 1
+          }
+        },
+        {
+          "seed": "v38-validation-31",
+          "outcome": "loss",
+          "floor": 10,
+          "starter": [
+            {
+              "id": 6,
+              "name": "鉄壁"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 82,
+              "name": "ブーメラン"
+            },
+            {
+              "id": 79,
+              "name": "緊急回避"
+            },
+            {
+              "id": 8,
+              "name": "大剣"
+            },
+            {
+              "id": 3,
+              "name": "双剣"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 56,
+              "name": "探索"
+            },
+            {
+              "id": 14,
+              "name": "毒霧"
+            },
+            {
+              "id": 5,
+              "name": "猛毒の刃"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 7,
+              "name": "戦術"
+            },
+            {
+              "id": 11,
+              "name": "吸血"
+            }
+          ],
+          "traceHash": "713c430d",
+          "counts": {
+            "frontDamage": 3,
+            "frontBlock": 2,
+            "scaling": 8,
+            "draw": 7,
+            "block": 5,
+            "heal": 1,
+            "selfHarm": 1
+          }
+        },
+        {
+          "seed": "v38-validation-32",
+          "outcome": "loss",
+          "floor": 10,
+          "starter": [
+            {
+              "id": 6,
+              "name": "鉄壁"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 82,
+              "name": "ブーメラン"
+            },
+            {
+              "id": 79,
+              "name": "緊急回避"
+            },
+            {
+              "id": 8,
+              "name": "大剣"
+            },
+            {
+              "id": 3,
+              "name": "双剣"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 56,
+              "name": "探索"
+            },
+            {
+              "id": 14,
+              "name": "毒霧"
+            },
+            {
+              "id": 5,
+              "name": "猛毒の刃"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 7,
+              "name": "戦術"
+            },
+            {
+              "id": 11,
+              "name": "吸血"
+            }
+          ],
+          "traceHash": "c31587b9",
+          "counts": {
+            "frontDamage": 3,
+            "frontBlock": 2,
+            "scaling": 9,
+            "draw": 6,
+            "block": 5,
+            "heal": 1,
+            "selfHarm": 1
+          }
+        },
+        {
+          "seed": "v38-validation-33",
+          "outcome": "loss",
+          "floor": 10,
+          "starter": [
+            {
+              "id": 6,
+              "name": "鉄壁"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 82,
+              "name": "ブーメラン"
+            },
+            {
+              "id": 79,
+              "name": "緊急回避"
+            },
+            {
+              "id": 8,
+              "name": "大剣"
+            },
+            {
+              "id": 3,
+              "name": "双剣"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 56,
+              "name": "探索"
+            },
+            {
+              "id": 14,
+              "name": "毒霧"
+            },
+            {
+              "id": 5,
+              "name": "猛毒の刃"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 7,
+              "name": "戦術"
+            },
+            {
+              "id": 11,
+              "name": "吸血"
+            }
+          ],
+          "traceHash": "2ee95f6a",
+          "counts": {
+            "frontDamage": 4,
+            "frontBlock": 3,
+            "scaling": 8,
+            "draw": 7,
+            "block": 5,
+            "heal": 1,
+            "selfHarm": 2
+          }
+        },
+        {
+          "seed": "v38-validation-34",
+          "outcome": "loss",
+          "floor": 10,
+          "starter": [
+            {
+              "id": 6,
+              "name": "鉄壁"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 82,
+              "name": "ブーメラン"
+            },
+            {
+              "id": 79,
+              "name": "緊急回避"
+            },
+            {
+              "id": 8,
+              "name": "大剣"
+            },
+            {
+              "id": 3,
+              "name": "双剣"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 56,
+              "name": "探索"
+            },
+            {
+              "id": 14,
+              "name": "毒霧"
+            },
+            {
+              "id": 5,
+              "name": "猛毒の刃"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 7,
+              "name": "戦術"
+            },
+            {
+              "id": 11,
+              "name": "吸血"
+            }
+          ],
+          "traceHash": "0553f91e",
+          "counts": {
+            "frontDamage": 3,
+            "frontBlock": 2,
+            "scaling": 7,
+            "draw": 5,
+            "block": 7,
+            "heal": 1,
+            "selfHarm": 1
+          }
+        },
+        {
+          "seed": "v38-validation-35",
+          "outcome": "win",
+          "floor": 10,
+          "starter": [
+            {
+              "id": 6,
+              "name": "鉄壁"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 82,
+              "name": "ブーメラン"
+            },
+            {
+              "id": 79,
+              "name": "緊急回避"
+            },
+            {
+              "id": 8,
+              "name": "大剣"
+            },
+            {
+              "id": 3,
+              "name": "双剣"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 56,
+              "name": "探索"
+            },
+            {
+              "id": 14,
+              "name": "毒霧"
+            },
+            {
+              "id": 5,
+              "name": "猛毒の刃"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 7,
+              "name": "戦術"
+            },
+            {
+              "id": 11,
+              "name": "吸血"
+            }
+          ],
+          "traceHash": "096fc6e4",
+          "counts": {
+            "frontDamage": 3,
+            "frontBlock": 4,
+            "scaling": 8,
+            "draw": 9,
+            "block": 7,
+            "heal": 1,
+            "selfHarm": 1
+          }
+        },
+        {
+          "seed": "v38-validation-36",
+          "outcome": "loss",
+          "floor": 10,
+          "starter": [
+            {
+              "id": 6,
+              "name": "鉄壁"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 82,
+              "name": "ブーメラン"
+            },
+            {
+              "id": 79,
+              "name": "緊急回避"
+            },
+            {
+              "id": 8,
+              "name": "大剣"
+            },
+            {
+              "id": 3,
+              "name": "双剣"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 56,
+              "name": "探索"
+            },
+            {
+              "id": 14,
+              "name": "毒霧"
+            },
+            {
+              "id": 5,
+              "name": "猛毒の刃"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 7,
+              "name": "戦術"
+            },
+            {
+              "id": 11,
+              "name": "吸血"
+            }
+          ],
+          "traceHash": "770063bb",
+          "counts": {
+            "frontDamage": 4,
+            "frontBlock": 3,
+            "scaling": 8,
+            "draw": 6,
+            "block": 5,
+            "heal": 1,
+            "selfHarm": 1
+          }
+        },
+        {
+          "seed": "v38-validation-37",
+          "outcome": "loss",
+          "floor": 10,
+          "starter": [
+            {
+              "id": 6,
+              "name": "鉄壁"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 82,
+              "name": "ブーメラン"
+            },
+            {
+              "id": 79,
+              "name": "緊急回避"
+            },
+            {
+              "id": 8,
+              "name": "大剣"
+            },
+            {
+              "id": 3,
+              "name": "双剣"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 56,
+              "name": "探索"
+            },
+            {
+              "id": 14,
+              "name": "毒霧"
+            },
+            {
+              "id": 5,
+              "name": "猛毒の刃"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 7,
+              "name": "戦術"
+            },
+            {
+              "id": 11,
+              "name": "吸血"
+            }
+          ],
+          "traceHash": "59b76f21",
+          "counts": {
+            "frontDamage": 3,
+            "frontBlock": 3,
+            "scaling": 9,
+            "draw": 6,
+            "block": 5,
+            "heal": 1,
+            "selfHarm": 1
+          }
+        },
+        {
+          "seed": "v38-validation-38",
+          "outcome": "loss",
+          "floor": 10,
+          "starter": [
+            {
+              "id": 6,
+              "name": "鉄壁"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 82,
+              "name": "ブーメラン"
+            },
+            {
+              "id": 79,
+              "name": "緊急回避"
+            },
+            {
+              "id": 8,
+              "name": "大剣"
+            },
+            {
+              "id": 3,
+              "name": "双剣"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 56,
+              "name": "探索"
+            },
+            {
+              "id": 14,
+              "name": "毒霧"
+            },
+            {
+              "id": 5,
+              "name": "猛毒の刃"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 7,
+              "name": "戦術"
+            },
+            {
+              "id": 11,
+              "name": "吸血"
+            }
+          ],
+          "traceHash": "84548f8c",
+          "counts": {
+            "frontDamage": 4,
+            "frontBlock": 3,
+            "scaling": 7,
+            "draw": 7,
+            "block": 5,
+            "heal": 1,
+            "selfHarm": 2
+          }
+        },
+        {
+          "seed": "v38-validation-39",
+          "outcome": "win",
+          "floor": 10,
+          "starter": [
+            {
+              "id": 6,
+              "name": "鉄壁"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 82,
+              "name": "ブーメラン"
+            },
+            {
+              "id": 79,
+              "name": "緊急回避"
+            },
+            {
+              "id": 8,
+              "name": "大剣"
+            },
+            {
+              "id": 3,
+              "name": "双剣"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 56,
+              "name": "探索"
+            },
+            {
+              "id": 14,
+              "name": "毒霧"
+            },
+            {
+              "id": 5,
+              "name": "猛毒の刃"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 7,
+              "name": "戦術"
+            },
+            {
+              "id": 11,
+              "name": "吸血"
+            }
+          ],
+          "traceHash": "ae9df089",
+          "counts": {
+            "frontDamage": 3,
+            "frontBlock": 2,
+            "scaling": 8,
+            "draw": 5,
+            "block": 5,
+            "heal": 1,
+            "selfHarm": 1
+          }
+        },
+        {
+          "seed": "v38-validation-40",
+          "outcome": "loss",
+          "floor": 10,
+          "starter": [
+            {
+              "id": 6,
+              "name": "鉄壁"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 82,
+              "name": "ブーメラン"
+            },
+            {
+              "id": 79,
+              "name": "緊急回避"
+            },
+            {
+              "id": 8,
+              "name": "大剣"
+            },
+            {
+              "id": 3,
+              "name": "双剣"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 56,
+              "name": "探索"
+            },
+            {
+              "id": 14,
+              "name": "毒霧"
+            },
+            {
+              "id": 5,
+              "name": "猛毒の刃"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 7,
+              "name": "戦術"
+            },
+            {
+              "id": 11,
+              "name": "吸血"
+            }
+          ],
+          "traceHash": "d9d4deb9",
+          "counts": {
+            "frontDamage": 5,
+            "frontBlock": 2,
+            "scaling": 6,
+            "draw": 5,
+            "block": 5,
+            "heal": 1,
+            "selfHarm": 2
+          }
+        },
+        {
+          "seed": "v38-validation-41",
+          "outcome": "loss",
+          "floor": 8,
+          "starter": [
+            {
+              "id": 6,
+              "name": "鉄壁"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 82,
+              "name": "ブーメラン"
+            },
+            {
+              "id": 79,
+              "name": "緊急回避"
+            },
+            {
+              "id": 8,
+              "name": "大剣"
+            },
+            {
+              "id": 3,
+              "name": "双剣"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 56,
+              "name": "探索"
+            },
+            {
+              "id": 14,
+              "name": "毒霧"
+            },
+            {
+              "id": 5,
+              "name": "猛毒の刃"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 7,
+              "name": "戦術"
+            },
+            {
+              "id": 11,
+              "name": "吸血"
+            }
+          ],
+          "traceHash": "532c42a0",
+          "counts": {
+            "frontDamage": 5,
+            "frontBlock": 2,
+            "scaling": 10,
+            "draw": 5,
+            "block": 4,
+            "heal": 1,
+            "selfHarm": 1
+          }
+        },
+        {
+          "seed": "v38-validation-42",
+          "outcome": "win",
+          "floor": 10,
+          "starter": [
+            {
+              "id": 6,
+              "name": "鉄壁"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 82,
+              "name": "ブーメラン"
+            },
+            {
+              "id": 79,
+              "name": "緊急回避"
+            },
+            {
+              "id": 8,
+              "name": "大剣"
+            },
+            {
+              "id": 3,
+              "name": "双剣"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 56,
+              "name": "探索"
+            },
+            {
+              "id": 14,
+              "name": "毒霧"
+            },
+            {
+              "id": 5,
+              "name": "猛毒の刃"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 7,
+              "name": "戦術"
+            },
+            {
+              "id": 11,
+              "name": "吸血"
+            }
+          ],
+          "traceHash": "742b4ef3",
+          "counts": {
+            "frontDamage": 5,
+            "frontBlock": 3,
+            "scaling": 9,
+            "draw": 4,
+            "block": 7,
+            "heal": 1,
+            "selfHarm": 1
+          }
+        },
+        {
+          "seed": "v38-validation-43",
+          "outcome": "loss",
+          "floor": 10,
+          "starter": [
+            {
+              "id": 6,
+              "name": "鉄壁"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 82,
+              "name": "ブーメラン"
+            },
+            {
+              "id": 79,
+              "name": "緊急回避"
+            },
+            {
+              "id": 8,
+              "name": "大剣"
+            },
+            {
+              "id": 3,
+              "name": "双剣"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 56,
+              "name": "探索"
+            },
+            {
+              "id": 14,
+              "name": "毒霧"
+            },
+            {
+              "id": 5,
+              "name": "猛毒の刃"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 7,
+              "name": "戦術"
+            },
+            {
+              "id": 11,
+              "name": "吸血"
+            }
+          ],
+          "traceHash": "80324c0c",
+          "counts": {
+            "frontDamage": 3,
+            "frontBlock": 2,
+            "scaling": 8,
+            "draw": 6,
+            "block": 6,
+            "heal": 1,
+            "selfHarm": 1
+          }
+        },
+        {
+          "seed": "v38-validation-44",
+          "outcome": "loss",
+          "floor": 10,
+          "starter": [
+            {
+              "id": 6,
+              "name": "鉄壁"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 82,
+              "name": "ブーメラン"
+            },
+            {
+              "id": 79,
+              "name": "緊急回避"
+            },
+            {
+              "id": 8,
+              "name": "大剣"
+            },
+            {
+              "id": 3,
+              "name": "双剣"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 56,
+              "name": "探索"
+            },
+            {
+              "id": 14,
+              "name": "毒霧"
+            },
+            {
+              "id": 5,
+              "name": "猛毒の刃"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 7,
+              "name": "戦術"
+            },
+            {
+              "id": 11,
+              "name": "吸血"
+            }
+          ],
+          "traceHash": "9299421c",
+          "counts": {
+            "frontDamage": 4,
+            "frontBlock": 4,
+            "scaling": 7,
+            "draw": 6,
+            "block": 7,
+            "heal": 1,
+            "selfHarm": 2
+          }
+        },
+        {
+          "seed": "v38-validation-45",
+          "outcome": "loss",
+          "floor": 7,
+          "starter": [
+            {
+              "id": 6,
+              "name": "鉄壁"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 82,
+              "name": "ブーメラン"
+            },
+            {
+              "id": 79,
+              "name": "緊急回避"
+            },
+            {
+              "id": 8,
+              "name": "大剣"
+            },
+            {
+              "id": 3,
+              "name": "双剣"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 56,
+              "name": "探索"
+            },
+            {
+              "id": 14,
+              "name": "毒霧"
+            },
+            {
+              "id": 5,
+              "name": "猛毒の刃"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 7,
+              "name": "戦術"
+            },
+            {
+              "id": 11,
+              "name": "吸血"
+            }
+          ],
+          "traceHash": "b4a1d002",
+          "counts": {
+            "frontDamage": 4,
+            "frontBlock": 3,
+            "scaling": 6,
+            "draw": 5,
+            "block": 5,
+            "heal": 1,
+            "selfHarm": 2
+          }
+        },
+        {
+          "seed": "v38-validation-46",
+          "outcome": "win",
+          "floor": 10,
+          "starter": [
+            {
+              "id": 6,
+              "name": "鉄壁"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 82,
+              "name": "ブーメラン"
+            },
+            {
+              "id": 79,
+              "name": "緊急回避"
+            },
+            {
+              "id": 8,
+              "name": "大剣"
+            },
+            {
+              "id": 3,
+              "name": "双剣"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 56,
+              "name": "探索"
+            },
+            {
+              "id": 14,
+              "name": "毒霧"
+            },
+            {
+              "id": 5,
+              "name": "猛毒の刃"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 7,
+              "name": "戦術"
+            },
+            {
+              "id": 11,
+              "name": "吸血"
+            }
+          ],
+          "traceHash": "695a72c8",
+          "counts": {
+            "frontDamage": 3,
+            "frontBlock": 4,
+            "scaling": 6,
+            "draw": 6,
+            "block": 6,
+            "heal": 1,
+            "selfHarm": 1
+          }
+        },
+        {
+          "seed": "v38-validation-47",
+          "outcome": "loss",
+          "floor": 10,
+          "starter": [
+            {
+              "id": 6,
+              "name": "鉄壁"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 82,
+              "name": "ブーメラン"
+            },
+            {
+              "id": 79,
+              "name": "緊急回避"
+            },
+            {
+              "id": 8,
+              "name": "大剣"
+            },
+            {
+              "id": 3,
+              "name": "双剣"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 56,
+              "name": "探索"
+            },
+            {
+              "id": 14,
+              "name": "毒霧"
+            },
+            {
+              "id": 5,
+              "name": "猛毒の刃"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 7,
+              "name": "戦術"
+            },
+            {
+              "id": 11,
+              "name": "吸血"
+            }
+          ],
+          "traceHash": "12f55cb9",
+          "counts": {
+            "frontDamage": 5,
+            "frontBlock": 3,
+            "scaling": 9,
+            "draw": 8,
+            "block": 6,
+            "heal": 1,
+            "selfHarm": 1
+          }
+        },
+        {
+          "seed": "v38-validation-48",
+          "outcome": "win",
+          "floor": 10,
+          "starter": [
+            {
+              "id": 6,
+              "name": "鉄壁"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 82,
+              "name": "ブーメラン"
+            },
+            {
+              "id": 79,
+              "name": "緊急回避"
+            },
+            {
+              "id": 8,
+              "name": "大剣"
+            },
+            {
+              "id": 3,
+              "name": "双剣"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 56,
+              "name": "探索"
+            },
+            {
+              "id": 14,
+              "name": "毒霧"
+            },
+            {
+              "id": 5,
+              "name": "猛毒の刃"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 7,
+              "name": "戦術"
+            },
+            {
+              "id": 11,
+              "name": "吸血"
+            }
+          ],
+          "traceHash": "a4716bd9",
+          "counts": {
+            "frontDamage": 3,
+            "frontBlock": 5,
+            "scaling": 8,
+            "draw": 8,
+            "block": 7,
+            "heal": 1,
+            "selfHarm": 1
+          }
+        },
+        {
+          "seed": "v38-validation-49",
+          "outcome": "loss",
+          "floor": 10,
+          "starter": [
+            {
+              "id": 6,
+              "name": "鉄壁"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 82,
+              "name": "ブーメラン"
+            },
+            {
+              "id": 79,
+              "name": "緊急回避"
+            },
+            {
+              "id": 8,
+              "name": "大剣"
+            },
+            {
+              "id": 3,
+              "name": "双剣"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 56,
+              "name": "探索"
+            },
+            {
+              "id": 14,
+              "name": "毒霧"
+            },
+            {
+              "id": 5,
+              "name": "猛毒の刃"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 7,
+              "name": "戦術"
+            },
+            {
+              "id": 11,
+              "name": "吸血"
+            }
+          ],
+          "traceHash": "57f9d558",
+          "counts": {
+            "frontDamage": 4,
+            "frontBlock": 2,
+            "scaling": 8,
+            "draw": 5,
+            "block": 5,
+            "heal": 1,
+            "selfHarm": 2
+          }
+        }
+      ]
+    },
+    {
+      "version": "v38",
+      "trials": 50,
+      "wins": 10,
+      "progress": 9.58,
+      "causes": {
+        "ボスの高威力攻撃": 13,
+        "HP枯渇（回復不足）": 17,
+        "ビルド未完成": 7,
+        "火力不足": 1,
+        "防御不足": 2
+      },
+      "runs": [
+        {
+          "seed": "v38-validation-0",
+          "outcome": "win",
+          "floor": 10,
+          "starter": [
+            {
+              "id": 6,
+              "name": "鉄壁"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 82,
+              "name": "ブーメラン"
+            },
+            {
+              "id": 79,
+              "name": "緊急回避"
+            },
+            {
+              "id": 8,
+              "name": "大剣"
+            },
+            {
+              "id": 3,
+              "name": "双剣"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 56,
+              "name": "探索"
+            },
+            {
+              "id": 14,
+              "name": "毒霧"
+            },
+            {
+              "id": 5,
+              "name": "猛毒の刃"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 7,
+              "name": "戦術"
+            },
+            {
+              "id": 11,
+              "name": "吸血"
+            }
+          ],
+          "traceHash": "ac1427cc",
+          "counts": {
+            "frontDamage": 3,
+            "frontBlock": 2,
+            "scaling": 7,
+            "draw": 7,
+            "block": 6,
+            "heal": 1,
+            "selfHarm": 1
+          }
+        },
+        {
+          "seed": "v38-validation-1",
+          "outcome": "win",
+          "floor": 10,
+          "starter": [
+            {
+              "id": 6,
+              "name": "鉄壁"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 82,
+              "name": "ブーメラン"
+            },
+            {
+              "id": 79,
+              "name": "緊急回避"
+            },
+            {
+              "id": 8,
+              "name": "大剣"
+            },
+            {
+              "id": 3,
+              "name": "双剣"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 56,
+              "name": "探索"
+            },
+            {
+              "id": 14,
+              "name": "毒霧"
+            },
+            {
+              "id": 5,
+              "name": "猛毒の刃"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 7,
+              "name": "戦術"
+            },
+            {
+              "id": 11,
+              "name": "吸血"
+            }
+          ],
+          "traceHash": "3865c5df",
+          "counts": {
+            "frontDamage": 4,
+            "frontBlock": 2,
+            "scaling": 9,
+            "draw": 7,
+            "block": 4,
+            "heal": 1,
+            "selfHarm": 1
+          }
+        },
+        {
+          "seed": "v38-validation-2",
+          "outcome": "loss",
+          "floor": 10,
+          "starter": [
+            {
+              "id": 6,
+              "name": "鉄壁"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 82,
+              "name": "ブーメラン"
+            },
+            {
+              "id": 79,
+              "name": "緊急回避"
+            },
+            {
+              "id": 8,
+              "name": "大剣"
+            },
+            {
+              "id": 3,
+              "name": "双剣"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 56,
+              "name": "探索"
+            },
+            {
+              "id": 14,
+              "name": "毒霧"
+            },
+            {
+              "id": 5,
+              "name": "猛毒の刃"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 7,
+              "name": "戦術"
+            },
+            {
+              "id": 11,
+              "name": "吸血"
+            }
+          ],
+          "traceHash": "e1989231",
+          "counts": {
+            "frontDamage": 4,
+            "frontBlock": 4,
+            "scaling": 6,
+            "draw": 7,
+            "block": 7,
+            "heal": 1,
+            "selfHarm": 2
+          }
+        },
+        {
+          "seed": "v38-validation-3",
+          "outcome": "loss",
+          "floor": 8,
+          "starter": [
+            {
+              "id": 6,
+              "name": "鉄壁"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 82,
+              "name": "ブーメラン"
+            },
+            {
+              "id": 79,
+              "name": "緊急回避"
+            },
+            {
+              "id": 8,
+              "name": "大剣"
+            },
+            {
+              "id": 3,
+              "name": "双剣"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 56,
+              "name": "探索"
+            },
+            {
+              "id": 14,
+              "name": "毒霧"
+            },
+            {
+              "id": 5,
+              "name": "猛毒の刃"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 7,
+              "name": "戦術"
+            },
+            {
+              "id": 11,
+              "name": "吸血"
+            }
+          ],
+          "traceHash": "dcbdf944",
+          "counts": {
+            "frontDamage": 4,
+            "frontBlock": 5,
+            "scaling": 6,
+            "draw": 7,
+            "block": 7,
+            "heal": 1,
+            "selfHarm": 1
+          }
+        },
+        {
+          "seed": "v38-validation-4",
+          "outcome": "loss",
+          "floor": 10,
+          "starter": [
+            {
+              "id": 6,
+              "name": "鉄壁"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 82,
+              "name": "ブーメラン"
+            },
+            {
+              "id": 79,
+              "name": "緊急回避"
+            },
+            {
+              "id": 8,
+              "name": "大剣"
+            },
+            {
+              "id": 3,
+              "name": "双剣"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 56,
+              "name": "探索"
+            },
+            {
+              "id": 14,
+              "name": "毒霧"
+            },
+            {
+              "id": 5,
+              "name": "猛毒の刃"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 7,
+              "name": "戦術"
+            },
+            {
+              "id": 11,
+              "name": "吸血"
+            }
+          ],
+          "traceHash": "cb9ccdd3",
+          "counts": {
+            "frontDamage": 4,
+            "frontBlock": 5,
+            "scaling": 8,
+            "draw": 6,
+            "block": 7,
+            "heal": 1,
+            "selfHarm": 2
+          }
+        },
+        {
+          "seed": "v38-validation-5",
+          "outcome": "win",
+          "floor": 10,
+          "starter": [
+            {
+              "id": 6,
+              "name": "鉄壁"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 82,
+              "name": "ブーメラン"
+            },
+            {
+              "id": 79,
+              "name": "緊急回避"
+            },
+            {
+              "id": 8,
+              "name": "大剣"
+            },
+            {
+              "id": 3,
+              "name": "双剣"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 56,
+              "name": "探索"
+            },
+            {
+              "id": 14,
+              "name": "毒霧"
+            },
+            {
+              "id": 5,
+              "name": "猛毒の刃"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 7,
+              "name": "戦術"
+            },
+            {
+              "id": 11,
+              "name": "吸血"
+            }
+          ],
+          "traceHash": "9566b6ea",
+          "counts": {
+            "frontDamage": 3,
+            "frontBlock": 3,
+            "scaling": 8,
+            "draw": 9,
+            "block": 6,
+            "heal": 1,
+            "selfHarm": 1
+          }
+        },
+        {
+          "seed": "v38-validation-6",
+          "outcome": "win",
+          "floor": 10,
+          "starter": [
+            {
+              "id": 6,
+              "name": "鉄壁"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 82,
+              "name": "ブーメラン"
+            },
+            {
+              "id": 79,
+              "name": "緊急回避"
+            },
+            {
+              "id": 8,
+              "name": "大剣"
+            },
+            {
+              "id": 3,
+              "name": "双剣"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 56,
+              "name": "探索"
+            },
+            {
+              "id": 14,
+              "name": "毒霧"
+            },
+            {
+              "id": 5,
+              "name": "猛毒の刃"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 7,
+              "name": "戦術"
+            },
+            {
+              "id": 11,
+              "name": "吸血"
+            }
+          ],
+          "traceHash": "884d4167",
+          "counts": {
+            "frontDamage": 4,
+            "frontBlock": 3,
+            "scaling": 4,
+            "draw": 4,
+            "block": 5,
+            "heal": 1,
+            "selfHarm": 2
+          }
+        },
+        {
+          "seed": "v38-validation-7",
+          "outcome": "loss",
+          "floor": 10,
+          "starter": [
+            {
+              "id": 6,
+              "name": "鉄壁"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 82,
+              "name": "ブーメラン"
+            },
+            {
+              "id": 79,
+              "name": "緊急回避"
+            },
+            {
+              "id": 8,
+              "name": "大剣"
+            },
+            {
+              "id": 3,
+              "name": "双剣"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 56,
+              "name": "探索"
+            },
+            {
+              "id": 14,
+              "name": "毒霧"
+            },
+            {
+              "id": 5,
+              "name": "猛毒の刃"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 7,
+              "name": "戦術"
+            },
+            {
+              "id": 11,
+              "name": "吸血"
+            }
+          ],
+          "traceHash": "5be535f1",
+          "counts": {
+            "frontDamage": 4,
+            "frontBlock": 2,
+            "scaling": 12,
+            "draw": 6,
+            "block": 9,
+            "heal": 1,
+            "selfHarm": 1
+          }
+        },
+        {
+          "seed": "v38-validation-8",
+          "outcome": "loss",
+          "floor": 10,
+          "starter": [
+            {
+              "id": 6,
+              "name": "鉄壁"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 82,
+              "name": "ブーメラン"
+            },
+            {
+              "id": 79,
+              "name": "緊急回避"
+            },
+            {
+              "id": 8,
+              "name": "大剣"
+            },
+            {
+              "id": 3,
+              "name": "双剣"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 56,
+              "name": "探索"
+            },
+            {
+              "id": 14,
+              "name": "毒霧"
+            },
+            {
+              "id": 5,
+              "name": "猛毒の刃"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 7,
+              "name": "戦術"
+            },
+            {
+              "id": 11,
+              "name": "吸血"
+            }
+          ],
+          "traceHash": "25bc104f",
+          "counts": {
+            "frontDamage": 4,
+            "frontBlock": 2,
+            "scaling": 7,
+            "draw": 6,
+            "block": 4,
+            "heal": 1,
+            "selfHarm": 1
+          }
+        },
+        {
+          "seed": "v38-validation-9",
+          "outcome": "loss",
+          "floor": 10,
+          "starter": [
+            {
+              "id": 6,
+              "name": "鉄壁"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 82,
+              "name": "ブーメラン"
+            },
+            {
+              "id": 79,
+              "name": "緊急回避"
+            },
+            {
+              "id": 8,
+              "name": "大剣"
+            },
+            {
+              "id": 3,
+              "name": "双剣"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 56,
+              "name": "探索"
+            },
+            {
+              "id": 14,
+              "name": "毒霧"
+            },
+            {
+              "id": 5,
+              "name": "猛毒の刃"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 7,
+              "name": "戦術"
+            },
+            {
+              "id": 11,
+              "name": "吸血"
+            }
+          ],
+          "traceHash": "8fb11481",
+          "counts": {
+            "frontDamage": 3,
+            "frontBlock": 3,
+            "scaling": 9,
+            "draw": 6,
+            "block": 5,
+            "heal": 1,
+            "selfHarm": 1
+          }
+        },
+        {
+          "seed": "v38-validation-10",
+          "outcome": "loss",
+          "floor": 10,
+          "starter": [
+            {
+              "id": 6,
+              "name": "鉄壁"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 82,
+              "name": "ブーメラン"
+            },
+            {
+              "id": 79,
+              "name": "緊急回避"
+            },
+            {
+              "id": 8,
+              "name": "大剣"
+            },
+            {
+              "id": 3,
+              "name": "双剣"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 56,
+              "name": "探索"
+            },
+            {
+              "id": 14,
+              "name": "毒霧"
+            },
+            {
+              "id": 5,
+              "name": "猛毒の刃"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 7,
+              "name": "戦術"
+            },
+            {
+              "id": 11,
+              "name": "吸血"
+            }
+          ],
+          "traceHash": "10138d7d",
+          "counts": {
+            "frontDamage": 4,
+            "frontBlock": 4,
+            "scaling": 10,
+            "draw": 8,
+            "block": 6,
+            "heal": 1,
+            "selfHarm": 1
+          }
+        },
+        {
+          "seed": "v38-validation-11",
+          "outcome": "loss",
+          "floor": 10,
+          "starter": [
+            {
+              "id": 6,
+              "name": "鉄壁"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 82,
+              "name": "ブーメラン"
+            },
+            {
+              "id": 79,
+              "name": "緊急回避"
+            },
+            {
+              "id": 8,
+              "name": "大剣"
+            },
+            {
+              "id": 3,
+              "name": "双剣"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 56,
+              "name": "探索"
+            },
+            {
+              "id": 14,
+              "name": "毒霧"
+            },
+            {
+              "id": 5,
+              "name": "猛毒の刃"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 7,
+              "name": "戦術"
+            },
+            {
+              "id": 11,
+              "name": "吸血"
+            }
+          ],
+          "traceHash": "5615b535",
+          "counts": {
+            "frontDamage": 4,
+            "frontBlock": 3,
+            "scaling": 8,
+            "draw": 7,
+            "block": 5,
+            "heal": 1,
+            "selfHarm": 1
+          }
+        },
+        {
+          "seed": "v38-validation-12",
+          "outcome": "loss",
+          "floor": 10,
+          "starter": [
+            {
+              "id": 6,
+              "name": "鉄壁"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 82,
+              "name": "ブーメラン"
+            },
+            {
+              "id": 79,
+              "name": "緊急回避"
+            },
+            {
+              "id": 8,
+              "name": "大剣"
+            },
+            {
+              "id": 3,
+              "name": "双剣"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 56,
+              "name": "探索"
+            },
+            {
+              "id": 14,
+              "name": "毒霧"
+            },
+            {
+              "id": 5,
+              "name": "猛毒の刃"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 7,
+              "name": "戦術"
+            },
+            {
+              "id": 11,
+              "name": "吸血"
+            }
+          ],
+          "traceHash": "2b2f5c95",
+          "counts": {
+            "frontDamage": 3,
+            "frontBlock": 5,
+            "scaling": 6,
+            "draw": 8,
+            "block": 7,
+            "heal": 1,
+            "selfHarm": 1
+          }
+        },
+        {
+          "seed": "v38-validation-13",
+          "outcome": "loss",
+          "floor": 8,
+          "starter": [
+            {
+              "id": 6,
+              "name": "鉄壁"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 82,
+              "name": "ブーメラン"
+            },
+            {
+              "id": 79,
+              "name": "緊急回避"
+            },
+            {
+              "id": 8,
+              "name": "大剣"
+            },
+            {
+              "id": 3,
+              "name": "双剣"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 56,
+              "name": "探索"
+            },
+            {
+              "id": 14,
+              "name": "毒霧"
+            },
+            {
+              "id": 5,
+              "name": "猛毒の刃"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 7,
+              "name": "戦術"
+            },
+            {
+              "id": 11,
+              "name": "吸血"
+            }
+          ],
+          "traceHash": "4ba5337b",
+          "counts": {
+            "frontDamage": 4,
+            "frontBlock": 2,
+            "scaling": 6,
+            "draw": 4,
+            "block": 7,
+            "heal": 1,
+            "selfHarm": 1
+          }
+        },
+        {
+          "seed": "v38-validation-14",
+          "outcome": "loss",
+          "floor": 10,
+          "starter": [
+            {
+              "id": 6,
+              "name": "鉄壁"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 82,
+              "name": "ブーメラン"
+            },
+            {
+              "id": 79,
+              "name": "緊急回避"
+            },
+            {
+              "id": 8,
+              "name": "大剣"
+            },
+            {
+              "id": 3,
+              "name": "双剣"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 56,
+              "name": "探索"
+            },
+            {
+              "id": 14,
+              "name": "毒霧"
+            },
+            {
+              "id": 5,
+              "name": "猛毒の刃"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 7,
+              "name": "戦術"
+            },
+            {
+              "id": 11,
+              "name": "吸血"
+            }
+          ],
+          "traceHash": "c7de28ac",
+          "counts": {
+            "frontDamage": 3,
+            "frontBlock": 3,
+            "scaling": 9,
+            "draw": 6,
+            "block": 7,
+            "heal": 1,
+            "selfHarm": 1
+          }
+        },
+        {
+          "seed": "v38-validation-15",
+          "outcome": "loss",
+          "floor": 8,
+          "starter": [
+            {
+              "id": 6,
+              "name": "鉄壁"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 82,
+              "name": "ブーメラン"
+            },
+            {
+              "id": 79,
+              "name": "緊急回避"
+            },
+            {
+              "id": 8,
+              "name": "大剣"
+            },
+            {
+              "id": 3,
+              "name": "双剣"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 56,
+              "name": "探索"
+            },
+            {
+              "id": 14,
+              "name": "毒霧"
+            },
+            {
+              "id": 5,
+              "name": "猛毒の刃"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 7,
+              "name": "戦術"
+            },
+            {
+              "id": 11,
+              "name": "吸血"
+            }
+          ],
+          "traceHash": "8e440f3b",
+          "counts": {
+            "frontDamage": 4,
+            "frontBlock": 2,
+            "scaling": 7,
+            "draw": 5,
+            "block": 5,
+            "heal": 1,
+            "selfHarm": 2
+          }
+        },
+        {
+          "seed": "v38-validation-16",
+          "outcome": "loss",
+          "floor": 8,
+          "starter": [
+            {
+              "id": 6,
+              "name": "鉄壁"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 82,
+              "name": "ブーメラン"
+            },
+            {
+              "id": 79,
+              "name": "緊急回避"
+            },
+            {
+              "id": 8,
+              "name": "大剣"
+            },
+            {
+              "id": 3,
+              "name": "双剣"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 56,
+              "name": "探索"
+            },
+            {
+              "id": 14,
+              "name": "毒霧"
+            },
+            {
+              "id": 5,
+              "name": "猛毒の刃"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 7,
+              "name": "戦術"
+            },
+            {
+              "id": 11,
+              "name": "吸血"
+            }
+          ],
+          "traceHash": "654aa4fc",
+          "counts": {
+            "frontDamage": 3,
+            "frontBlock": 4,
+            "scaling": 6,
+            "draw": 7,
+            "block": 6,
+            "heal": 1,
+            "selfHarm": 1
+          }
+        },
+        {
+          "seed": "v38-validation-17",
+          "outcome": "loss",
+          "floor": 10,
+          "starter": [
+            {
+              "id": 6,
+              "name": "鉄壁"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 82,
+              "name": "ブーメラン"
+            },
+            {
+              "id": 79,
+              "name": "緊急回避"
+            },
+            {
+              "id": 8,
+              "name": "大剣"
+            },
+            {
+              "id": 3,
+              "name": "双剣"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 56,
+              "name": "探索"
+            },
+            {
+              "id": 14,
+              "name": "毒霧"
+            },
+            {
+              "id": 5,
+              "name": "猛毒の刃"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 7,
+              "name": "戦術"
+            },
+            {
+              "id": 11,
+              "name": "吸血"
+            }
+          ],
+          "traceHash": "c5e63ff9",
+          "counts": {
+            "frontDamage": 4,
+            "frontBlock": 5,
+            "scaling": 7,
+            "draw": 7,
+            "block": 8,
+            "heal": 1,
+            "selfHarm": 2
+          }
+        },
+        {
+          "seed": "v38-validation-18",
+          "outcome": "loss",
+          "floor": 7,
+          "starter": [
+            {
+              "id": 6,
+              "name": "鉄壁"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 82,
+              "name": "ブーメラン"
+            },
+            {
+              "id": 79,
+              "name": "緊急回避"
+            },
+            {
+              "id": 8,
+              "name": "大剣"
+            },
+            {
+              "id": 3,
+              "name": "双剣"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 56,
+              "name": "探索"
+            },
+            {
+              "id": 14,
+              "name": "毒霧"
+            },
+            {
+              "id": 5,
+              "name": "猛毒の刃"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 7,
+              "name": "戦術"
+            },
+            {
+              "id": 11,
+              "name": "吸血"
+            }
+          ],
+          "traceHash": "97146dc1",
+          "counts": {
+            "frontDamage": 3,
+            "frontBlock": 2,
+            "scaling": 8,
+            "draw": 5,
+            "block": 4,
+            "heal": 1,
+            "selfHarm": 1
+          }
+        },
+        {
+          "seed": "v38-validation-19",
+          "outcome": "loss",
+          "floor": 8,
+          "starter": [
+            {
+              "id": 6,
+              "name": "鉄壁"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 82,
+              "name": "ブーメラン"
+            },
+            {
+              "id": 79,
+              "name": "緊急回避"
+            },
+            {
+              "id": 8,
+              "name": "大剣"
+            },
+            {
+              "id": 3,
+              "name": "双剣"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 56,
+              "name": "探索"
+            },
+            {
+              "id": 14,
+              "name": "毒霧"
+            },
+            {
+              "id": 5,
+              "name": "猛毒の刃"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 7,
+              "name": "戦術"
+            },
+            {
+              "id": 11,
+              "name": "吸血"
+            }
+          ],
+          "traceHash": "50531097",
+          "counts": {
+            "frontDamage": 5,
+            "frontBlock": 3,
+            "scaling": 8,
+            "draw": 8,
+            "block": 5,
+            "heal": 1,
+            "selfHarm": 2
+          }
+        },
+        {
+          "seed": "v38-validation-20",
+          "outcome": "loss",
+          "floor": 10,
+          "starter": [
+            {
+              "id": 6,
+              "name": "鉄壁"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 82,
+              "name": "ブーメラン"
+            },
+            {
+              "id": 79,
+              "name": "緊急回避"
+            },
+            {
+              "id": 8,
+              "name": "大剣"
+            },
+            {
+              "id": 3,
+              "name": "双剣"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 56,
+              "name": "探索"
+            },
+            {
+              "id": 14,
+              "name": "毒霧"
+            },
+            {
+              "id": 5,
+              "name": "猛毒の刃"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 7,
+              "name": "戦術"
+            },
+            {
+              "id": 11,
+              "name": "吸血"
+            }
+          ],
+          "traceHash": "a06033d6",
+          "counts": {
+            "frontDamage": 3,
+            "frontBlock": 3,
+            "scaling": 7,
+            "draw": 4,
+            "block": 5,
+            "heal": 1,
+            "selfHarm": 2
+          }
+        },
+        {
+          "seed": "v38-validation-21",
+          "outcome": "win",
+          "floor": 10,
+          "starter": [
+            {
+              "id": 6,
+              "name": "鉄壁"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 82,
+              "name": "ブーメラン"
+            },
+            {
+              "id": 79,
+              "name": "緊急回避"
+            },
+            {
+              "id": 8,
+              "name": "大剣"
+            },
+            {
+              "id": 3,
+              "name": "双剣"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 56,
+              "name": "探索"
+            },
+            {
+              "id": 14,
+              "name": "毒霧"
+            },
+            {
+              "id": 5,
+              "name": "猛毒の刃"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 7,
+              "name": "戦術"
+            },
+            {
+              "id": 11,
+              "name": "吸血"
+            }
+          ],
+          "traceHash": "ee280946",
+          "counts": {
+            "frontDamage": 4,
+            "frontBlock": 2,
+            "scaling": 10,
+            "draw": 6,
+            "block": 5,
+            "heal": 1,
+            "selfHarm": 1
+          }
+        },
+        {
+          "seed": "v38-validation-22",
+          "outcome": "loss",
+          "floor": 10,
+          "starter": [
+            {
+              "id": 6,
+              "name": "鉄壁"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 82,
+              "name": "ブーメラン"
+            },
+            {
+              "id": 79,
+              "name": "緊急回避"
+            },
+            {
+              "id": 8,
+              "name": "大剣"
+            },
+            {
+              "id": 3,
+              "name": "双剣"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 56,
+              "name": "探索"
+            },
+            {
+              "id": 14,
+              "name": "毒霧"
+            },
+            {
+              "id": 5,
+              "name": "猛毒の刃"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 7,
+              "name": "戦術"
+            },
+            {
+              "id": 11,
+              "name": "吸血"
+            }
+          ],
+          "traceHash": "8f930515",
+          "counts": {
+            "frontDamage": 4,
+            "frontBlock": 4,
+            "scaling": 7,
+            "draw": 7,
+            "block": 7,
+            "heal": 1,
+            "selfHarm": 2
+          }
+        },
+        {
+          "seed": "v38-validation-23",
+          "outcome": "win",
+          "floor": 10,
+          "starter": [
+            {
+              "id": 6,
+              "name": "鉄壁"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 82,
+              "name": "ブーメラン"
+            },
+            {
+              "id": 79,
+              "name": "緊急回避"
+            },
+            {
+              "id": 8,
+              "name": "大剣"
+            },
+            {
+              "id": 3,
+              "name": "双剣"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 56,
+              "name": "探索"
+            },
+            {
+              "id": 14,
+              "name": "毒霧"
+            },
+            {
+              "id": 5,
+              "name": "猛毒の刃"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 7,
+              "name": "戦術"
+            },
+            {
+              "id": 11,
+              "name": "吸血"
+            }
+          ],
+          "traceHash": "15f0ea5b",
+          "counts": {
+            "frontDamage": 3,
+            "frontBlock": 2,
+            "scaling": 7,
+            "draw": 4,
+            "block": 4,
+            "heal": 1,
+            "selfHarm": 1
+          }
+        },
+        {
+          "seed": "v38-validation-24",
+          "outcome": "loss",
+          "floor": 10,
+          "starter": [
+            {
+              "id": 6,
+              "name": "鉄壁"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 82,
+              "name": "ブーメラン"
+            },
+            {
+              "id": 79,
+              "name": "緊急回避"
+            },
+            {
+              "id": 8,
+              "name": "大剣"
+            },
+            {
+              "id": 3,
+              "name": "双剣"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 56,
+              "name": "探索"
+            },
+            {
+              "id": 14,
+              "name": "毒霧"
+            },
+            {
+              "id": 5,
+              "name": "猛毒の刃"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 7,
+              "name": "戦術"
+            },
+            {
+              "id": 11,
+              "name": "吸血"
+            }
+          ],
+          "traceHash": "1b886fa2",
+          "counts": {
+            "frontDamage": 4,
+            "frontBlock": 4,
+            "scaling": 6,
+            "draw": 6,
+            "block": 7,
+            "heal": 1,
+            "selfHarm": 1
+          }
+        },
+        {
+          "seed": "v38-validation-25",
+          "outcome": "loss",
+          "floor": 10,
+          "starter": [
+            {
+              "id": 6,
+              "name": "鉄壁"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 82,
+              "name": "ブーメラン"
+            },
+            {
+              "id": 79,
+              "name": "緊急回避"
+            },
+            {
+              "id": 8,
+              "name": "大剣"
+            },
+            {
+              "id": 3,
+              "name": "双剣"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 56,
+              "name": "探索"
+            },
+            {
+              "id": 14,
+              "name": "毒霧"
+            },
+            {
+              "id": 5,
+              "name": "猛毒の刃"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 7,
+              "name": "戦術"
+            },
+            {
+              "id": 11,
+              "name": "吸血"
+            }
+          ],
+          "traceHash": "a88a94e9",
+          "counts": {
+            "frontDamage": 4,
+            "frontBlock": 2,
+            "scaling": 12,
+            "draw": 7,
+            "block": 6,
+            "heal": 1,
+            "selfHarm": 1
+          }
+        },
+        {
+          "seed": "v38-validation-26",
+          "outcome": "loss",
+          "floor": 10,
+          "starter": [
+            {
+              "id": 6,
+              "name": "鉄壁"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 82,
+              "name": "ブーメラン"
+            },
+            {
+              "id": 79,
+              "name": "緊急回避"
+            },
+            {
+              "id": 8,
+              "name": "大剣"
+            },
+            {
+              "id": 3,
+              "name": "双剣"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 56,
+              "name": "探索"
+            },
+            {
+              "id": 14,
+              "name": "毒霧"
+            },
+            {
+              "id": 5,
+              "name": "猛毒の刃"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 7,
+              "name": "戦術"
+            },
+            {
+              "id": 11,
+              "name": "吸血"
+            }
+          ],
+          "traceHash": "dd834601",
+          "counts": {
+            "frontDamage": 3,
+            "frontBlock": 3,
+            "scaling": 7,
+            "draw": 6,
+            "block": 5,
+            "heal": 1,
+            "selfHarm": 1
+          }
+        },
+        {
+          "seed": "v38-validation-27",
+          "outcome": "win",
+          "floor": 10,
+          "starter": [
+            {
+              "id": 6,
+              "name": "鉄壁"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 82,
+              "name": "ブーメラン"
+            },
+            {
+              "id": 79,
+              "name": "緊急回避"
+            },
+            {
+              "id": 8,
+              "name": "大剣"
+            },
+            {
+              "id": 3,
+              "name": "双剣"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 56,
+              "name": "探索"
+            },
+            {
+              "id": 14,
+              "name": "毒霧"
+            },
+            {
+              "id": 5,
+              "name": "猛毒の刃"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 7,
+              "name": "戦術"
+            },
+            {
+              "id": 11,
+              "name": "吸血"
+            }
+          ],
+          "traceHash": "afe7d3ca",
+          "counts": {
+            "frontDamage": 3,
+            "frontBlock": 5,
+            "scaling": 8,
+            "draw": 7,
+            "block": 8,
+            "heal": 1,
+            "selfHarm": 1
+          }
+        },
+        {
+          "seed": "v38-validation-28",
+          "outcome": "loss",
+          "floor": 7,
+          "starter": [
+            {
+              "id": 6,
+              "name": "鉄壁"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 82,
+              "name": "ブーメラン"
+            },
+            {
+              "id": 79,
+              "name": "緊急回避"
+            },
+            {
+              "id": 8,
+              "name": "大剣"
+            },
+            {
+              "id": 3,
+              "name": "双剣"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 56,
+              "name": "探索"
+            },
+            {
+              "id": 14,
+              "name": "毒霧"
+            },
+            {
+              "id": 5,
+              "name": "猛毒の刃"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 7,
+              "name": "戦術"
+            },
+            {
+              "id": 11,
+              "name": "吸血"
+            }
+          ],
+          "traceHash": "d547fa6b",
+          "counts": {
+            "frontDamage": 3,
+            "frontBlock": 2,
+            "scaling": 7,
+            "draw": 4,
+            "block": 4,
+            "heal": 1,
+            "selfHarm": 1
+          }
+        },
+        {
+          "seed": "v38-validation-29",
+          "outcome": "loss",
+          "floor": 10,
+          "starter": [
+            {
+              "id": 6,
+              "name": "鉄壁"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 82,
+              "name": "ブーメラン"
+            },
+            {
+              "id": 79,
+              "name": "緊急回避"
+            },
+            {
+              "id": 8,
+              "name": "大剣"
+            },
+            {
+              "id": 3,
+              "name": "双剣"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 56,
+              "name": "探索"
+            },
+            {
+              "id": 14,
+              "name": "毒霧"
+            },
+            {
+              "id": 5,
+              "name": "猛毒の刃"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 7,
+              "name": "戦術"
+            },
+            {
+              "id": 11,
+              "name": "吸血"
+            }
+          ],
+          "traceHash": "b803c7f7",
+          "counts": {
+            "frontDamage": 4,
+            "frontBlock": 3,
+            "scaling": 10,
+            "draw": 8,
+            "block": 6,
+            "heal": 1,
+            "selfHarm": 2
+          }
+        },
+        {
+          "seed": "v38-validation-30",
+          "outcome": "loss",
+          "floor": 10,
+          "starter": [
+            {
+              "id": 6,
+              "name": "鉄壁"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 82,
+              "name": "ブーメラン"
+            },
+            {
+              "id": 79,
+              "name": "緊急回避"
+            },
+            {
+              "id": 8,
+              "name": "大剣"
+            },
+            {
+              "id": 3,
+              "name": "双剣"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 56,
+              "name": "探索"
+            },
+            {
+              "id": 14,
+              "name": "毒霧"
+            },
+            {
+              "id": 5,
+              "name": "猛毒の刃"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 7,
+              "name": "戦術"
+            },
+            {
+              "id": 11,
+              "name": "吸血"
+            }
+          ],
+          "traceHash": "5c0c73a4",
+          "counts": {
+            "frontDamage": 3,
+            "frontBlock": 2,
+            "scaling": 7,
+            "draw": 6,
+            "block": 4,
+            "heal": 1,
+            "selfHarm": 1
+          }
+        },
+        {
+          "seed": "v38-validation-31",
+          "outcome": "loss",
+          "floor": 10,
+          "starter": [
+            {
+              "id": 6,
+              "name": "鉄壁"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 82,
+              "name": "ブーメラン"
+            },
+            {
+              "id": 79,
+              "name": "緊急回避"
+            },
+            {
+              "id": 8,
+              "name": "大剣"
+            },
+            {
+              "id": 3,
+              "name": "双剣"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 56,
+              "name": "探索"
+            },
+            {
+              "id": 14,
+              "name": "毒霧"
+            },
+            {
+              "id": 5,
+              "name": "猛毒の刃"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 7,
+              "name": "戦術"
+            },
+            {
+              "id": 11,
+              "name": "吸血"
+            }
+          ],
+          "traceHash": "891106d2",
+          "counts": {
+            "frontDamage": 3,
+            "frontBlock": 2,
+            "scaling": 8,
+            "draw": 7,
+            "block": 5,
+            "heal": 1,
+            "selfHarm": 1
+          }
+        },
+        {
+          "seed": "v38-validation-32",
+          "outcome": "loss",
+          "floor": 10,
+          "starter": [
+            {
+              "id": 6,
+              "name": "鉄壁"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 82,
+              "name": "ブーメラン"
+            },
+            {
+              "id": 79,
+              "name": "緊急回避"
+            },
+            {
+              "id": 8,
+              "name": "大剣"
+            },
+            {
+              "id": 3,
+              "name": "双剣"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 56,
+              "name": "探索"
+            },
+            {
+              "id": 14,
+              "name": "毒霧"
+            },
+            {
+              "id": 5,
+              "name": "猛毒の刃"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 7,
+              "name": "戦術"
+            },
+            {
+              "id": 11,
+              "name": "吸血"
+            }
+          ],
+          "traceHash": "d38339a5",
+          "counts": {
+            "frontDamage": 3,
+            "frontBlock": 2,
+            "scaling": 9,
+            "draw": 6,
+            "block": 5,
+            "heal": 1,
+            "selfHarm": 1
+          }
+        },
+        {
+          "seed": "v38-validation-33",
+          "outcome": "loss",
+          "floor": 10,
+          "starter": [
+            {
+              "id": 6,
+              "name": "鉄壁"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 82,
+              "name": "ブーメラン"
+            },
+            {
+              "id": 79,
+              "name": "緊急回避"
+            },
+            {
+              "id": 8,
+              "name": "大剣"
+            },
+            {
+              "id": 3,
+              "name": "双剣"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 56,
+              "name": "探索"
+            },
+            {
+              "id": 14,
+              "name": "毒霧"
+            },
+            {
+              "id": 5,
+              "name": "猛毒の刃"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 7,
+              "name": "戦術"
+            },
+            {
+              "id": 11,
+              "name": "吸血"
+            }
+          ],
+          "traceHash": "7fdd222b",
+          "counts": {
+            "frontDamage": 4,
+            "frontBlock": 3,
+            "scaling": 8,
+            "draw": 7,
+            "block": 5,
+            "heal": 1,
+            "selfHarm": 2
+          }
+        },
+        {
+          "seed": "v38-validation-34",
+          "outcome": "loss",
+          "floor": 10,
+          "starter": [
+            {
+              "id": 6,
+              "name": "鉄壁"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 82,
+              "name": "ブーメラン"
+            },
+            {
+              "id": 79,
+              "name": "緊急回避"
+            },
+            {
+              "id": 8,
+              "name": "大剣"
+            },
+            {
+              "id": 3,
+              "name": "双剣"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 56,
+              "name": "探索"
+            },
+            {
+              "id": 14,
+              "name": "毒霧"
+            },
+            {
+              "id": 5,
+              "name": "猛毒の刃"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 7,
+              "name": "戦術"
+            },
+            {
+              "id": 11,
+              "name": "吸血"
+            }
+          ],
+          "traceHash": "9c73e488",
+          "counts": {
+            "frontDamage": 3,
+            "frontBlock": 2,
+            "scaling": 7,
+            "draw": 5,
+            "block": 7,
+            "heal": 1,
+            "selfHarm": 1
+          }
+        },
+        {
+          "seed": "v38-validation-35",
+          "outcome": "win",
+          "floor": 10,
+          "starter": [
+            {
+              "id": 6,
+              "name": "鉄壁"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 82,
+              "name": "ブーメラン"
+            },
+            {
+              "id": 79,
+              "name": "緊急回避"
+            },
+            {
+              "id": 8,
+              "name": "大剣"
+            },
+            {
+              "id": 3,
+              "name": "双剣"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 56,
+              "name": "探索"
+            },
+            {
+              "id": 14,
+              "name": "毒霧"
+            },
+            {
+              "id": 5,
+              "name": "猛毒の刃"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 7,
+              "name": "戦術"
+            },
+            {
+              "id": 11,
+              "name": "吸血"
+            }
+          ],
+          "traceHash": "6080ca21",
+          "counts": {
+            "frontDamage": 3,
+            "frontBlock": 4,
+            "scaling": 8,
+            "draw": 9,
+            "block": 7,
+            "heal": 1,
+            "selfHarm": 1
+          }
+        },
+        {
+          "seed": "v38-validation-36",
+          "outcome": "loss",
+          "floor": 10,
+          "starter": [
+            {
+              "id": 6,
+              "name": "鉄壁"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 82,
+              "name": "ブーメラン"
+            },
+            {
+              "id": 79,
+              "name": "緊急回避"
+            },
+            {
+              "id": 8,
+              "name": "大剣"
+            },
+            {
+              "id": 3,
+              "name": "双剣"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 56,
+              "name": "探索"
+            },
+            {
+              "id": 14,
+              "name": "毒霧"
+            },
+            {
+              "id": 5,
+              "name": "猛毒の刃"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 7,
+              "name": "戦術"
+            },
+            {
+              "id": 11,
+              "name": "吸血"
+            }
+          ],
+          "traceHash": "568dd3c5",
+          "counts": {
+            "frontDamage": 4,
+            "frontBlock": 3,
+            "scaling": 8,
+            "draw": 6,
+            "block": 5,
+            "heal": 1,
+            "selfHarm": 1
+          }
+        },
+        {
+          "seed": "v38-validation-37",
+          "outcome": "loss",
+          "floor": 10,
+          "starter": [
+            {
+              "id": 6,
+              "name": "鉄壁"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 82,
+              "name": "ブーメラン"
+            },
+            {
+              "id": 79,
+              "name": "緊急回避"
+            },
+            {
+              "id": 8,
+              "name": "大剣"
+            },
+            {
+              "id": 3,
+              "name": "双剣"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 56,
+              "name": "探索"
+            },
+            {
+              "id": 14,
+              "name": "毒霧"
+            },
+            {
+              "id": 5,
+              "name": "猛毒の刃"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 7,
+              "name": "戦術"
+            },
+            {
+              "id": 11,
+              "name": "吸血"
+            }
+          ],
+          "traceHash": "47c8a151",
+          "counts": {
+            "frontDamage": 3,
+            "frontBlock": 3,
+            "scaling": 9,
+            "draw": 6,
+            "block": 5,
+            "heal": 1,
+            "selfHarm": 1
+          }
+        },
+        {
+          "seed": "v38-validation-38",
+          "outcome": "loss",
+          "floor": 10,
+          "starter": [
+            {
+              "id": 6,
+              "name": "鉄壁"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 82,
+              "name": "ブーメラン"
+            },
+            {
+              "id": 79,
+              "name": "緊急回避"
+            },
+            {
+              "id": 8,
+              "name": "大剣"
+            },
+            {
+              "id": 3,
+              "name": "双剣"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 56,
+              "name": "探索"
+            },
+            {
+              "id": 14,
+              "name": "毒霧"
+            },
+            {
+              "id": 5,
+              "name": "猛毒の刃"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 7,
+              "name": "戦術"
+            },
+            {
+              "id": 11,
+              "name": "吸血"
+            }
+          ],
+          "traceHash": "5ce48593",
+          "counts": {
+            "frontDamage": 4,
+            "frontBlock": 3,
+            "scaling": 7,
+            "draw": 7,
+            "block": 5,
+            "heal": 1,
+            "selfHarm": 2
+          }
+        },
+        {
+          "seed": "v38-validation-39",
+          "outcome": "loss",
+          "floor": 10,
+          "starter": [
+            {
+              "id": 6,
+              "name": "鉄壁"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 82,
+              "name": "ブーメラン"
+            },
+            {
+              "id": 79,
+              "name": "緊急回避"
+            },
+            {
+              "id": 8,
+              "name": "大剣"
+            },
+            {
+              "id": 3,
+              "name": "双剣"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 56,
+              "name": "探索"
+            },
+            {
+              "id": 14,
+              "name": "毒霧"
+            },
+            {
+              "id": 5,
+              "name": "猛毒の刃"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 7,
+              "name": "戦術"
+            },
+            {
+              "id": 11,
+              "name": "吸血"
+            }
+          ],
+          "traceHash": "83197a6f",
+          "counts": {
+            "frontDamage": 3,
+            "frontBlock": 2,
+            "scaling": 8,
+            "draw": 5,
+            "block": 5,
+            "heal": 1,
+            "selfHarm": 1
+          }
+        },
+        {
+          "seed": "v38-validation-40",
+          "outcome": "loss",
+          "floor": 10,
+          "starter": [
+            {
+              "id": 6,
+              "name": "鉄壁"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 82,
+              "name": "ブーメラン"
+            },
+            {
+              "id": 79,
+              "name": "緊急回避"
+            },
+            {
+              "id": 8,
+              "name": "大剣"
+            },
+            {
+              "id": 3,
+              "name": "双剣"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 56,
+              "name": "探索"
+            },
+            {
+              "id": 14,
+              "name": "毒霧"
+            },
+            {
+              "id": 5,
+              "name": "猛毒の刃"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 7,
+              "name": "戦術"
+            },
+            {
+              "id": 11,
+              "name": "吸血"
+            }
+          ],
+          "traceHash": "778d863e",
+          "counts": {
+            "frontDamage": 5,
+            "frontBlock": 2,
+            "scaling": 6,
+            "draw": 5,
+            "block": 5,
+            "heal": 1,
+            "selfHarm": 2
+          }
+        },
+        {
+          "seed": "v38-validation-41",
+          "outcome": "loss",
+          "floor": 8,
+          "starter": [
+            {
+              "id": 6,
+              "name": "鉄壁"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 82,
+              "name": "ブーメラン"
+            },
+            {
+              "id": 79,
+              "name": "緊急回避"
+            },
+            {
+              "id": 8,
+              "name": "大剣"
+            },
+            {
+              "id": 3,
+              "name": "双剣"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 56,
+              "name": "探索"
+            },
+            {
+              "id": 14,
+              "name": "毒霧"
+            },
+            {
+              "id": 5,
+              "name": "猛毒の刃"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 7,
+              "name": "戦術"
+            },
+            {
+              "id": 11,
+              "name": "吸血"
+            }
+          ],
+          "traceHash": "d922e63a",
+          "counts": {
+            "frontDamage": 5,
+            "frontBlock": 2,
+            "scaling": 10,
+            "draw": 5,
+            "block": 4,
+            "heal": 1,
+            "selfHarm": 1
+          }
+        },
+        {
+          "seed": "v38-validation-42",
+          "outcome": "loss",
+          "floor": 10,
+          "starter": [
+            {
+              "id": 6,
+              "name": "鉄壁"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 82,
+              "name": "ブーメラン"
+            },
+            {
+              "id": 79,
+              "name": "緊急回避"
+            },
+            {
+              "id": 8,
+              "name": "大剣"
+            },
+            {
+              "id": 3,
+              "name": "双剣"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 56,
+              "name": "探索"
+            },
+            {
+              "id": 14,
+              "name": "毒霧"
+            },
+            {
+              "id": 5,
+              "name": "猛毒の刃"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 7,
+              "name": "戦術"
+            },
+            {
+              "id": 11,
+              "name": "吸血"
+            }
+          ],
+          "traceHash": "0435666d",
+          "counts": {
+            "frontDamage": 5,
+            "frontBlock": 3,
+            "scaling": 9,
+            "draw": 4,
+            "block": 7,
+            "heal": 1,
+            "selfHarm": 1
+          }
+        },
+        {
+          "seed": "v38-validation-43",
+          "outcome": "loss",
+          "floor": 10,
+          "starter": [
+            {
+              "id": 6,
+              "name": "鉄壁"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 82,
+              "name": "ブーメラン"
+            },
+            {
+              "id": 79,
+              "name": "緊急回避"
+            },
+            {
+              "id": 8,
+              "name": "大剣"
+            },
+            {
+              "id": 3,
+              "name": "双剣"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 56,
+              "name": "探索"
+            },
+            {
+              "id": 14,
+              "name": "毒霧"
+            },
+            {
+              "id": 5,
+              "name": "猛毒の刃"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 7,
+              "name": "戦術"
+            },
+            {
+              "id": 11,
+              "name": "吸血"
+            }
+          ],
+          "traceHash": "45e7449a",
+          "counts": {
+            "frontDamage": 3,
+            "frontBlock": 2,
+            "scaling": 8,
+            "draw": 6,
+            "block": 6,
+            "heal": 1,
+            "selfHarm": 1
+          }
+        },
+        {
+          "seed": "v38-validation-44",
+          "outcome": "loss",
+          "floor": 10,
+          "starter": [
+            {
+              "id": 6,
+              "name": "鉄壁"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 82,
+              "name": "ブーメラン"
+            },
+            {
+              "id": 79,
+              "name": "緊急回避"
+            },
+            {
+              "id": 8,
+              "name": "大剣"
+            },
+            {
+              "id": 3,
+              "name": "双剣"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 56,
+              "name": "探索"
+            },
+            {
+              "id": 14,
+              "name": "毒霧"
+            },
+            {
+              "id": 5,
+              "name": "猛毒の刃"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 7,
+              "name": "戦術"
+            },
+            {
+              "id": 11,
+              "name": "吸血"
+            }
+          ],
+          "traceHash": "a93ee305",
+          "counts": {
+            "frontDamage": 4,
+            "frontBlock": 4,
+            "scaling": 7,
+            "draw": 6,
+            "block": 7,
+            "heal": 1,
+            "selfHarm": 2
+          }
+        },
+        {
+          "seed": "v38-validation-45",
+          "outcome": "loss",
+          "floor": 7,
+          "starter": [
+            {
+              "id": 6,
+              "name": "鉄壁"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 82,
+              "name": "ブーメラン"
+            },
+            {
+              "id": 79,
+              "name": "緊急回避"
+            },
+            {
+              "id": 8,
+              "name": "大剣"
+            },
+            {
+              "id": 3,
+              "name": "双剣"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 56,
+              "name": "探索"
+            },
+            {
+              "id": 14,
+              "name": "毒霧"
+            },
+            {
+              "id": 5,
+              "name": "猛毒の刃"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 7,
+              "name": "戦術"
+            },
+            {
+              "id": 11,
+              "name": "吸血"
+            }
+          ],
+          "traceHash": "002a47c0",
+          "counts": {
+            "frontDamage": 4,
+            "frontBlock": 3,
+            "scaling": 6,
+            "draw": 5,
+            "block": 5,
+            "heal": 1,
+            "selfHarm": 2
+          }
+        },
+        {
+          "seed": "v38-validation-46",
+          "outcome": "win",
+          "floor": 10,
+          "starter": [
+            {
+              "id": 6,
+              "name": "鉄壁"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 82,
+              "name": "ブーメラン"
+            },
+            {
+              "id": 79,
+              "name": "緊急回避"
+            },
+            {
+              "id": 8,
+              "name": "大剣"
+            },
+            {
+              "id": 3,
+              "name": "双剣"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 56,
+              "name": "探索"
+            },
+            {
+              "id": 14,
+              "name": "毒霧"
+            },
+            {
+              "id": 5,
+              "name": "猛毒の刃"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 7,
+              "name": "戦術"
+            },
+            {
+              "id": 11,
+              "name": "吸血"
+            }
+          ],
+          "traceHash": "e77a4242",
+          "counts": {
+            "frontDamage": 3,
+            "frontBlock": 4,
+            "scaling": 6,
+            "draw": 6,
+            "block": 6,
+            "heal": 1,
+            "selfHarm": 1
+          }
+        },
+        {
+          "seed": "v38-validation-47",
+          "outcome": "loss",
+          "floor": 10,
+          "starter": [
+            {
+              "id": 6,
+              "name": "鉄壁"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 82,
+              "name": "ブーメラン"
+            },
+            {
+              "id": 79,
+              "name": "緊急回避"
+            },
+            {
+              "id": 8,
+              "name": "大剣"
+            },
+            {
+              "id": 3,
+              "name": "双剣"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 56,
+              "name": "探索"
+            },
+            {
+              "id": 14,
+              "name": "毒霧"
+            },
+            {
+              "id": 5,
+              "name": "猛毒の刃"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 7,
+              "name": "戦術"
+            },
+            {
+              "id": 11,
+              "name": "吸血"
+            }
+          ],
+          "traceHash": "ae473d50",
+          "counts": {
+            "frontDamage": 5,
+            "frontBlock": 3,
+            "scaling": 9,
+            "draw": 8,
+            "block": 6,
+            "heal": 1,
+            "selfHarm": 1
+          }
+        },
+        {
+          "seed": "v38-validation-48",
+          "outcome": "win",
+          "floor": 10,
+          "starter": [
+            {
+              "id": 6,
+              "name": "鉄壁"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 82,
+              "name": "ブーメラン"
+            },
+            {
+              "id": 79,
+              "name": "緊急回避"
+            },
+            {
+              "id": 8,
+              "name": "大剣"
+            },
+            {
+              "id": 3,
+              "name": "双剣"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 56,
+              "name": "探索"
+            },
+            {
+              "id": 14,
+              "name": "毒霧"
+            },
+            {
+              "id": 5,
+              "name": "猛毒の刃"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 7,
+              "name": "戦術"
+            },
+            {
+              "id": 11,
+              "name": "吸血"
+            }
+          ],
+          "traceHash": "deabbd27",
+          "counts": {
+            "frontDamage": 3,
+            "frontBlock": 5,
+            "scaling": 8,
+            "draw": 8,
+            "block": 7,
+            "heal": 1,
+            "selfHarm": 1
+          }
+        },
+        {
+          "seed": "v38-validation-49",
+          "outcome": "loss",
+          "floor": 10,
+          "starter": [
+            {
+              "id": 6,
+              "name": "鉄壁"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 13,
+              "name": "影走り"
+            },
+            {
+              "id": 82,
+              "name": "ブーメラン"
+            },
+            {
+              "id": 79,
+              "name": "緊急回避"
+            },
+            {
+              "id": 8,
+              "name": "大剣"
+            },
+            {
+              "id": 3,
+              "name": "双剣"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 56,
+              "name": "探索"
+            },
+            {
+              "id": 14,
+              "name": "毒霧"
+            },
+            {
+              "id": 5,
+              "name": "猛毒の刃"
+            },
+            {
+              "id": 25,
+              "name": "毒針"
+            },
+            {
+              "id": 7,
+              "name": "戦術"
+            },
+            {
+              "id": 11,
+              "name": "吸血"
+            }
+          ],
+          "traceHash": "7811ce7e",
+          "counts": {
+            "frontDamage": 4,
+            "frontBlock": 2,
+            "scaling": 8,
+            "draw": 5,
+            "block": 5,
+            "heal": 1,
+            "selfHarm": 2
+          }
+        }
+      ]
+    }
+  ]
+}

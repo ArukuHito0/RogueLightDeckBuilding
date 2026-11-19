@@ -1,0 +1,16 @@
+.relic-reroll-count{font-size:20px;left:8px;top:8px;transform:none}.relic-reroll-count b{font-size:32px}.vault-relic .vault-title{padding-top:42px}
+.relic-vault.list .vault-relic>.toolbar{justify-content:flex-end;position:relative;z-index:1}
+.potion-slot{position:relative}.potion-menu{position:absolute;z-index:500;left:0;top:100%;width:230px;padding:12px;background:#18221e;border:1px solid #a28e65;border-radius:8px;box-shadow:0 8px 18px #0009}.potion-menu p{font-size:12px;margin:6px 0}.potion-menu button{margin:3px}
+.potion-slot:has(.potion-menu)>.tooltip{display:none}.reward-loot{font-size:clamp(22px,2.5vw,32px);gap:28px;margin:16px auto}.reward-potion-row{display:flex;justify-content:center;margin:12px auto 20px}.reward-potion{display:flex;align-items:center;gap:10px;font-size:18px}.reward-potion .potion-bottle{width:56px;height:56px}.reward-potion small{color:var(--gold)}
+@keyframes potion-reward-shake{0%,100%{transform:translateX(0)}15%,45%,75%{transform:translateX(-8px)}30%,60%,90%{transform:translateX(8px)}}
+@keyframes potion-belt-flash{0%,100%{background:#19231f;border-color:var(--line)}20%,60%{background:#842f30;border-color:#ff7777;box-shadow:0 0 18px #fb5555}}
+.potion-shake{animation:potion-reward-shake .5s ease-in-out}.potion-full-alert{animation:potion-belt-flash 1.5s ease-in-out}
+
+/* 遺物の操作を同じ行に収め、下部の余白をなくす。 */
+.relic-reroll-count{background:none;border:0;border-radius:0;padding:0;box-shadow:none}
+.relic-vault.list .vault-relic>.vault-title{grid-column:1;grid-row:1;align-self:stretch}
+.relic-vault.list .vault-relic>.relic-effects{grid-column:2;grid-row:1}
+.relic-vault.list .vault-relic>.toolbar{position:absolute;right:22px;bottom:22px;justify-content:flex-end;margin:0;transform:none}
+@media(max-width:700px){.relic-vault.list .vault-relic>.toolbar{position:static;margin:12px 0 0}}
+
+.reward-revealed .flip-inner{animation:none;transform:rotateY(0)}.reward-revealed .card-front{animation:none!important}

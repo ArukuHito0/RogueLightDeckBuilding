@@ -1,0 +1,7 @@
+const fs=require('fs'),vm=require('vm'),assert=require('assert');let saved=null;const root=require('path').join(__dirname,'../dist/');const scripts=[...fs.readFileSync(root+'index.html','utf8').matchAll(/src="([^"]+\.js)"/g)].map(x=>x[1]);function load(){let noop=()=>{},el={innerHTML:'',textContent:'',classList:{add:noop,remove:noop,toggle:noop},style:{},dataset:{},querySelector:()=>null,querySelectorAll:()=>[],insertAdjacentHTML:noop,addEventListener:noop};let ctx={console,Math,assert,localStorage:{getItem:()=>saved,setItem:(k,v)=>saved=v},document:{body:el,documentElement:el,getElementById:()=>el,querySelector:()=>null,querySelectorAll:()=>[],addEventListener:noop},window:{addEventListener:noop},setTimeout:noop,clearTimeout:noop,requestAnimationFrame:noop,performance:{now:()=>0}};vm.createContext(ctx);for(let f of scripts)vm.runInContext(fs.readFileSync(root+f,'utf8'),ctx,{filename:f});return ctx}
+
+let c=load();vm.runInContext(`
+render=()=>save();S.run=null;page='relics';busy=false;S.relicPoints=8;S.relicVault=[{id:'old',name:'既存',icon:'◇',effects:['start_heal']}];
+beginRelicReroll('old',0);confirmRelicReroll();assert.equal(S.relicVault[0].rerolls,1);resolveRelicReroll(false);save();`,c);
+c=load();vm.runInContext(`assert.equal(S.relicVault[0].rerolls,1);assert.equal(S.relicPoints,7);assert.equal(S.relicVault[0].effects[0],'start_heal');`,c);
+console.log('PASS v104 saved reroll count and rejected result survive reload');

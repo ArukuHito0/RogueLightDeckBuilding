@@ -1,0 +1,19 @@
+const {workerHarness}=require('./ai-stage1.cjs'),vm=require('vm'),assert=require('assert');
+(async()=>{const h=workerHarness();await h.run('v49-test');h.context.assert=assert;await vm.runInContext(`(async()=>{
+const id=n=>C.find(c=>c.name===n).id;
+function reset(effects=[]){S.run={hp:70,max:70,block:0,str:0,agility:0,energy:99,hand:[],draw:[0,1,2,3,4],discard:[],exhausted:[],enemies:[{hp:1000,max:1000,block:0,poison:0,intent:'attack',atk:5,hits:1}],deck:[0,1],turn:1,kind:'fight',mode:'battle',relics:[],carriedRelic:{effects},generatedCards:[],battleCards:[],potions:[]};page='battle';busy=false;target=0;return S.run}
+function use(n){let r=S.run;r.hand.push(typeof n==='number'?n:id(n));base.play(r.hand.length-1)}
+for(const n of ['血の盾','毒纏い','供物','茨の盾','残火の刃'])assert.equal(C[id(n)].rarity,'common');assert.equal(id('残火の大太刀'),24);assert.equal(C[24].fx.d,14);assert.equal(C[24].fx.exScale,2);
+let r=reset();r.exhausted=[0,1,2];r.str=2;use('残火の刃');assert.equal(r.enemies[0].hp,991);assert(combatDesc(combatCard(id('残火の刃')),r).includes('+1'));
+r=reset();use('巨人の血');assert.equal(r.str,4);assert.equal(r.regen||0,0);r.str=4;use('巨人の血');assert.equal(r.str,8);assert.equal(r.regen,5);r.hp=40;applyTurnStartBuffs(r);assert.equal(r.hp,45);assert.equal(r.regen,4);
+r=reset(['double_cards']);r.str=4;use('巨人の血');assert.equal(r.str,12);assert.equal(r.regen,10);
+r=reset();r.agility=2;use('厚い城壁');assert.equal(r.block,20);assert.equal(r.nextBlock,8);r.block=0;applyTurnStartBuffs(r);assert.equal(r.block,8);applyTurnStartBuffs(r);assert.equal(r.block,8);
+r=reset();addPoison(r.enemies[0],7);use('共感');assert.equal(r.str,0);assert.equal(r.enemies[0].poison,7);assert.equal(r.enemies[0].poisonTotal,7);await endTurn();assert.equal(r.str,0);assert.equal(r.tempStr,0);
+for(const n of ['触媒の契約','灰の守り','激情','城壁','鼓動','焼身','鍛え直し','灰の肉体','汚染地域']){r=reset();r.exhaustEngine=1;r.exhaustStrength=1;use(n);const k=id(n);assert(C[k].special,n);assert(!r.hand.includes(k));assert(!r.draw.includes(k));assert(!r.discard.includes(k));assert(!r.exhausted.includes(k));assert.equal(r.block,0,n);assert.equal(r.exhaustStrengthCount||0,0,n);assert.equal(r.specialUses[k],1);assert(!combatDesc(combatCard(k),r).includes('除外。'),n);}
+r=reset();use('灰の守り');exhaustCard(r,0);assert.equal(r.block,3);assert.equal(r.exhausted.length,1);
+r=reset();use('灰の肉体');exhaustCard(r,0);exhaustCard(r,1);exhaustCard(r,2);assert.equal(r.str,1);
+r=reset();use('鼓動');const k=id('鼓動');r=JSON.parse(JSON.stringify(r));S.run=r;assert.equal(r.specialUses[k],1);assert(!r.exhausted.includes(k));assert(r.heartbeat);r.mode=page='map';r.deck=[k,0,1,2,3];choose('fight');assert.equal(S.run.specialUses[k],undefined);assert([...S.run.draw,...S.run.hand,...S.run.discard].includes(k));
+r=reset();const generated=addBattleCard(r,{origin:id('焼身')});base.play(r.hand.indexOf(generated));assert(C[generated].special);assert(!r.exhausted.includes(generated));assert(!r.discard.includes(generated));
+assert.deepEqual(Array.from(cardCategories(C[0])),['攻撃']);assert.deepEqual(Array.from(cardCategories(C[1])),['防御']);assert(cardCategories(C[id('護身の一撃')]).includes('攻撃'));assert(cardCategories(C[id('護身の一撃')]).includes('防御'));assert.deepEqual(Array.from(cardCategories(C[id('鼓動')])),['特殊']);assert.deepEqual(Array.from(cardCategories(C[id('共感')])),['補助']);
+page='book';for(const c of C){if(c.retired)continue;const html=card(c.id);assert(!/<small[^>]*>[^<]*(COMMON|RARE|EPIC)/.test(html),c.name);assert.equal(html.includes('latent-badge'),!!c.runOnly&&!c.token,c.name);}assert(card(id('血の盾')).includes('防御'));assert(card(id('鼓動')).includes('特殊'));assert.equal((tips(C[id('鼓動')]).match(/【特殊】/g)||[]).length,1);
+})()`,h.context);console.log('PASS: rarities/name/IDs, damage, conditional regen + relic, delayed block, retired empathy blocked, special consumption without exclusion triggers, save/rebattle/generated specials, categories and potential badge');})().catch(e=>{console.error(e);process.exit(1)});

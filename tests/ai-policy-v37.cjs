@@ -1,0 +1,16 @@
+const {workerHarness}=require('./ai-stage1.cjs'),assert=require('assert'),vm=require('vm');
+(async()=>{const h=workerHarness();await h.run('policy-v37',{axis:'poison'});const P=h.context.AI_POLICY,T=h.context.AI_TUNING;const card=(id,cost,fx)=>({id,cost,fx,name:'test',rarity:'common'}),base={mode:'battle',floor:4,hp:60,maxHp:70,energy:3,block:0,strength:0,guard:0,turn:1,statuses:{},excluded:[],discard:[],drawPile:[],battleDamage:0,restDistance:2,deck:[],hand:[],enemies:[{index:0,hp:100,maxHp:100,poison:0,block:0,intent:'attack',attack:10,hits:1}],actions:[]};
+function choose(o,axis){o.deck=o.deck.length?o.deck:o.hand;return P.choose(o,()=>0,axis,1)}
+const play=(index,id)=>({type:'play',index,cardId:id,enemy:0}),end={type:'endTurn'};
+assert(P.traits(card(1,2,{d:18})).frontDamage);assert(P.traits(card(2,3,{d:20,all:1})).frontDamage);assert(P.traits(card(3,0,{b:20})).frontBlock);T.frontload.damagePerEnergy=100;assert(!P.traits(card(1,2,{d:18})).frontDamage);T.frontload.damagePerEnergy=8;
+let o={...base,hand:[card(1,1,{d:6}),card(2,1,{p:3})],actions:[play(0,1),play(1,2),end]};assert.equal(choose(o,'poison').cardId,2);
+o={...base,hand:[card(1,1,{b:10}),card(2,1,{p:3})],enemies:[{...base.enemies[0],hp:50,poison:20}],actions:[play(0,1),play(1,2),end]};assert.equal(choose(o,'poison').cardId,1);
+o={...base,block:20,hand:[card(1,1,{b:10}),card(2,1,{d:12})],actions:[play(0,1),play(1,2),end]};assert.equal(choose(o,'block').cardId,2);
+o={...base,hand:[card(1,1,{b:12}),card(2,1,{exactBlock:2})],actions:[play(0,1),play(1,2),end]};assert.equal(choose(o,'block').cardId,1);o={...o,block:12,hand:[o.hand[1]],actions:[play(0,2),end]};assert.equal(choose(o,'block').cardId,2);
+o={...base,enemies:[{...base.enemies[0],hp:6}],hand:[card(1,1,{s:2}),card(2,1,{d:6})],actions:[play(0,1),play(1,2),end]};assert.equal(choose(o,'strength').cardId,2);
+o={...base,enemies:[{...base.enemies[0],hp:300,intent:'guard'}],hand:[card(1,1,{s:2}),card(2,1,{d:6})],actions:[play(0,1),play(1,2),end]};assert.equal(choose(o,'strength').cardId,1);
+const healthy={...base,deck:[card(1,1,{d:6})]};assert(P.tolerance({...healthy,hp:10,battleDamage:30,restDistance:8}).total<P.tolerance(healthy).total);
+const heal=card(2,1,{heal:6});assert(P.healing(heal,{...healthy,hp:30},'block').total>P.healing(heal,{...healthy,hp:30},'strength').total);assert(P.healing(heal,{...healthy,hp:30,deck:[card(3,1,{hpLoss:4})]},'strength').total>P.healing(heal,{...healthy,hp:30},'strength').total);assert(P.healing(heal,healthy,'strength').total<P.healing(heal,{...healthy,hp:30},'strength').total);
+const lowDefense=[card(1,1,{d:6}),card(2,1,{d:7})],def=card(3,2,{b:14});assert(P.pick(def,lowDefense,'poison',1).balance>P.pick(card(4,1,{p:3}),lowDefense,'poison',1).balance);assert(P.pick(card(4,1,{s:1}),lowDefense,'strength',1,{floor:8}).scaling>P.pick(card(4,1,{s:1}),lowDefense,'strength',1,{floor:1}).scaling);
+const a=await workerHarness().run('v37-repeat',{axis:'block'}),b=await workerHarness().run('v37-repeat',{axis:'block'});assert.deepStrictEqual(a,b);assert(a.deckCounts);assert(a.log.some(x=>x.diagnosis));console.log('PASS: configurable tags, poison/defense/conversion order, scaling/lethal, tolerance/heal, pick deficits, deterministic logs');
+})().catch(e=>{console.error(e);process.exit(1)});

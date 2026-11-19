@@ -1,0 +1,20 @@
+const {workerHarness}=require('./ai-stage1.cjs'),vm=require('vm'),assert=require('assert');
+(async()=>{const h=workerHarness();await h.run('balance-v55');h.context.assert=assert;vm.runInContext(`{
+render=()=>save();const id=n=>HUNTER_IDS[n];
+function reset(effects=[]){S.run={characterId:'hunter',hp:1000,max:1000,block:0,str:0,agility:0,energy:99,energyMax:3,turn:1,hand:[],draw:[],discard:[],exhausted:[],enemies:[{hp:10000,max:10000,block:0,poison:0,atk:10,intent:'attack',hits:1}],deck:[0,1],mode:'battle',kind:'fight',relics:[],carriedRelic:{effects},battleCards:[],generatedCards:[],potions:[]};page='battle';busy=false;target=0;return S.run;}
+function use(n){S.run.hand.push(typeof n==='number'?n:id(n));base.play(S.run.hand.length-1);}
+function desc(n){return combatDesc(combatCard(typeof n==='number'?n:id(n)),S.run);}
+for(const [n,cost]of Object.entries({'残虐':1,'刻み裂く':1,'獣王の爪':2,'本能':1,'歴史的瞬間':1,'進化論':1,'引き裂き':1,'手負いの一撃':1,'体当たり':1,'集中攻撃':2}))assert.equal(C[id(n)].cost,cost,n);
+assert.equal(C[id('過程')].fx.evolutionBlock,8);assert.equal(C[id('風切り')].fx.bleedAmount,2);assert.equal(C[id('啄み')].fx.bleed,2);assert.equal(C[id('衰弱')].fx.bleed,2);assert.equal(C[id('衰弱')].fx.vulnerable,2);assert.equal(C[id('追い打ち')].fx.d,16);
+let r=reset();r.evolutionCount=3;assert.equal(combatCard(id('食物連鎖')).fx.d,19);use('食物連鎖');assert.equal(r.enemies[0].hp,9981);
+r=reset(['double_cards']);r.evolutionCount=3;assert.equal(combatCard(id('食物連鎖')).fx.d,19);assert(desc('食物連鎖').includes('現在19ダメージ'));use('食物連鎖');assert.equal(r.enemies[0].hp,9981);
+r=reset(['double_cards']);for(const [name,parts]of Object.entries({'衰弱':['脆弱4','裂傷4'],'風切り':['裂傷4を2回'],'啄み':['2ダメージを2回','裂傷4'],'過程':['8ブロック'],'成長':['3回進化','筋力2'],'本能':['カードを2枚選び'],'歴史的瞬間':['デッキ','4枚まで'],'進化論':['枚数の2倍'],'追跡':['カードを2枚引く'],'残虐':['量+2'],'獣の狩り':['HPを2失い','裂傷2'],'腐食':['発動回数+2','減少量+2'],'麻痺毒':['筋力-8'],'眼光':['脆弱4','筋力2'],'痛み分け':['自身に裂傷4','対象に裂傷4']})){const d=desc(name);for(const text of parts)assert(d.includes(text),name+': '+d);}
+use('衰弱');assert.equal(r.enemies[0].vulnerable,4);assert.equal(r.enemies[0].laceration,4);
+r=reset(['double_cards']);use('残虐');assert.equal(r.bleedBonus,2);assert(desc('衰弱').includes('裂傷6'));assert(desc('獣の狩り').includes('裂傷2'));use('獣の狩り');applyTurnStartBuffs(r);assert.equal(r.enemies[0].laceration,2);assert.equal(r.hp,994);
+r=reset();use('残虐');use('獣の狩り');applyTurnStartBuffs(r);assert.equal(r.enemies[0].laceration,1);assert.equal(r.hp,999);
+r=reset(['double_cards']);r.characterId='wanderer';assert(desc(4).includes('HPを12回復'));const duel=C.find(c=>c.name==='正々堂々');const text=desc(duel.id);assert(text.includes('筋力+4'));assert(text.includes('攻撃対象に筋力+2'));r.hp=900;use(4);assert.equal(r.hp,910); // -2 HP from relic, +12 heal
+// Historical Moment transforms actual combat instances in each pile, not run originals.
+r=reset();r.deck=[id('牙'),id('爪'),id('鱗')];r.draw=[id('牙')];r.discard=[id('爪')];r.exhausted=[id('鱗')];r.evolutionBlock=10;r.exhaustEngine=1;use('歴史的瞬間');assert.equal(r.hunterChoice.scope,'deck');assert.equal(r.hunterChoice.remaining,2);assert.equal(r.block,3);
+let candidate=hunterChoiceCandidates(r).find(x=>x.pile==='draw');chooseHunterCard(candidate.index);assert.equal(C[r.draw[0]].name,'大喰らい');assert(!hunterChoiceCandidates(r).some(x=>x.pile==='draw'));candidate=hunterChoiceCandidates(r).find(x=>x.pile==='exhausted');chooseHunterCard(candidate.index);assert.equal(C[r.exhausted[0]].name,'甲羅');assert.equal(r.block,43);assert.equal(r.evolutionCount,4);assert(!r.hunterChoice);assert.deepEqual(Array.from(r.deck),[id('牙'),id('爪'),id('鱗')]);assert.equal(r.exhausted.length,2);
+r=reset(['double_cards']);r.draw=[id('牙'),id('爪'),id('鱗'),id('羽')];use('歴史的瞬間');assert.equal(r.hunterChoice.remaining,4);for(let n=0;n<4;n++)chooseHunterCard(hunterChoiceCandidates(r)[0].index);assert.equal(r.evolutionCount,8);assert(!r.hunterChoice);
+}`,h.context);console.log('PASS v55: all requested balances, actual-value relic descriptions, unchanged damage/hit counts/intervals, hunt without brutality, deck-wide evolution and pile/next-battle identity');})().catch(e=>{console.error(e);process.exit(1)});

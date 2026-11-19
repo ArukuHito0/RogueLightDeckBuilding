@@ -1,0 +1,67 @@
+.lucky-card-art{width:66px;height:66px}
+.lucky-table{padding:10px 14px;margin:8px 0;border:1px solid #85704b66;border-radius:10px;background:#16181bc9}
+.lucky-poker{display:flex;align-items:center;gap:16px;flex-wrap:wrap}.lucky-poker small{color:var(--muted)}
+.poker-hand{display:flex;gap:6px}.poker-hand>span{display:grid;place-items:center;width:30px;height:40px;border:1px solid #716850;background:#111317;border-radius:4px;font-weight:bold;color:#807867}.poker-hand>.filled{color:var(--gold);border-color:var(--gold)}
+.lucky-slot-result{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:8px;font-size:.85em}.lucky-slot-result>div{display:flex;gap:5px;flex-wrap:wrap}.lucky-slot-result>div>span{padding:2px 5px;background:#ffffff0a;border-radius:3px}.lucky-slot-result.win>strong{color:#b8cd91}.lucky-slot-result.lose>strong{color:#cfaa91}
+.lucky-choice-overlay{position:fixed;inset:0;z-index:9500;background:#090b10d9;display:grid;place-items:center;padding:16px}
+.lucky-choice-panel{width:min(1150px,96vw);max-height:90vh;overflow:auto;background:#1b1e24;border:1px solid #a78c55;border-radius:12px;padding:22px}.lucky-choice-panel .cards{display:flex;flex-wrap:wrap;gap:14px;justify-content:center}.lucky-option .card{cursor:pointer;opacity:1;filter:none}.lucky-choice-panel .card:hover{transform:translateY(-3px)}
+.character-options.explorer-roster{flex-wrap:wrap}
+@media(max-width:600px){.lucky-choice-panel{padding:10px}.lucky-choice-panel .card{max-width:40vw}.lucky-poker{gap:8px}.poker-hand>span{width:25px;height:32px}.lucky-slot-result>div{max-height:70px;overflow:auto}}
+.lucky-role-list{display:flex;flex-wrap:wrap;gap:14px}.lucky-role-list>div>p{font-size:.8em;color:var(--gold)}.lucky-role-help{font-size:.8em;padding:4px 8px}.lucky-role-codex{margin-top:32px}
+
+/* Fixed visual stage never participates in battle layout. */
+.slot-reveal-overlay{position:fixed;inset:0;z-index:9600;background:transparent;pointer-events:auto;overflow:hidden}
+.slot-reveal-anchor{position:absolute;transform:translate(-50%,-50%);width:min(94vw,1250px);text-align:center;pointer-events:none}
+.slot-reveal-stage{animation:slot-stage-exit 2500ms linear both}
+.slot-reveal-cards{display:flex;justify-content:center;gap:clamp(3px,1vw,16px);align-items:center}
+.slot-reveal-item{width:min(180px,calc((92vw - (var(--slot-count) - 1)*8px)/var(--slot-count)));aspect-ratio:3/5;perspective:1000px;flex-shrink:0}
+.slot-reveal-flip{position:relative;width:100%;height:100%;transform-style:preserve-3d;animation:slot-card-turn 1250ms ease-in-out both}
+.slot-reveal-front,.slot-reveal-back{position:absolute;inset:0;backface-visibility:hidden;border-radius:9px}
+.slot-reveal-back{display:grid;place-items:center;background:#202329;border:2px solid #a58b55;color:var(--gold);font-size:48px}
+.slot-reveal-front{transform:rotateY(180deg)}
+.slot-reveal-front .card-wrap{width:100%;height:100%;display:block;margin:0}
+.slot-reveal-front .card{width:100%;height:100%;min-height:0;box-sizing:border-box;transform:none!important;filter:none!important;margin:0;pointer-events:none;font-size:clamp(8px,1.1vw,14px)}
+.slot-reveal-front .tooltip{display:none!important}
+.slot-reveal-front .art{height:28%;font-size:30px}.slot-reveal-front .lucky-card-art{width:100%;height:100%;max-height:66px}
+.slot-match .card{border:4px solid #ffe05a!important;box-shadow:0 0 16px #ffdb5380}
+.slot-reveal-result{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:clamp(32px,6vw,84px);letter-spacing:.1em;text-shadow:0 3px 8px #000,0 0 24px #000;animation:slot-result-in 2500ms linear both;white-space:nowrap}
+.slot-reveal-result.success{color:#ffe05a}.slot-reveal-result.failed{color:#ef8b83}
+@keyframes slot-card-turn{from{transform:rotateY(0)}to{transform:rotateY(180deg)}}
+@keyframes slot-result-in{0%,50%{opacity:0}57%,100%{opacity:1}}
+@keyframes slot-stage-exit{0%,77%{opacity:1;transform:translateY(0)}87%,100%{opacity:0}100%{transform:translateY(22px)}}
+@media(prefers-reduced-motion:reduce){.slot-reveal-flip{animation:none;transform:rotateY(180deg)}}
+
+.lucky-discard-done{bottom:110px!important}.inspecting-choice .lucky-discard-done{display:none}
+
+.lucky-top-panel{position:fixed;z-index:120;left:50%;top:42%;transform:translate(-50%,-50%);text-align:center;background:#181b21f5;border:1px solid var(--gold);padding:12px;border-radius:10px;max-width:94vw}
+.lucky-top-panel h3,.lucky-top-panel p{margin:4px}.lucky-top-panel p{font-size:13px}.lucky-top-slots{display:flex;gap:12px;justify-content:center;margin:10px 0}
+.lucky-top-slot{position:relative;display:flex;align-items:center;justify-content:center;flex-direction:column;width:clamp(80px,12vw,150px);height:clamp(140px,22vw,250px);border:2px dashed #b89a5e;border-radius:8px}.lucky-top-slot>b{position:absolute;top:-10px;left:5px;background:#23262c;padding:0 8px;z-index:3;color:#f4d188}
+.lucky-top-slot .card-wrap{width:100%;height:85%}.lucky-top-slot .card{width:100%;height:100%;min-height:0;transform:none!important;font-size:11px}.lucky-top-slot .art{height:40px}.lucky-top-slot .lucky-card-art{height:40px}.lucky-top-slot .tooltip{display:none!important}.top-undo{font-size:11px;padding:3px}.lucky-top-ghost{position:fixed;z-index:20000;pointer-events:none;width:150px;transform:translate(-50%,-50%);opacity:.85}.top-selected{outline:3px solid #ffe05a}.choosing-hand .hand .card{touch-action:none}
+
+.inspecting-choice .lucky-top-panel{display:none}
+
+/* Drop slots sit above the same selection shade as the hand. */
+.lucky-top-panel{z-index:220}.choosing-hand #drag-ghost{z-index:10000!important}
+.lucky-role-reference{position:fixed;left:8px;top:145px;width:260px;max-height:calc(100dvh - 165px);overflow:auto;z-index:80;background:#16191fee;border:1px solid #88734d;border-radius:8px;padding:7px;box-sizing:border-box}
+.lucky-role-reference article{padding:8px 5px;border-bottom:1px solid #85704b55;cursor:help}.lucky-role-reference article:last-child{border-bottom:0}
+.role-reference-heading{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:6px}.role-reference-heading strong{color:var(--gold);font-size:14px}.lucky-role-reference .poker-hand{gap:3px}.lucky-role-reference .poker-hand>span{width:20px;height:26px;font-size:12px}
+.lucky-role-reference p{margin:5px 0 0;font-size:11px;line-height:1.5}.role-reference-rule{color:#c5b895}.role-reference-effect b{color:var(--gold);white-space:nowrap}
+.lucky-role-preview{position:fixed;z-index:10005;width:200px;pointer-events:none}.lucky-role-preview .card-wrap,.lucky-role-preview .card{width:200px}.lucky-role-preview .tooltip{display:none}
+@media(max-width:900px){.lucky-role-reference{top:100px;max-height:38dvh;opacity:.95}.lucky-role-reference article{padding:5px 2px}.lucky-role-reference p{font-size:10px}}
+
+.slot-reveal-cards{gap:0}.slot-reveal-item{width:var(--slot-card-width,180px);height:var(--slot-card-height,300px);aspect-ratio:auto}.slot-reveal-item+.slot-reveal-item{margin-left:calc(-1*var(--slot-overlap,0px))}.slot-reveal-front .card{font-size:inherit;padding:14px}.slot-reveal-front .art{height:auto;font-size:inherit}.slot-reveal-front .lucky-card-art{width:66px;height:66px;max-height:none}
+.lucky-top-pool{display:flex;justify-content:center;gap:8px;max-height:28vh;overflow:auto}.lucky-top-pool .card{width:120px;min-height:180px;font-size:10px}.lucky-top-pool .art{height:40px}.lucky-top-pool .lucky-card-art{height:40px}.lucky-top-panel:has(.lucky-top-pool){max-height:80vh;overflow:auto;top:45%}
+
+.lucky-auto-presentation{position:fixed;inset:0;z-index:9700;background:transparent;display:grid;place-items:center}
+.lucky-auto-stage{text-align:center;pointer-events:none}.lucky-auto-stage>p{color:var(--gold);text-shadow:0 2px 5px #000;font-size:18px}
+.lucky-auto-stage .card-wrap,.lucky-auto-stage .card{width:200px}.lucky-auto-stage .card{transform:none!important;filter:none!important}.lucky-auto-stage .tooltip{display:none!important}
+
+.lucky-role-reference{zoom:1.5;max-height:calc((100dvh - 165px)/1.5)}
+.slot-reveal-front .card-wrap{width:var(--slot-logical-width,166px);height:var(--slot-logical-height,280px);transform:scale(var(--slot-scale,1));transform-origin:top left}
+.slot-reveal-front .card{width:100%;height:100%;font-size:inherit}
+.slot-reveal-item.slot-miss .slot-reveal-front{filter:brightness(.35) saturate(.55)}
+@media(max-width:900px){.lucky-role-reference{max-height:calc(38dvh/1.5)}}
+
+/* Override the shared height:auto !important and responsive card widths. */
+.slot-reveal-front .card-wrap{width:var(--slot-logical-width,166px)!important;min-width:var(--slot-logical-width,166px)!important;max-width:none!important;height:var(--slot-logical-height,280px)!important}
+.slot-reveal-front .card{width:var(--slot-logical-width,166px)!important;min-width:var(--slot-logical-width,166px)!important;max-width:none!important;height:var(--slot-logical-height,280px)!important;min-height:var(--slot-logical-height,280px)!important;box-sizing:border-box!important}

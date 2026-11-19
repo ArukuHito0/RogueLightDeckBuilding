@@ -1,0 +1,13 @@
+const {workerHarness}=require('./ai-stage1.cjs'),vm=require('vm'),assert=require('assert');
+(async()=>{let h=workerHarness();await h.run('act3');h.context.assert=assert;await vm.runInContext(`(async()=>{
+render=()=>{};animateEntity=async()=>{};toast=()=>{};
+S.clearedActs=[1,2];S.destinationAct=3;S.run=null;S.relicQueue=[];S.relicReroll=null;S.deck=[0,0,0,1,1,1,3,3,4,4];start();let r=S.run;assert.equal(r.act,3);choose('boss');assert.equal(r.enemies[0].desertKey,'mother');let m=r.enemies[0];assert.equal(m.hp,150);assert.equal(m.snowAction.heal,20);
+r.hp=100;r.max=100;r.torrent=3;r.block=4;hunterPlayerTurnEnd(r);assert.equal(r.hp,97);assert.equal(r.torrent,2);
+r.enemies=[desertFoe('squid')];r.torrent=3;r.block=0;r.hp=100;hunterPlayerTurnEnd(r);assert.equal(r.hp,90);assert.equal(r.torrent,2);
+r.enemies=[desertFoe('shrimp')];let e=r.enemies[0];e.block=50;dealDamage(e,4,{attack:true,attacker:r});assert.equal(e.str,1);assert.equal(e.hp,80);hunterEnemyActionEnd(r,e);assert.equal(e.str,0);
+r.enemies=[desertFoe('mother')];m=r.enemies[0];m.growth=4;dealDamage(m,999,{attack:true,attacker:r});assert.equal(r.enemies.length,2);let child=r.enemies[1];assert.equal(child.hp,240);assert.equal(child.birthStun,2);assert.equal(r.torrent,6);assert.equal(child.intent,'stunned');hunterEnemyActionEnd(r,child);assert.equal(child.birthStun,1);hunterEnemyActionEnd(r,child);assert.equal(child.birthStun,0);planDesert(r);assert.equal(child.intent,'attack');
+r.enemies=[desertFoe('mother')];m=r.enemies[0];m.actionStep=5;m.growth=9;planDesert(r);assert.equal(m.actionStep,6);assert.equal(m.snowAction.heal,20);m.actionStep=5;m.growth=10;planDesert(r);snowAction(r,m);assert.equal(m.hp,0);assert.equal(r.enemies[1].hp,300);
+r.enemies=[desertFoe('whale')];r.hand=[0,1];r.discard=[];r.pendingChoice={kind:'discard',remaining:1,desertSand:true};busy=false;chooseHand(0);assert.equal(r.enemies[0].str,1);assert.equal(r.discard.length,1);assert.equal(r.pendingChoice,null);
+r= S.run; r.enemies=[desertFoe('whale')];r.hp=r.max=100;r.block=0;r.hand=[0,1];r.draw=[0,1,0,1,0];r.discard=[];r.energy=3;r.turn=1;r.sand=0;r.torrent=0;r.weak=0;r.pendingChoice=null;r.mode=page='battle';busy=false;planDesert(r);await endTurn();assert.equal(r.turn,2);assert.equal(r.sand,1);assert(r.pendingChoice?.desertSand);chooseHand(0);assert.equal(r.enemies[0].str,1);assert.equal(r.hand.length,4);
+assert(destinationUnlocked(3));assert.equal(DESERT_FOES.shrimp[3].length,4);assert.equal(DESERT_FOES.whale[3].length,5);
+})()`,h.context);console.log('PASS ACT3 unlock, encounters, statuses, whale, boss birth, and actions');})().catch(e=>{console.error(e);process.exit(1)});

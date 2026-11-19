@@ -1,0 +1,38 @@
+/* Battle layout adapts without altering the player's display preferences. */
+body:has(#app .arena){--battle-side:clamp(190px,18vw,290px)}
+body:has(#app .arena) #app{padding-top:clamp(8px,1.3vh,20px);padding-bottom:24px}
+body:has(#app .arena) .battle-top h2{font-size:clamp(18px,2.6vh,28px);margin:4px 0}
+body:has(#app .arena) .arena{min-height:clamp(160px,28vh,300px);margin:clamp(4px,1vh,10px) 0;padding:clamp(2px,1vh,12px) clamp(6px,2vw,28px);gap:clamp(5px,1.4vw,24px)}
+body:has(#app .arena) .arena>.unit{flex:0 1 clamp(100px,13vw,180px);min-width:0;padding:clamp(3px,1vh,15px)}
+body:has(#app .arena) .arena .portrait{height:clamp(48px,10vh,120px);line-height:clamp(48px,10vh,120px);font-size:clamp(38px,7vh,75px)}
+body:has(#app .arena) .arena .unit h3,body:has(#app .arena) .arena .unit p{margin:clamp(3px,.7vh,9px) 0}
+body:has(#app .arena) .arena .intent{padding:clamp(3px,.8vh,10px) clamp(5px,1vw,16px);gap:2px}
+body:has(#app .arena) .lucky-table{padding:clamp(4px,.8vh,10px) 10px;margin:clamp(4px,.8vh,8px) 0}
+body:has(#app .arena) .hand .card{width:clamp(118px,11.5vw,166px);min-height:clamp(175px,24vh,245px);padding:clamp(6px,1vh,12px)}
+body:has(#app .arena) .hand .card .art{height:clamp(42px,8vh,99px);font-size:clamp(35px,6vh,64px);margin:clamp(3px,.7vh,12px) 0}
+body:has(#app .arena) .hand .card h3{margin:clamp(3px,.6vh,10px) 0}
+body:has(#app .arena) .hand .card p{margin:clamp(3px,.6vh,10px) 0}
+body:has(#app .arena) .combat-controls{gap:6px}
+body:has(#app .arena) .log{margin:5px 0}
+/* A fixed left reference gets dedicated room on wider displays. */
+@media(min-width:1001px){
+ body:has(#app .lucky-role-reference) #app{padding-left:calc(var(--battle-side) + 20px)}
+ body:has(#app .lucky-role-reference) .lucky-role-reference{zoom:1;left:8px;top:clamp(84px,14vh,145px);width:var(--battle-side);max-height:calc(100dvh - clamp(84px,14vh,145px) - 12px);overflow:auto}
+ body:has(#app .lucky-role-reference) .lucky-role-reference article{padding:clamp(4px,.9vh,8px) 5px}
+ body:has(#app .lucky-role-reference) .lucky-role-reference p{font-size:calc(clamp(11px,.85vw,14px) * var(--text-scale,1));line-height:1.45}
+ body:has(#app .lucky-role-reference) .role-reference-heading strong{font-size:calc(clamp(13px,1vw,16px) * var(--text-scale,1))}
+}
+/* On narrow screens the reference is a horizontal, scrollable strip in the page. */
+@media(max-width:1000px){
+ body:has(#app .lucky-role-reference) #app{display:flex;flex-direction:column}
+ body:has(#app .lucky-role-reference) .lucky-role-reference{position:relative;order:-1;left:auto;top:auto;zoom:1;width:100%;max-width:100%;max-height:none;display:flex;gap:8px;overflow-x:auto;overflow-y:hidden;margin:0 0 8px;padding:6px;overscroll-behavior-inline:contain}
+ body:has(#app .lucky-role-reference) .lucky-role-reference article{flex:0 0 clamp(160px,30vw,230px);border-bottom:0;border-right:1px solid #85704b55;padding:5px 8px}
+ body:has(#app .lucky-role-reference) .lucky-role-reference article:last-child{border-right:0}
+ body:has(#app .arena) .arena>.unit{flex:1 1 0}
+ body:has(#app .arena) .arena>.unit[data-entity="player"]{margin-left:0}
+}
+
+body:has(#app .arena) .potion-belt{padding:6px 10px;margin-bottom:clamp(5px,1vh,12px);gap:6px}
+body:has(#app .arena) .potion-empty{padding:4px 12px}
+
+@media(max-width:1000px){body:has(#app .lucky-role-reference) .lucky-role-reference p{font-size:calc(11px * var(--text-scale,1));line-height:1.4}}

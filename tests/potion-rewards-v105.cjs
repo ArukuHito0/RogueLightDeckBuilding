@@ -1,0 +1,16 @@
+const {workerHarness}=require('./ai-stage1.cjs'),vm=require('vm'),assert=require('assert');
+(async()=>{const h=workerHarness();await h.run('lucky-v89');h.context.assert=assert;
+await vm.runInContext(`(async()=>{
+render=()=>{};animateEntity=async()=>{};toast=()=>{};
+function reset(){S.run={characterId:'lucky',hp:77,max:77,block:0,str:0,agility:0,energy:20,energyMax:3,turn:1,act:1,floor:1,hand:[],draw:[],discard:[],exhausted:[],deck:[0,1],relics:[],battleCards:[],generatedCards:[],potions:[],enemies:[{hp:10000,max:10000,block:0,str:0,poison:0,atk:1,intent:'attack'}],mode:'battle',kind:'fight'};page='battle';target=0;busy=false;return S.run;}
+function add(r,key,pile='hand'){const id=luckyInstance(r,LUCKY_IDS[key]);r[pile].push(id);return id;}
+function use(r,key){const id=add(r,key);base.play(r.hand.indexOf(id));return id;}
+function finishChoices(r){let guard=0;while(r.lucky?.choice&&guard++<50){if(r.lucky.choice.kind==='top'){const p=luckyTopPrepare(r);if(!p.remaining)luckyFinishChoice(r);else{const i=p.candidates.findIndex(x=>r.hand.includes(x.id));luckyChoose(i);}}else luckyChoose(0);}assert(guard<50);}
+
+
+let r=reset();r.kind='fight';assert.equal(rollPotionReward(r,()=>.50),null);assert.equal(r.potionDropRate,55);assert(rollPotionReward(r,()=>.54));assert.equal(r.potionDropRate,40);r.kind='elite';assert(rollPotionReward(r,()=>.69));assert.equal(r.potionDropRate,25);assert.equal(rollPotionReward(r,()=>.55),null);assert.equal(r.potionDropRate,30);r.potionDropRate=0;assert(rollPotionReward(r,()=>.29));assert.equal(r.potionDropRate,0);r.kind='fight';r.potionDropRate=100;assert(rollPotionReward(r,()=>.99));assert.equal(r.potionDropRate,85);
+r=reset();r.kind='fight';r.mode=page='reward';r.potions=['heal','guard'];r.rewardCards=[];r.rewardPotion='poison';r.rewardPotionClaimed=false;let markup=reward();assert(!markup.includes('reward-revealed'));assert(reward().includes('reward-revealed'));assert(markup.includes('◈ 20'));assert(markup.includes('▣ ×1'));assert(markup.includes('毒フラスコ'));let effects=[];document.querySelector=()=>({offsetWidth:50,classList:{remove(){},add(x){effects.push(x);}}});setTimeout=(fn,ms)=>{assert.equal(ms,1500);return 1;};claimRewardPotion();assert(!r.rewardPotionClaimed);assert.equal(r.potions.length,2);assert(effects.includes('potion-shake')&&effects.includes('potion-full-alert'));openPotionMenu(1);assert(potionBelt().includes('捨てる'));discardPotionMenu(1);assert.equal(r.potions.length,1);claimRewardPotion();assert.equal(r.potions.join(','),'heal,poison');assert(r.rewardPotionClaimed);claimRewardPotion();assert.equal(r.potions.length,2);
+r=reset();r.mode=page='map';r.potions=['strength'];openPotionMenu(0);assert(potionBelt().includes('disabled>使用'));discardPotionMenu(0);assert.equal(r.potions.length,0);
+relicSearch='abc';relicEffectFilter=['start_heal'];relicFavoriteOnly=true;resetRelicSearch();assert.equal(relicSearch,'');assert.equal(relicEffectFilter.length,0);assert.equal(relicFavoriteOnly,false);assert(!relicEffectsHTML({effects:['start_heal']}).includes('relic-category'));
+})()`,h.context);console.log('PASS v105 drop progression, elite chance, rewards, full slots, discarding and filter reset');
+})().catch(e=>{console.error(e);process.exit(1)});

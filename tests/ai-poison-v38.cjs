@@ -1,0 +1,11 @@
+const {workerHarness}=require('./ai-stage1.cjs'),assert=require('assert');
+(async()=>{const h=workerHarness();await h.run('v38-tests',{axis:'poison'});const P=h.context.AI_POLICY;
+const c=(cost,fx)=>({cost,fx}),e={index:0,boss:true,audienceUsed:false,hp:140,maxHp:200,block:0,poison:12,intent:'attack',attack:20,hits:1},o={enemies:[e],hand:[],energy:3,strength:0,block:0,statuses:{},drawPile:[]};
+assert(P.poisonTactics(c(2,{poisonDouble:1}),{...o,statuses:{poisonDouble:2}},e).skip);
+assert(P.poisonTactics(c(2,{poisonDouble:1}),{...o,statuses:{poisonDouble:2},enemies:[{...e,audienceUsed:true}]},e).skip);
+assert(P.poisonTactics(c(0,{p:3,ex:1}),o,e).score<0);
+const cleared={...e,hp:120,poison:0,audienceUsed:true};assert(P.poisonTactics(c(1,{p:2}),{...o,enemies:[cleared]},cleared).score>0);
+const crossing={...e,hp:134,poison:0};assert(P.poisonTactics(c(1,{d:4,p:2}),{...o,enemies:[crossing]},crossing).reasons.some(s=>s.includes('再構築')));
+const normal={...e,boss:false,hp:80,poison:2},poison=c(1,{p:3}),payoff=c(1,{equalPoison:1}),pair={...o,enemies:[normal],hand:[poison,payoff]};assert(P.poisonTactics(poison,pair,normal).score>0);assert(P.poisonTactics(payoff,pair,normal).score<0);assert.equal(P.poisonTactics(payoff,{...pair,energy:1},normal).score,0);assert.equal(P.poisonTactics(payoff,pair,{...normal,hp:2}).score,0);
+const a=await workerHarness().run('v38-repeat',{axis:'poison'}),b=await workerHarness().run('v38-repeat',{axis:'poison'});assert.deepStrictEqual(a,b);console.log('PASS: catalyst duplicate, cleanse reservation/rebuild, crossing hit, poison-before-payoff, affordability/lethal, deterministic run');
+})().catch(e=>{console.error(e);process.exit(1)});
