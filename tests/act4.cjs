@@ -69,5 +69,41 @@ r.hp=14;
 forestCheckErosion(r);
 assert.equal(r.hp,0);
 r.hp=1000;
+// 新規の通常戦・強敵戦で実際の敵ターンを解決する。
+r.turn=1;r.hp=r.max=1000;r.forestErosion=0;r.forestMarks={};r.hand=[];r.discard=[];
+r.draw=Array.from({length:12},()=>luckyInstance(r,0));
+const flower=forestRedesignedFoe('flower'),ape=forestRedesignedFoe('ape');
+r.enemies=[flower,ape];planForest(r);
+assert.equal(ape.atk,3);assert.equal(ape.hits,3);
+await endTurn();
+assert.equal(Object.keys(r.forestMarks).length,2);
+r.forestErosion=40;ape.actionStep=2;planForest(r);assert.equal(ape.atk,12);
+const deer=forestRedesignedFoe('deer');
+r.enemies=[deer];r.turn=1;deer.actionStep=2;deer.bud=3;planForest(r);
+assert.equal(deer.atk,18);await endTurn();
+assert.equal(deer.bud,0);assert(deer.snowAction.wait);
+const group=forestRedesignedFoe('colony'),attack=forestRedesignedFoe('attackBranch'),guard=forestRedesignedFoe('guardBranch');
+r.enemies=[group,attack,guard];r.turn=1;planForest(r);await endTurn();
+assert.equal(group.block,8);
+dealDamage(attack,999,{attack:true,attacker:r});
+assert.equal(group.hp,71);assert.equal(group.block,8);
+dealDamage(group,999,{attack:true,attacker:r});assert.equal(guard.hp,0);
+for(const accelerate of [false,true]){
+ const queen=forestRedesignedFoe('queen');
+ r.enemies=[queen];r.turn=1;r.forestMarks={};r.forestErosion=0;delete r.forestSeedBoostTurn;
+ r.hand=[];r.discard=[];r.draw=Array.from({length:12},()=>luckyInstance(r,0));planForest(r);
+ await endTurn();await endTurn();
+ const seed=forestLiving(r,'seed');assert(seed);assert.equal(seed.hatchProgress,0);
+ if(accelerate){
+  const id=Number(Object.keys(r.forestMarks)[0]);
+  forestCardUsed(r,id);forestCardUsed(r,id);assert.equal(seed.hatchProgress,1);
+ }
+ await endTurn();await endTurn();
+ assert.equal(!!forestLiving(r,'larva'),accelerate);
+ await endTurn();
+ const larva=forestLiving(r,'larva');assert(larva);assert.equal(larva.actionStep,accelerate?1:0);
+ assert(!forestLiving(r,'seed'));
+ dealDamage(queen,999,{attack:true,attacker:r});assert.equal(larva.hp,0);
+}
 const saved=JSON.parse(JSON.stringify(r));saved.enemies=[forestFoe('queen'),forestFoe('larva')];saved.enemies[0].bud=3;saved.enemies[0].actionStep=2;S.run=saved;planForest(saved);assert.equal(saved.enemies[0].snowAction.count,2);assert.equal(saved.enemies[0].bud,3);
 })()`,h.context);console.log('PASS ACT4 bud hits/blocks/laceration, all summon counts, revival, boss order, actual turns, unlock and serialized state');})().catch(e=>{console.error(e);process.exit(1)});

@@ -21,10 +21,10 @@ function canPlayHunterCard(c,r){return !c.fx.lowHpOnly||r.hp<=r.max*c.fx.lowHpOn
 function resolveHunterEffects(r,c){if(c.characterId!=='hunter')return;const f=c.fx,foes=f.all?r.enemies.filter(e=>e.hp>0):[r.enemies[target]],selected=r.enemies[target];for(const e of foes){if(!e||e.hp<=0)continue;const hadBleed=!!e.laceration;
  if(f.bleed)addLaceration(r,e,f.bleed+(hadBleed?(f.extraBleed||0):0),{card:true,temporary:!!f.temporaryBleed});
  if(f.bleedDraw&&hadBleed)draw(f.bleedDraw*effectFactor(r));
- if(f.vulnerable)addVulnerable(r,e,f.vulnerable);if(f.blockVulnerable)addVulnerable(r,e,Math.floor((e.block||0)/10)*f.blockVulnerable*effectFactor(r));
+ if(f.vulnerable)addVulnerable(r,e,f.vulnerable);if(f.blockVulnerable)addVulnerable(r,e,Math.floor((e.block||0)/(f.blockVulnerableInterval??10))*f.blockVulnerable*effectFactor(r));
  if(f.doubleVulnerable)addVulnerable(r,e,e.vulnerable||0);if(f.vulnerableStrength)r.str+=(e.vulnerable||0)*f.vulnerableStrength;
- if(f.vulnerableBleed)addLaceration(r,e,Math.floor((e.vulnerable||0)/2)*f.vulnerableBleed,{card:true});
- if(f.vulnerableDraw)draw(Math.floor((e.vulnerable||0)/2)*f.vulnerableDraw);
+ if(f.vulnerableBleed)addLaceration(r,e,Math.floor((e.vulnerable||0)/(f.vulnerableBleedInterval??2))*f.vulnerableBleed,{card:true});
+ if(f.vulnerableDraw)draw(Math.floor((e.vulnerable||0)/(f.vulnerableDrawInterval??2))*f.vulnerableDraw);
  if(f.stun||(f.stunAttack&&e.intent==='attack'))applyHunterStun(e);
  if(f.enemyTempStrength){e.str=(e.str||0)-f.enemyTempStrength;e.hunterTempStrength=(e.hunterTempStrength||0)+f.enemyTempStrength;}
  }

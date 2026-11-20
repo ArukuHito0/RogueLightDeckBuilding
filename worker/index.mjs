@@ -3,6 +3,8 @@ const json=(body,status=200)=>Response.json(body,{status,headers:{'Cache-Control
 const revision=object=>object?.customMetadata?.revision||null;
 export default {async fetch(req,env){
   const url=new URL(req.url);
+  if(url.pathname==='/api/balance')return balanceRequest(req,env,false);
+  if(url.pathname==='/api/balance-admin')return balanceAdmin(req,env);
   if(url.pathname!=='/api/cloud-save'){
     if(req.method!=='GET'&&req.method!=='HEAD')return new Response(null,{status:405});
     const name=url.pathname==='/'?'index.html':url.pathname.slice(1);

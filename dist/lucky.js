@@ -25,7 +25,7 @@ function luckySelectTask(kind,n,extra={}){return {op:'select',kind,n,...extra};}
 const luckyTypesBase=cardCategories;cardCategories=function(c){return c?.characterId==='lucky'?c.types:luckyTypesBase(c);};
 const luckyCombatBase=combatCard;
 combatCard=function(id){let c=luckyCombatBase(id),r=S.run;if(!c||!isLucky(r))return c;const l=luckyState(r),f={...c.fx},key=f.luckyKey;
-if(key==='zero')f.d+=l.zeroBonus||0;if(key==='drawAttack')f.d+=l.drawCount||0;
+if(key==='zero')f.d+=l.zeroBonus||0;if(key==='drawAttack')f.d+=(l.drawCount||0)*(f.drawDamageFactor??1);
 if(key==='jackpot')f.h=l.slotCount||0;
 if(key==='streakAttack'||key==='streakBlock')f.slot=l.streak[id]||1;
 if(key==='payout')f.b+=Math.max(0,(l.failures||0)-(l.payout[id]||0))*3;
@@ -36,8 +36,10 @@ if(f.slot){if(l.nextFree)cost=0;if(l.nextGuarantee)cost+=l.guaranteeCost||1;}
 return {...c,fx:f,cost:Math.max(0,cost),baseCost};};
 const luckyNeedsBase=needsEnemy;needsEnemy=function(c){if(c?.fx.luckyKey)return c.types[0]==='攻撃'&&!c.fx.all&&!c.fx.randomOne&&!c.fx.randomAttack||c.fx.luckyKey==='knock';return luckyNeedsBase(c);};
 const luckyCanPlayBase=canPlayHunterCard;canPlayHunterCard=function(c,r){return !r?.lucky?.choice&&luckyCanPlayBase(c,r);};
+function luckyDrawSymbolDescription(fx){return 'スロット'+fx.slot+'。カードを'+fx.draw+'枚引く。';}
 const luckyDescBase=combatDesc;
 combatDesc=function(c,r){if(!c?.fx.luckyKey)return luckyDescBase(c,r);let d=C[c.id].desc,key=c.fx.luckyKey;if(['zero','drawAttack'].includes(key))d=d.replace(/^\d+ダメージ/,previewDamage(c,r,r.enemies[target])+'ダメージ');
+if(key==='draw')d=luckyDrawSymbolDescription(c.fx);
 if(key==='jackpot')d+=' 現在'+(luckyState(r).slotCount||0)+'回。';
 if(key==='payout')d=d.replace(/^7ブロック/,cardBlockValue(r,c.fx.b)+'ブロック');
 if(key==='streakAttack'||key==='streakBlock')d=d.replace(/スロット1/g,'スロット'+c.fx.slot);
@@ -46,10 +48,10 @@ let luckyCardDrawDepth=0;
 function luckyEffectDraw(n){luckyCardDrawDepth++;try{return draw(n);}finally{luckyCardDrawDepth--;}}
 const luckyDrawBase=draw;
 draw=function(n,baseline=false){const r=S.run;if(!isLucky(r))return luckyDrawBase(n,baseline);const l=luckyState(r);
-if(baseline){if(l.retained?.length){r.hand.push(...l.retained);l.retained=[];}n=Math.max(0,n-(l.powers.custom||0));}
+if(baseline){if(l.retained?.length){r.hand.push(...l.retained);l.retained=[];}n=Math.max(0,n-luckyBalanceNumber('custom','drawPenalty',1)*(l.powers.custom||0));}
 const before=r.hand.length,result=luckyDrawBase(n,baseline),count=r.hand.length-before;
-if(!baseline&&count>0&&luckyCardDrawDepth>0){const previous=l.drawCount||0;l.drawCount=previous+count;if(l.powers.force)r.str+=Math.floor((previous%4+count)/4)*l.powers.force;}
-if(baseline&&l.baselineTurn!==r.turn){l.baselineTurn=r.turn;const tasks=[];if(l.powers.startup)tasks.push({op:'draw',n:2*l.powers.startup},luckySelectTask('exhaust',l.powers.startup));if(l.powers.mulligan)tasks.push(luckySelectTask('discard',2*l.powers.mulligan,{optional:true,redraw:true}));l.queue.push(...tasks);}
+if(!baseline&&count>0&&luckyCardDrawDepth>0){const previous=l.drawCount||0;l.drawCount=previous+count;if(l.powers.force){const threshold=luckyBalanceNumber('force','drawThreshold',4);r.str+=Math.floor((previous%threshold+count)/threshold)*l.powers.force*luckyBalanceNumber('force','drawStrength',1);}}
+if(baseline&&l.baselineTurn!==r.turn){l.baselineTurn=r.turn;const tasks=[];if(l.powers.startup)tasks.push({op:'draw',n:luckyBalanceNumber('startup','extraDraw',2)*l.powers.startup},luckySelectTask('exhaust',luckyBalanceNumber('startup','exhaustCount',1)*l.powers.startup));if(l.powers.mulligan)tasks.push(luckySelectTask('discard',2*l.powers.mulligan,{optional:true,redraw:true}));l.queue.push(...tasks);}
 return result;};
 function luckyRoles(numbers){const roles=new Set();function check(a){const counts={};for(const n of a)counts[n]=(counts[n]||0)+1;
 if(Object.values(counts).filter(n=>n>=2).length>=2)roles.add('pair');
@@ -59,46 +61,47 @@ if(a.every(n=>n===3))roles.add('three');if(a.every(n=>n===0))roles.add('five');}
 function visit(a,i){if(i===numbers.length){check(a);return;}if(numbers[i]==='X')for(let n=0;n<=3;n++)visit([...a,n],i+1);else visit([...a,numbers[i]],i+1);}
 if(numbers.length===5)visit([],0);return [...roles];}
 function luckyRecordPoker(r,c,suppress=false){if(!isLucky(r)||suppress||c.role)return;const l=luckyState(r);l.hand.push(luckyNumber(c));if(l.hand.length<5)return;const snapshot=l.hand.splice(0,5),roles=luckyRoles(snapshot);l.lastHand=snapshot;l.lastRoles=roles;
-if(roles.length){if(l.powers.royal){for(const e of r.enemies.filter(e=>e.hp>0))cardAttack(e,7*l.powers.royal);}if(l.powers.master){gainEnergy(r,l.powers.master);r.str+=l.powers.master;}if(roles.length===1)luckyAddHand(r,luckyInstance(r,LUCKY_ROLE_IDS[roles[0]]));else luckyPush(r,[{op:'roleChoice',roles}]);}}
-function luckySlot(r,ctx){const l=luckyState(r),f=ctx.card.fx,threshold=f.slot,seen=[];const total=5+2*(l.powers.custom||0);for(let i=0;i<total;i++){if(!r.draw.length&&r.discard.length){r.draw=shuffle(r.discard);r.discard=[];}if(!r.draw.length)break;seen.push(r.draw.pop());}r.draw.push(...seen);r.draw=shuffle(r.draw);
+if(roles.length){if(l.powers.royal){for(const e of r.enemies.filter(e=>e.hp>0))cardAttack(e,luckyBalanceNumber('royal','pokerDamage',7)*l.powers.royal);}if(l.powers.master){gainEnergy(r,luckyBalanceNumber('master','pokerEnergy',1)*l.powers.master);r.str+=luckyBalanceNumber('master','pokerStrength',1)*l.powers.master;}if(roles.length===1)luckyAddHand(r,luckyInstance(r,LUCKY_ROLE_IDS[roles[0]]));else luckyPush(r,[{op:'roleChoice',roles}]);}}
+function luckySlot(r,ctx){const l=luckyState(r),f=ctx.card.fx,threshold=f.slot,seen=[];const total=5+luckyBalanceNumber('custom','revealBonus',2)*(l.powers.custom||0);for(let i=0;i<total;i++){if(!r.draw.length&&r.discard.length){r.draw=shuffle(r.discard);r.discard=[];}if(!r.draw.length)break;seen.push(r.draw.pop());}r.draw.push(...seen);r.draw=shuffle(r.draw);
 const kind=ctx.card.types[0],matches=seen.filter(id=>cardCategories(C[id]).includes(kind)).length;const forced=!!ctx.guarantee,success=forced||matches>=threshold;l.slotCount++;
 l.lastSlot={name:ctx.card.name,seen:[...seen],kind,matches,threshold,success,forced};
 if(!success)l.failures++;
 return {success,seen};}
 function luckyAttack(r,ctx,d,h=1,all=false,randomEach=false,randomOne=false){let chosen=luckyTarget(r,ctx.target);if(randomOne){const living=r.enemies.map((e,i)=>({e,i})).filter(x=>x.e.hp>0);if(living.length)chosen=rand(living).i;}
 const enemies=all?r.enemies.map((e,i)=>({e,i})).filter(x=>x.e.hp>0):[{e:r.enemies[chosen],i:chosen}];for(const {e}of enemies){for(let i=0;i<h&&r.hp>0;i++){let enemy=e;if(randomEach)enemy=rand(r.enemies.filter(x=>x.hp>0));if(!enemy||enemy.hp<=0)break;const c={...ctx.card,fx:{...ctx.card.fx,d}};cardAttack(enemy,previewDamage(c,r,enemy));}}}
+function luckyBalanceNumber(key, field, fallback){return typeof balanceScriptedNumber==='function'?balanceScriptedNumber(key.startsWith('role_')?LUCKY_ROLE_IDS[key.slice(5)]:LUCKY_IDS[key],field,fallback):fallback;}
 function luckyActions(r,ctx,phase='normal'){const c=ctx.card,f=c.fx,k=f.luckyKey,l=luckyState(r),factor=effectFactor(r),a=[],add=(op,rest={})=>a.push({op,...rest}),attack=(d=f.d,h=f.h??1,all=!!f.all,randomEach=!!f.randomAttack,randomOne=!!f.randomOne)=>add('attack',{d,h,all,randomEach,randomOne}),block=n=>add('block',{n}),drawN=n=>add('draw',{n}),energy=n=>add('energy',{n}),select=(kind,n,extra={})=>a.push(luckySelectTask(kind,n,extra));
-if(phase==='success'){switch(k){case 'hit':case 'doubleStep':case 'draw':drawN(f.draw);break;case 'stand':block(8);break;case 'take':select('take',factor,{seen:ctx.seen});break;case 'knock':add('stun');break;case 'streakAttack':attack(9,f.slot,false,true);add('streak');break;case 'streakBlock':block(7*f.slot);add('streak');break;default:if(f.d!=null)attack();if(f.b)block(f.b);if(f.heal)add('heal',{n:f.heal});if(f.randomStatus)add('randomStatus',{n:f.randomStatus});}return a;}
+if(phase==='success'){switch(k){case 'hit':case 'doubleStep':case 'draw':drawN(f.draw);break;case 'stand':block(luckyBalanceNumber(k,'successBlock',8));break;case 'take':select('take',factor,{seen:ctx.seen});break;case 'knock':add('stun');break;case 'streakAttack':attack(luckyBalanceNumber(k,'hitDamage',9),f.slot,false,true);add('streak');break;case 'streakBlock':block(luckyBalanceNumber(k,'matchBlock',7)*f.slot);add('streak');break;default:if(f.d!=null)attack();if(f.b)block(f.b);if(f.heal)add('heal',{n:f.heal});if(f.randomStatus)add('randomStatus',{n:f.randomStatus});}return a;}
 if(f.slot){add('slot');return a;}
 if(c.special){add('power',{key:k,factor});return a;}
 switch(k){
-case 'jackpot':attack(10,l.slotCount||0);break;
+case 'jackpot':attack(luckyBalanceNumber(k,'slotDamage',10),l.slotCount||0);break;
 case 'zero':attack();add('zero');break;
 case 'flip':attack();drawN(f.draw);break;
 case 'drawAttack':attack();break;
 case 'flick':case 'rapid':case 'jump':if(f.d)attack();if(f.b)block(f.b);break;
 case 'chip':select('discard',factor);break;
-case 'free':add('set',{key:'nextFree',n:1});drawN(f.draw);break;
-case 'retry':add('set',{key:'retry',n:factor});break;
+case 'free':add('set',{key:'nextFree',n:luckyBalanceNumber(k,'freeSlots',1)});drawN(f.draw);break;
+case 'retry':add('set',{key:'retry',n:luckyBalanceNumber(k,'retries',1)*factor});break;
 case 'mystery':add('mystery');break;
-case 'double':add('set',{key:'nextDouble',n:2*factor});break;
+case 'double':add('set',{key:'nextDouble',n:luckyBalanceNumber(k,'repeats',2)*factor});break;
 case 'guarantee':add('set',{key:'nextGuarantee',n:factor});break;
 case 'loan':energy(f.energy);add('debt',{n:factor});break;
 case 'cash':case 'gather':drawN(f.draw);break;
 case 'push':energy(f.energy);break;
-case 'pickup':select('recover',factor,{pile:'discard'});break;
-case 'doubleDown':add('multiplyEnergy',{n:effectFactor(r)>1?4:2});break;
-case 'swap':drawN(f.draw);select('top',3*factor);break;
-case 'deal':select('deckTop',5*factor);break;
+case 'pickup':select('recover',luckyBalanceNumber(k,'recoverCount',1)*factor,{pile:'discard'});break;
+case 'doubleDown':add('multiplyEnergy',{n:luckyBalanceNumber(k,'energyMultiplier',2)*factor});break;
+case 'swap':drawN(f.draw);select('top',luckyBalanceNumber(k,'returnCount',3)*factor);break;
+case 'deal':select('deckTop',luckyBalanceNumber(k,'topCount',5)*factor);break;
 case 'redeal':add('redeal');break;
-case 'trick':drawN(f.draw);select('top',2*factor);break;
+case 'trick':drawN(f.draw);select('top',luckyBalanceNumber(k,'returnCount',2)*factor);break;
 case 'delay':add('delay',{n:factor});break;
 case 'payout':block(f.b);add('payoutReset');break;
 case 'hop':block(f.b);break;
 case 'bounce':block(f.b);add('nextBlock',{n:f.nextBlock});break;
 case 'dodge':block(f.b);select('discard',factor);break;
 case 'reflect':block(f.b);select('top',factor);break;
-case 'hold':block(f.b);select('hold',2*factor);break;
+case 'hold':block(f.b);select('hold',luckyBalanceNumber(k,'retainCount',2)*factor);break;
 case 'role_pair':select('recover',factor,{pile:'draw'});select('recover',factor,{pile:'discard'});break;
 case 'role_straight':add('generateStraight');energy(f.energy);break;
 case 'role_blackjack':attack();break;
@@ -109,7 +112,7 @@ return a;}
 function luckyAttachFrame(tasks,frame){return tasks.map(t=>({...t,frame}));}
 function luckyBegin(r,id,options={}){const l=luckyState(r),c=combatCard(id);if(c&&options.free&&typeof swampRejectAuto==='function'&&swampRejectAuto(r,c)){r.discard.push(id);return false;}if(!c||(!options.free&&r.energy<c.cost))return false;if(typeof forestCardUsed==='function')forestCardUsed(r,id);const paid=options.free?0:c.cost;if(!options.free)r.energy-=paid;
 if(typeof swampCardUsed==='function')swampCardUsed(r,c,options);
-const frame=++l.serial;const ctx={id,card:{...c,fx:{...c.fx}},target:options.target??target,paid,suppress:!!options.suppress,forceExhaust:!!options.forceExhaust,folded:!!options.folded,guarantee:!!(c.fx.slot&&l.nextGuarantee),double:c.fx.slot?l.nextDouble||1:1,penalty:l.nextDouble?effectFactor(r):0};
+const frame=++l.serial;const ctx={id,card:{...c,fx:{...c.fx}},target:options.target??target,paid,suppress:!!options.suppress,forceExhaust:!!options.forceExhaust,folded:!!options.folded,guarantee:!!(c.fx.slot&&l.nextGuarantee),double:c.fx.slot?l.nextDouble||1:1,penalty:l.nextDouble?luckyBalanceNumber('double','penalty',1)*effectFactor(r):0};
 if(c.fx.slot){if(l.nextFree)l.nextFree--;if(l.nextGuarantee){l.nextGuarantee=0;l.guaranteeCost=0;}l.nextDouble=0;}
 if(isAttackCard50(c)){ctx.card.fx.attackBonus=r.nextAttackBonus||0;r.nextAttackBonus=0;}
 l.frames[frame]=ctx;luckyPush(r,[...luckyAttachFrame(luckyActions(r,ctx),frame),{op:'finish',frame}]);return true;}
@@ -131,17 +134,17 @@ case 'delay':l.delayedEnergy=(l.delayedEnergy||0)+t.n;break;
 case 'nextBlock':(r.nextBlockEffects??=[]).push(t.n);break;
 case 'multiplyEnergy':gainEnergy(r,r.energy*(t.n-1));break;
 case 'zero':l.zeroBonus+=2;break;
-case 'streak':l.streak[c.id]=Math.min(5,(l.streak[c.id]||1)+1);break;
+case 'streak':l.streak[c.id]=Math.min(c.fx.slotMaximum??5,(l.streak[c.id]||1)+1);break;
 case 'payoutReset':l.payout[c.id]=l.failures;break;
 case 'mystery':{const ids=r.hand.splice(0);for(const id of ids)exhaustCard(r,id);const pool=luckyPotentialPool();for(let i=0;i<ids.length&&pool.length;i++)luckyAddHand(r,luckyInstance(r,rand(pool).id));break;}
 case 'randomStatus':{const key=rand(['str','agility','plate','regen']);r[key]=(r[key]||0)+t.n;break;}
-case 'power':{const magnitudes={royal:1,master:1,custom:1,mental:5,tension:1,mulligan:1,startup:1,force:1,throw:4};const n=magnitudes[t.key]*(t.key==='mental'||t.key==='throw'?1:t.factor);l.powers[t.key]=(l.powers[t.key]||0)+n;break;}
+case 'power':{const magnitudes={royal:1,master:1,custom:1,mental:luckyBalanceNumber('mental','failBlock',5),tension:luckyBalanceNumber('tension','successStrength',1),mulligan:1,startup:1,force:1,throw:luckyBalanceNumber('throw','foldBlock',4)};const n=magnitudes[t.key]*(t.key==='mental'||t.key==='throw'?1:t.factor);l.powers[t.key]=(l.powers[t.key]||0)+n;break;}
 case 'slot':{const result=luckySlot(r,ctx);ctx.seen=result.seen;luckyPush(r,[{op:'slotResolve',frame:t.frame,result}]);
 if(canPresentBattleCards()){l.slotPresentation={seen:result.seen,success:result.success,kind:ctx.card.types[0]};}break;}
 case 'slotResolve':{const result=t.result;
 if(result.success){if(l.powers.tension)r.str+=l.powers.tension;}else if(l.powers.mental)gainBlock(r,l.powers.mental,'passive');
 if(!result.success&&l.retry){l.retry--;luckyPush(r,[{op:'slot',frame:t.frame}]);break;}
-const baseline=[];if(c.fx.luckyKey==='hit')baseline.push({op:'attack',d:7,h:1,frame:t.frame});if(['stand','doubleStep'].includes(c.fx.luckyKey))baseline.push({op:'block',n:c.fx.b,frame:t.frame});
+const baseline=[];if(c.fx.luckyKey==='hit')baseline.push({op:'attack',d:luckyBalanceNumber('hit','baseDamage',7),h:1,frame:t.frame});if(['stand','doubleStep'].includes(c.fx.luckyKey))baseline.push({op:'block',n:c.fx.b,frame:t.frame});
 if(result.success){const tasks=[...baseline];for(let n=0;n<ctx.double;n++)tasks.push(...luckyAttachFrame(luckyActions(r,ctx,'success'),t.frame));luckyPush(r,tasks);}
 else{if(ctx.penalty)r.energy=Math.max(0,r.energy-ctx.penalty);if(c.fx.luckyKey==='safe')baseline.push({op:'attack',d:5,h:1,all:true,frame:t.frame});luckyPush(r,baseline);}break;}
 case 'select':{let candidates;if(t.kind==='deckTop')candidates=luckyCandidates(r,'draw');else if(t.kind==='recover')candidates=luckyCandidates(r,t.pile);else if(t.kind==='take')candidates=luckyCandidates(r,'draw').filter(x=>t.seen.includes(x.id));else candidates=luckyCandidates(r,'hand').filter(x=>t.kind!=='hold'||!l.hold.includes(x.id));
@@ -151,11 +154,11 @@ case 'redeal':{const ids=r.hand.splice(0);luckyPush(r,[...luckyDiscardTasks(r,id
 case 'discard':{if(C[t.id]?.fx.fold){if(l.powers.throw)gainBlock(r,l.powers.throw,'passive');queuePlayedCardPresentation(r,t.id);luckyPush(r,[{op:'auto',id:t.id,folded:true}]);}else r.discard.push(t.id);break;}
 case 'auto':{if(t.suppress&&t.forceExhaust&&!t.presented&&canPresentBattleCards()){l.autoPresentation={id:t.id};luckyPush(r,[{...t,presented:true}]);break;}const living=r.enemies.map((e,i)=>({e,i})).filter(x=>x.e.hp>0);if(!living.length){if(t.forceExhaust)exhaustCard(r,t.id);else r.discard.push(t.id);break;}const aim=rand(living).i;if(C[t.id]?.fx.luckyKey){luckyBegin(r,t.id,{free:true,folded:t.folded,suppress:t.suppress,forceExhaust:t.forceExhaust,target:aim});}else{luckyPlayExistingAuto(r,t,aim);}break;}
 case 'generateStraight':{const pool=luckyPotentialPool();for(let cost=0;cost<=3;cost++){const choices=pool.filter(x=>!x.xCost&&x.cost===cost);if(choices.length)luckyAddHand(r,luckyInstance(r,rand(choices).id));}break;}
-case 'playZeros':{const pool=luckyPotentialPool().filter(c=>!c.xCost&&c.cost===0),ids=Array.from({length:pool.length?5:0},()=>luckyInstance(r,rand(pool).id));luckyPush(r,ids.map(id=>({op:'auto',id,suppress:true,forceExhaust:true})));break;}
+case 'playZeros':{const pool=luckyPotentialPool().filter(c=>!c.xCost&&c.cost===0),ids=Array.from({length:pool.length?luckyBalanceNumber('role_five','autoCount',5):0},()=>luckyInstance(r,rand(pool).id));luckyPush(r,ids.map(id=>({op:'auto',id,suppress:true,forceExhaust:true})));break;}
 case 'poker':luckyRecordPoker(r,t.card,t.suppress);break;
 case 'roleChoice':luckyChoice(r,'role','成立した役を1つ選ぶ',t.roles.map(role=>({id:LUCKY_ROLE_IDS[role],role})),1);break;
 case 'finish':{if(ctx.forceExhaust||c.role)exhaustCard(r,ctx.id);else resolvePlayedCardPile(r,c);
-if(r.heartbeat){const total=(r.heartbeatCount||0)+ctx.paid;gainEnergy(r,Math.floor(total/4)*(r.heartbeatRefund||1));r.heartbeatCount=total%4;}
+if(r.heartbeat){const total=(r.heartbeatCount||0)+ctx.paid;gainEnergy(r,Math.floor(total/(r.heartbeatThreshold??4))*(r.heartbeatRefund||1));r.heartbeatCount=total%(r.heartbeatThreshold??4);}
 onCardResolved(r,c);luckyRecordPoker(r,c,ctx.suppress);
 if(r.kind==='boss')bossPlan(r);msg=c.name+'を使用。';delete l.frames[t.frame];break;}
 }

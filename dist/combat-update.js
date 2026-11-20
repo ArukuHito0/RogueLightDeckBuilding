@@ -72,7 +72,7 @@ function cardBlockValue(r,n){let v=blockValue(r,n,'card');return hasRelic('first
 gainBlock=function(r,n,source='card'){if(r.hp<=0)return 0;return withEffectChain(()=>{let value=source==='card'?cardBlockValue(r,n):blockValue(r,n,source);if(value<=0)return 0;if(source==='card'&&hasRelic('first_block',r)&&!r.firstCardBlock)r.firstCardBlock=true;r.block+=value;
  if(hasRelic('four_blocks',r)){r.blockGainCount=(r.blockGainCount||0)+1;if(r.blockGainCount%4===0)r.agility=(r.agility||0)+1}
  if(source==='card'&&r.burn&&!eventChain.has('burn')){eventChain.add('burn');let enemies=r.enemies.filter(e=>e.hp>0);if(enemies.length)dealDamage(rand(enemies),r.burn)}return value})};
-exhaustCard=function(r,id,trigger=true){(r.exhausted??=[]).push(id);if(trigger){if(r.exhaustStrength){r.exhaustStrengthCount=(r.exhaustStrengthCount||0)+1;if(r.exhaustStrengthCount%3===0)r.str+=r.exhaustStrength;}if(r.exhaustEngine)gainBlock(r,3*r.exhaustEngine,'passive')}};
+exhaustCard=function(r,id,trigger=true){(r.exhausted??=[]).push(id);if(trigger){if(r.exhaustStrength){r.exhaustStrengthCount=(r.exhaustStrengthCount||0)+1;if(r.exhaustStrengthCount%(r.exhaustStrengthInterval??3)===0)r.str+=r.exhaustStrength;}if(r.exhaustEngine)gainBlock(r,3*r.exhaustEngine,'passive')}};
 onCardResolved=function(r,c){if(c.cost===0&&hasRelic('zero_block',r))gainBlock(r,1,'relic')};
 // Reset persistent-in-battle engines between encounters, including resumed runs.
 const newBattle31=choose;choose=function(type){let r=S.run;if(!r)return;let wasBattle=r.mode==='battle';newBattle31(type);if(S.run===r&&r.mode==='battle'&&!wasBattle){for(const k of ['burn','rage','thornShield','thorns','thornGarden','forge','strikeBonus','hpLossCount','exhaustStrength','damageCount','passionHp','exhaustStrengthCount','poisonAura','poisonCoat','nextAttackBonus','bloodBlessing'])r[k]=0;r.bloodBlessingTurn=null;r.enemyPhase=false;r.specialUses={};r.battleCards=[];r.callTurn=0;render()}};
@@ -88,13 +88,13 @@ base.play=function(i,options={}){let r=S.run,c=combatCard(r?.hand[i]);if(c&&opti
  if(f.nextAttack)r.nextAttackBonus=(r.nextAttackBonus||0)+f.nextAttack;
  if(f.bloodBlessing)r.bloodBlessing=(r.bloodBlessing||0)+f.bloodBlessing;
  if(f.spendBlock)r.block=0;
- if(f.poisonBlock)gainBlock(r,r.enemies.filter(e=>e.hp>0).reduce((n,e)=>n+(e.poison||0),0)*f.poisonBlock);if(f.empathy){let n=(r.enemies[target]?.poison||0)*f.empathy;r.str+=n;r.enemies[target].poison=0;}if(f.b)gainBlock(r,f.b);if(f.strengthBlock)gainBlock(r,str*f.strengthBlock);if(f.exhaustBlock)gainBlock(r,Math.floor(exhaustedCount(r)/2)*f.exhaustBlock);
+ if(f.poisonBlock)gainBlock(r,r.enemies.filter(e=>e.hp>0).reduce((n,e)=>n+(e.poison||0),0)*f.poisonBlock);if(f.empathy){let n=(r.enemies[target]?.poison||0)*f.empathy;r.str+=n;r.enemies[target].poison=0;}if(f.b)gainBlock(r,f.b);if(f.strengthBlock)gainBlock(r,str*f.strengthBlock);if(f.exhaustBlock)gainBlock(r,Math.floor(exhaustedCount(r)/(f.exhaustBlockInterval??2))*f.exhaustBlock);
  if(f.hpLoss&&f.lossAfterBlock)loseHP(r,f.hpLoss);
  if(r.hp<=0){resolvePlayedCardPile(r,c,false);render();return}
  for(let j=0;j<(f.recover||0)&&r.discard.length&&r.hand.length<10;j++)r.hand.push(r.discard.splice(Math.floor(Math.random()*r.discard.length),1)[0]);
- if(f.blockRegen&&r.block>=15)r.regen=(r.regen||0)+f.blockRegen;
- if(f.strRegen&&str>=4)r.regen=(r.regen||0)+f.strRegen;
- healHP(r,f.healOnHpDamage&&attackHpLoss<=0?0:f.heal||0);r.str+=(f.s||0)+(f.strBonus&&str>=4?f.strBonus:0);
+ if(f.blockRegen&&r.block>=(f.blockRegenThreshold??15))r.regen=(r.regen||0)+f.blockRegen;
+ if(f.strRegen&&str>=(f.strRegenThreshold??4))r.regen=(r.regen||0)+f.strRegen;
+ healHP(r,f.healOnHpDamage&&attackHpLoss<=0?0:f.heal||0);r.str+=(f.s||0)+(f.strBonus&&str>=(f.strBonusThreshold??4)?f.strBonus:0);
  if(f.doubleStr){r.str*=f.strMultiplier||2;r.tempStr=(r.tempStr||0)*(f.strMultiplier||2)}
  gainEnergy(r,(f.energy||0)+(f.lowEnergy&&r.hp<=r.max/2?f.lowEnergy:0));
  for(let j=0;j<(f.sacrifice||0)&&r.hand.length;j++)exhaustCard(r,r.hand.splice(Math.floor(Math.random()*r.hand.length),1)[0]);
@@ -105,8 +105,9 @@ base.play=function(i,options={}){let r=S.run,c=combatCard(r?.hand[i]);if(c&&opti
  if(f.passion)r.passionHp=(r.passionHp||0)+(f.passionHp||1);
  if(f.temporary){r.tempStr=(r.tempStr||0)+(f.s||0);r.tempAgility=(r.tempAgility||0)+(f.agility||0)}
  if(f.nextBlock){(r.nextBlockEffects??=[]).push(f.nextBlock);r.nextBlock=(r.nextBlock||0)+f.nextBlock}
- if(f.poisonDouble)r.poisonDouble=f.poisonTicks||2;if(f.retainBlock)r.retainBlock=true;if(f.heartbeat){r.heartbeat=true;r.heartbeatRefund=f.heartbeatRefund||1}
- if(wasHeartbeat){let total=(r.heartbeatCount||0)+paidCost;gainEnergy(r,Math.floor(total/4)*(r.heartbeatRefund||1));r.heartbeatCount=total%4}
+ if(f.exhaustStrength)r.exhaustStrengthInterval=f.exhaustStrengthInterval??3;
+ if(f.poisonDouble)r.poisonDouble=f.poisonTicks||2;if(f.retainBlock)r.retainBlock=true;if(f.heartbeat){r.heartbeat=true;r.heartbeatRefund=f.heartbeatRefund||1;r.heartbeatThreshold=f.heartbeatThreshold??4}
+ if(wasHeartbeat){let total=(r.heartbeatCount||0)+paidCost;gainEnergy(r,Math.floor(total/(r.heartbeatThreshold??4))*(r.heartbeatRefund||1));r.heartbeatCount=total%(r.heartbeatThreshold??4)}
  if(f.maxHpLoss){r.max=Math.max(1,r.max-f.maxHpLoss);if(r.hp>r.max)loseHP(r,r.hp-r.max)}
  if(f.draw)draw(f.draw);if(f.poisonDraw&&hadPoison)draw(f.poisonDraw);
  if(f.discard&&r.hand.length)r.pendingChoice={kind:'discard',remaining:f.discard};
@@ -130,7 +131,7 @@ endTurn=async function(){let r=S.run;if(busy||page!=='battle'||r.pendingChoice||
  for(let i=0;i<r.enemies.length;i++){let e=r.enemies[i];if(e.hp<=0||e.summonedTurn===r.turn)continue;if(!e.retainBlock&&!e.reading)e.block=0;
  for(let tick=0;tick<(r.poisonDouble===true?2:r.poisonDouble||1)&&e.hp>0;tick++)if(e.poison){let n=e.poison;e.poison--;dealDamage(e,n,{ignoreBlock:true});await animateEntity(i,'hit',n)}
  if(e.hp<=0){await animateEntity(i,'death');continue}
- if(typeof prepareAct7Action==='function')prepareAct7Action(r,e);if(typeof prepareAct6Action==='function')prepareAct6Action(r,e);if(typeof prepareAct4Action==='function')prepareAct4Action(r,e);if(typeof prepareAct5Action==='function')prepareAct5Action(r,e);const actionStunned=!!e.hunterStun||e.intent==='stunned';if(!actionStunned){if(e.intent==='attack'){await animateEntity(i,'attack',0,-1);for(let h=0;h<(e.hits||1)&&e.hp>0&&r.hp>0&&e.intent==='attack';h++){let before=e.hp,n=dealDamage(r,enemyAttack(e),{attack:true,attacker:e});if(n)await animateEntity('player','hit',n);if(before>e.hp)await animateEntity(i,'hit',before-e.hp);if(e.hp<=0)await animateEntity(i,'death')}}else if(e.intent==='guard'){if(e.retainBlock||e.reading)e.block=(e.block||0)+(e.guardAmount||9);else e.block=e.guardAmount||9;if(e.guardStrength)e.str=(e.str||0)+e.guardStrength;}else if(e.act2)snowAction(r,e);else if(!e.boss)e.atk+=3;}
+ if(typeof prepareAct7Action==='function')prepareAct7Action(r,e);if(typeof prepareAct6Action==='function')prepareAct6Action(r,e);if(typeof prepareAct4Action==='function')prepareAct4Action(r,e);if(typeof prepareAct5Action==='function')prepareAct5Action(r,e);const actionStunned=!!e.hunterStun||e.intent==='stunned';if(!actionStunned){if(e.intent==='attack'){await animateEntity(i,'attack',0,-1);for(let h=0;h<(e.hits||1)&&e.hp>0&&r.hp>0&&e.intent==='attack';h++){let before=e.hp,n=dealDamage(r,enemyAttack(e),{attack:true,attacker:e});if(n)await animateEntity('player','hit',n);if(before>e.hp)await animateEntity(i,'hit',before-e.hp);if(e.hp<=0)await animateEntity(i,'death')}}else if(e.intent==='guard'){if(e.retainBlock||e.reading)e.block=(e.block||0)+(e.guardAmount??9);else e.block=e.guardAmount??9;if(e.guardStrength)e.str=(e.str||0)+e.guardStrength;}else if(e.act2)snowAction(r,e);else if(!e.boss)e.atk+=3;}
  if(!actionStunned&&e.act2&&(e.intent==='attack'||e.intent==='guard')&&e.hp>0&&r.hp>0)snowAction(r,e);
  hunterEnemyActionEnd(r,e);
  if(e.boss&&typeof finishKingAction==='function')finishKingAction(r,e,actionStunned);
@@ -150,16 +151,16 @@ combatDesc=function(c,r){let d=descRelicsBase(c,r),f=c.fx,e=r.enemies[target];
  if(f.exScale)d=`${previewDamage(c,r,e)}ダメージ。除外済み1枚につき+${f.exScale}。${f.ex?'除外。':''}`;
  if(f.blockScale)d=`${previewDamage(c,r,e)}ダメージ（基礎${f.d}＋筋力＋ブロック×${f.blockScale}、端数切り捨て）。${f.b?cardBlockValue(r,f.b)+'ブロック。':''}`;
  if(f.strengthBlock)d=`筋力スタック分のブロック。現在 <strong class="boost">${cardBlockValue(r,r.str*f.strengthBlock)}ブロック</strong>。`;
- if(f.exhaustBlock)d=`除外済みカード2枚につき${f.exhaustBlock}ブロック。現在 <strong class="boost">${cardBlockValue(r,Math.floor(exhaustedCount(r)/2)*f.exhaustBlock)}ブロック</strong>。除外。`;
- if(f.strBonus)d=`筋力+${f.s}。既に筋力4以上なら、さらに+${f.strBonus}。除外。`;
+ if(f.exhaustBlock)d=`除外済みカード${f.exhaustBlockInterval??2}枚につき${f.exhaustBlock}ブロック。現在 <strong class="boost">${cardBlockValue(r,Math.floor(exhaustedCount(r)/(f.exhaustBlockInterval??2))*f.exhaustBlock)}ブロック</strong>。除外。`;
+ if(f.strBonus)d=`筋力+${f.s}。既に筋力${f.strBonusThreshold??4}以上なら、さらに+${f.strBonus}。除外。`;
  if(f.doubleStr)d=`現在の筋力を${f.strMultiplier||2}倍にする。除外。`;
  if(f.poisonDouble)d=`この戦闘中、敵の毒が${f.poisonTicks||2}回発動。各発動で毒を1消費。除外。`;
- if(f.heartbeat)d=`この戦闘中、エナジーを4消費するたびエナジーを${f.heartbeatRefund||1}回復。除外。`;
+ if(f.heartbeat)d=`この戦闘中、エナジーを${f.heartbeatThreshold??4}消費するたびエナジーを${f.heartbeatRefund||1}回復。除外。`;
  if(f.chooseExhaust&&f.exhaustDraw==null)d=`手札を${f.chooseExhaust}枚選び除外。その後${2*effectFactor(r)}枚引く。`;
  if(f.passion)d=`この戦闘中、ターン開始時にHPを${f.passionHp||1}失い、5ブロックを得る。除外。`;
  if(f.poisonDraw)d=`毒を${f.p}付与。付与前から毒がある対象なら${f.poisonDraw}枚引く。`;
  if(f.revenge)d+=` 現在${c.cost}コスト（HP喪失${r.hpLossCount||0}回）。`;
- if(f.exhaustStrength)d=`この戦闘中、カードを3枚除外するたび筋力+${f.exhaustStrength}。除外。`;if(f.poisonAura)d=`この戦闘中、ターン開始時に敵全体に毒${f.poisonAura}を付与。除外。`;if(f.poisonCoat)d=`このターン、カード攻撃1ヒットごとに毒${f.poisonCoat}を付与。`;if(f.reinfect)d=`対象がこの戦闘中に蓄積した毒を再付与。現在 <strong class="boost">${(e?.poisonTotal||0)*f.reinfect+(f.reinfectBonus||0)}</strong>。除外。`;if(f.poisonBlock)d=`敵全体の毒の合計分のブロック。現在 <strong class="boost">${cardBlockValue(r,r.enemies.filter(x=>x.hp>0).reduce((n,x)=>n+(x.poison||0),0)*f.poisonBlock)}ブロック</strong>。`;if(f.empathy)d=`対象の毒スタック分の筋力を得て、対象の毒を全て失わせる。現在 <strong class="boost">+${(e?.poison||0)*f.empathy}</strong>。`;return d
+ if(f.exhaustStrength)d=`この戦闘中、カードを${f.exhaustStrengthInterval??3}枚除外するたび筋力+${f.exhaustStrength}。除外。`;if(f.poisonAura)d=`この戦闘中、ターン開始時に敵全体に毒${f.poisonAura}を付与。除外。`;if(f.poisonCoat)d=`このターン、カード攻撃1ヒットごとに毒${f.poisonCoat}を付与。`;if(f.reinfect)d=`対象がこの戦闘中に蓄積した毒を再付与。現在 <strong class="boost">${(e?.poisonTotal||0)*f.reinfect+(f.reinfectBonus||0)}</strong>。除外。`;if(f.poisonBlock)d=`敵全体の毒の合計分のブロック。現在 <strong class="boost">${cardBlockValue(r,r.enemies.filter(x=>x.hp>0).reduce((n,x)=>n+(x.poison||0),0)*f.poisonBlock)}ブロック</strong>。`;if(f.empathy)d=`対象の毒スタック分の筋力を得て、対象の毒を全て失わせる。現在 <strong class="boost">+${(e?.poison||0)*f.empathy}</strong>。`;return d
 };
 const chooseHand31=chooseHand;chooseHand=function(i){chooseHand31(i);let r=S.run;if(r?.mode==='battle'&&r.hp>0&&r.enemies.every(e=>e.hp<=0)){r.pendingChoice=null;victory()}};
 const bonus31=bonusReady;bonusReady=(c,r)=>bonus31(c,r)||!!(c.fx.poisonDraw&&(r.enemies[target]?.poison||0)>0)||!!(c.fx.revenge&&r.hpLossCount);
@@ -207,7 +208,7 @@ for(const [name,cost,rarity,runOnly,desc,fx,axis,icon] of [
 ])C.push({id:C.length,name,cost,rarity,runOnly,desc,fx,axis,icon});
 const target39=needsEnemy;needsEnemy=c=>!!(c.fx.reinfect||c.fx.empathy)||target39(c);
 const tips39=tips;tips=c=>tips39(c)+(c.fx.reinfect?'<div><strong>【累積毒】</strong><p>この戦闘で対象に付与した毒の合計。毒の減少・謁見で消えず、再感染で付与した毒も合計に含みます。</p></div>':'');
-const battle39=battle;battle=function(){let html=battle39();let r=S.run;if(r?.exhaustStrength)html=html.replace('灰の肉体 '+r.exhaustStrength,'灰の肉体 '+r.exhaustStrength+'（'+(r.exhaustStrengthCount%3||0)+'/3）');return html};
+const battle39=battle;battle=function(){let html=battle39();let r=S.run;if(r?.exhaustStrength)html=html.replace('灰の肉体 '+r.exhaustStrength,'灰の肉体 '+r.exhaustStrength+'（'+(r.exhaustStrengthCount%(r.exhaustStrengthInterval??3)||0)+'/'+(r.exhaustStrengthInterval??3)+'）');return html};
 
 for(const e of S.run?.enemies||[])e.poisonTotal??=e.poison||0;
 for(const e of S.run?.battleCards||[])hydrateBattleCard(e);
