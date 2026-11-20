@@ -43,8 +43,11 @@ const balanceCardConditions = {
 };
 
 const balanceEffectLabels = {
-  autoEvolvePlay:'自動使用する進化可能カードの枚数', beastHunt:'毎ターンのHP消費・裂傷量',
-  bloodBlessing:'HP喪失時の回復量', engine:'除外時の追加ドロー枚数', sacrifice:'ランダムに除外する枚数',
+  autoEvolvePlay:'自動使用する進化可能カードの枚数', beastHunt:'毎ターン開始時のHP喪失',
+  bleedDecay:'敵の裂傷の追加減少量', evolutionStrengthInterval:'筋力を得るまでの進化回数',
+  beastHuntBleed:'毎ターン開始時の裂傷付与量', forge:'斬撃のダメージ上昇量',
+  passionBlock:'毎ターン開始時のブロック量', engineBlock:'除外時のブロック量',
+  bloodBlessing:'HP喪失時の回復量', engine:'除外時のブロック倍率（旧設定）', sacrifice:'ランダムに除外する枚数',
   equalPoison:'対象の毒参照倍率', totalPoison:'敵全体の毒参照倍率', reinfect:'蓄積毒の再付与倍率',
   passionHp:'ターン開始時のHP消費', strMultiplier:'筋力倍率', poisonTicks:'毒の発動回数',
   heartbeatRefund:'エナジーの還元量', poisonDraw:'毒対象でのドロー枚数',
@@ -83,7 +86,7 @@ const balanceEffectLabels = {
 const balanceSwitchEffects = new Set([
   'all','bleedHitCount','discardBreak',
   'doubleStr','doubleVulnerable','evolutionEnergy','evolveAll','ex',
-  'fold','forge','healOnHpDamage','heartbeat','lossAfterBlock','passion','poisonDouble',
+  'fold','healOnHpDamage','heartbeat','lossAfterBlock','passion','poisonDouble',
   'randomAttack','randomOne','retainBlock','revenge','stun','stunAttack',
   'temporary','temporaryBleed','unplayable','xHits',
 ]);
@@ -92,16 +95,20 @@ function balanceCardEffects(card) {
   const fx = {...card.fx};
   if (!fx.luckyKey && !fx.xHits && !fx.bleedHitCount && (fx.d != null || fx.totalPoison || fx.equalPoison || fx.exactBlock)) fx.h ??= 1;
   if (fx.heartbeat) fx.heartbeatRefund ??= 1;
-  if (fx.passion) fx.passionHp ??= 1;
+  if (fx.passion) { fx.passionHp ??= 1; fx.passionBlock ??= 5; }
+  if (fx.engine != null) fx.engineBlock ??= 3*fx.engine;
+  if (fx.beastHunt != null) fx.beastHuntBleed ??= fx.beastHunt;
+  if (fx.bleedRepeat != null) fx.bleedDecay ??= fx.bleedRepeat;
+  if (fx.evolutionStrength != null) fx.evolutionStrengthInterval ??= 3;
   if (fx.poisonDouble) fx.poisonTicks ??= 2;
   if (fx.doubleStr) fx.strMultiplier ??= 2;
   const fields = Object.entries(fx).filter(([key, value]) =>
     Number.isFinite(value) && !balanceSwitchEffects.has(key)
   ).map(([key, value]) => ({
     id: card.id + ':' + key,
-    key, implicit: !Object.hasOwn(card.fx ?? {}, key), label: balanceEffectLabels[key] ?? key, value,
-    min: value < 0 ? -99 : ['h','slot','lowHpOnly','heartbeatRefund','passionHp','poisonTicks','strMultiplier','evolveStages'].includes(key) ? (key === 'lowHpOnly' ? 0.01 : 1) : 0,
-    max: key === 'lowHpOnly' || key === 'damageReduction' ? 1 : 99,
+    key, hidden: key === 'engine', implicit: !Object.hasOwn(card.fx ?? {}, key), label: balanceEffectLabels[key] ?? key, value,
+    min: value < 0 ? -99 : ['h','slot','lowHpOnly','heartbeatRefund','passionHp','poisonTicks','strMultiplier','evolveStages','evolutionStrengthInterval'].includes(key) ? (key === 'lowHpOnly' ? 0.01 : 1) : 0,
+    max: key === 'lowHpOnly' || key === 'damageReduction' ? 1 : key === 'engineBlock' ? 297 : 99,
     step: ['blockScale','damageReduction','lowHpOnly','territory'].includes(key) ? 0.01 : 1,
   }));
   for (const [trigger, [key, value, label, min]] of Object.entries(balanceCardConditions)) {
@@ -369,6 +376,16 @@ function balanceValidate(input) {
 
 // Bind displayed numbers only to effect phrases whose original value matches.
 const balanceDescriptionPatterns = {
+  bleedRepeat: /(?<=発動回数\+)\d+/g,
+  bleedDecay: /(?<=減少量\+)\d+/g,
+  evolutionStrengthInterval: /(?<=カードが)\d+(?=回進化)/g,
+  evolutionStrength: /(?<=筋力)\d+/g,
+  beastHunt: /(?<=HPを)\d+(?=失い)/g,
+  beastHuntBleed: /(?<=裂傷)\d+(?=を付与)/g,
+  forge: /(?<=ダメージ\+)\d+/g,
+  passionHp: /(?<=HPを)\d+(?=失い)/g,
+  passionBlock: /\d+(?=ブロックを得る)/g,
+  engineBlock: /\d+(?=ブロックを得る)/g,
   d: /\d+(?=ダメージ)/g,
   b: /\d+(?=ブロック)|(?<=ブロック)\d+/g,
   p: /(?<=毒を?)\d+(?=付与)/g,
@@ -400,11 +417,20 @@ const balanceDescriptionPatterns = {
 };
 
 const balanceDescriptionNotes = new Map();
+function balanceEffectiveEffect(overrides, field) {
+  const direct=overrides[field.id];
+  if(direct!==undefined)return direct;
+  const legacy={engineBlock:['engine',3],beastHuntBleed:['beastHunt',1],bleedDecay:['bleedRepeat',1]}[field.key];
+  if(!legacy)return undefined;
+  const id=field.id.slice(0,field.id.lastIndexOf(':')+1)+legacy[0];
+  return overrides[id]===undefined?undefined:overrides[id]*legacy[1];
+}
 function balanceCardDescription({id, effects, detail}, overrides) {
   const bindings = new Map();
   const notes = [];
   for (const field of effects) {
-    const value = overrides[field.id];
+    if(field.hidden)continue;
+    const value = balanceEffectiveEffect(overrides,field);
     if (value === undefined || value === field.value) continue;
     const pattern = balanceDescriptionPatterns[field.key];
     const scale = field.key==='lowHpOnly' ? 100 : 1;

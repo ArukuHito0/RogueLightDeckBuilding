@@ -48,11 +48,32 @@ const vm = require('node:vm');
       base.play(0);
       assert.equal(result(r), value, card.name + ' ' + field);
     }
+    const specials = [
+      ['腐食',{bleedRepeat:0,bleedDecay:4},'減少量+4',r=>{r.enemies[0].laceration=8;decayHunterStatus(r,r.enemies[0]);assert.equal(r.enemies[0].laceration,3);assert.equal(r.bleedRepeat,0);}],
+      ['成長',{evolutionStrengthInterval:2},'2回進化',r=>{const id=C.find(c=>c?.evolveTo!=null).id;const before=r.str;evolveCardInstance(r,id);assert.equal(r.str,before);evolveCardInstance(r,id);assert.equal(r.str,before+1);}],
+      ['獣の狩り',{beastHunt:0,beastHuntBleed:4},'裂傷4',r=>{applyTurnStartBuffs(r);assert.equal(r.hp,77);assert.equal(r.enemies[0].laceration,4);}],
+      ['鍛え直し',{forge:4},'ダメージ+4',r=>{r.hand=[0];base.play(0);assert.equal(r.strikeBonus,4);}],
+      ['激情',{passionBlock:8},'8ブロック',r=>{applyTurnStartBuffs(r);assert.equal(r.hp,76);assert.equal(r.block,8);}],
+      ['灰の守り',{engineBlock:7},'7ブロック',r=>{exhaustCard(r,0);assert.equal(r.block,7);}],
+    ];
+    for(const [name,fields,phrase,verify] of specials){
+      const {id}=C.find(c=>c?.name===name);
+      balanceApply({...ASHBOUND_BALANCE_SETTINGS,cardEffects:Object.fromEntries(Object.entries(fields).map(([key,value])=>[id+':'+key,value]))});
+      const c=C[id];
+      const r=S.run={characterId:c.characterId??'wanderer',hp:77,max:77,block:0,str:0,agility:0,energy:20,energyMax:3,turn:1,act:1,floor:1,
+        hand:[id,1],draw:[0,0],discard:[],exhausted:[],deck:[0,1],relics:[],battleCards:[],generatedCards:[],potions:[],
+        enemies:[{hp:100,max:100,block:0,str:0,poison:0,atk:1,intent:'attack'}],mode:'battle',kind:'fight'};
+      page='battle';target=0;busy=false;
+      assert.ok(c.desc.includes(phrase),name+' '+c.desc);
+      assert.ok(combatDesc(combatCard(id),r).includes(phrase),name+' 戦闘説明');
+      base.play(0);
+      verify(r);
+    }
     balanceApply({...ASHBOUND_BALANCE_SETTINGS,cardEffects:{'0:d':9,[LUCKY_IDS.custom+':script.drawPenalty']:2}});
     assert.match(C[0].desc, /9ダメージ/);
     assert.ok(C[LUCKY_IDS.custom].desc.includes('ターン開始時のドロー減少枚数 1 → 2'));
     balanceApply(ASHBOUND_BALANCE_SETTINGS);
     assert.deepEqual(cases.map(([id]) => C[id].desc), original);
   `, h.context);
-  console.log('PASS all 11 published card effects in reference text and combat');
+  console.log('PASS all 17 published card effects in reference text and combat');
 })().catch(error => { console.error(error); process.exitCode = 1; });

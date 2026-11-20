@@ -9,7 +9,7 @@ function hunterAttackDamage(r,e,n){let value=Math.max(0,n);if(e.vulnerable)value
 const hunterDamageBase=dealDamage;dealDamage=function(e,n,options={}){const r=S.run;if(!r)return 0;const isAttack=!!options.attack,bleed=e?.laceration||0;if(isAttack)n=hunterAttackDamage(r,e,n);const beforeBlock=e?.block||0;const lost=hunterDamageBase(e,n,options);if(e===r&&isAttack&&options.attacker&&Math.min(beforeBlock,n)>0&&r.bleedCounter)addLaceration(r,options.attacker,r.bleedCounter);if(isAttack&&lost>0&&bleed&&e.laceration&&e.hp>0){const ticks=1+(e===r?0:r.bleedRepeat||0);for(let i=0;i<ticks&&e.hp>0;i++)hunterDamageBase(e,bleed,{ignoreBlock:true,damageKind:"裂傷"});}return lost;};
 const hunterCardAttackBase=cardAttack;cardAttack=function(e,n){const r=S.run;const lost=dealDamage(e,n,{attack:true,attacker:r});if(hasRelic('three_damage',r)){r.damageCount=(r.damageCount||0)+1;if(r.damageCount%3===0)r.str++;}if(r.poisonCoat&&e.hp>0)addPoison(e,r.poisonCoat);return lost;};
 const hunterCombatCardBase=combatCard;combatCard=function(id){const c=hunterCombatCardBase(id),r=S.run;if(!c||!r)return c;const f={...c.fx},e=r.enemies?.[target],factor=effectFactor(r);if(c.characterId==='hunter'){
- for(const key of ['bleed','vulnerable','bleedAmount','extraBleed','bleedCounter','bleedBonus','tracking','selfBleed','enemyTempStrength','vulnerableStrength','vulnerableBleed','vulnerableDraw','evolutionStrength','evolveHand','searchDraw','searchEvolvable','bleedRepeat','evolveDeck'])if(typeof f[key]==='number')f[key]*=factor;
+ for(const key of ['bleed','vulnerable','bleedAmount','extraBleed','bleedCounter','bleedBonus','tracking','selfBleed','enemyTempStrength','vulnerableStrength','vulnerableBleed','vulnerableDraw','evolutionStrength','evolveHand','searchDraw','searchEvolvable','bleedRepeat','bleedDecay','evolveDeck'])if(typeof f[key]==='number')f[key]*=factor;
  if(f.evolvedDamage)f.d+=evolvedCardCount(r)*f.evolvedDamage;if(f.evolutionDamage)f.d=(f.d||0)+(r.evolutionCount||0)*f.evolutionDamage;
  if(f.evolvedBlock)f.b+=evolvedCardCount(r)*f.evolvedBlock;if(f.vulnerableBlock&&e?.vulnerable)f.b+=f.vulnerableBlock;
  if(f.bleedHits&&e?.laceration)f.h=(f.h||1)+f.bleedHits;if(f.vulnerableHits&&e?.vulnerable)f.h=(f.h||1)+f.vulnerableHits;
@@ -31,23 +31,37 @@ function resolveHunterEffects(r,c){if(c.characterId!=='hunter')return;const f=c.
  for(let i=0;i<(f.randomBleed||0);i++){const alive=r.enemies.filter(e=>e.hp>0);if(alive.length)addLaceration(r,rand(alive),f.bleedAmount,{card:true});}
  if(f.selfBleed)addLaceration(r,r,f.selfBleed,{card:true});
  if(f.damageReduction)r.damageReduction=Math.max(r.damageReduction||0,f.damageReduction);
- for(const key of ['evolutionBlock','evolutionStrength','bleedCounter','bleedBonus','beastHunt','bleedRepeat','tracking','territory'])if(f[key])r[key]=(r[key]||0)+f[key];
+ for(const key of ['evolutionBlock','bleedCounter','bleedBonus','tracking','territory'])if(f[key])r[key]=(r[key]||0)+f[key];
+ if(f.evolutionStrength){
+  const intervals=r.evolutionStrengthByInterval??={3:r.evolutionStrength||0};
+  const interval=f.evolutionStrengthInterval??3;
+  intervals[interval]=(intervals[interval]||0)+f.evolutionStrength;
+  r.evolutionStrength=(r.evolutionStrength||0)+f.evolutionStrength;
+ }
+ if(f.beastHunt!=null){
+  r.beastHuntBleed=(r.beastHuntBleed??r.beastHunt??0)+(f.beastHuntBleed??f.beastHunt);
+  r.beastHunt=(r.beastHunt||0)+f.beastHunt;
+ }
+ if(f.bleedRepeat!=null){
+  r.bleedDecay=(r.bleedDecay??r.bleedRepeat??0)+(f.bleedDecay??f.bleedRepeat);
+  r.bleedRepeat=(r.bleedRepeat||0)+f.bleedRepeat;
+ }
  if(f.evolutionEnergy){gainEnergy(r,r.hand.filter(id=>C[id]?.evolution).length*effectFactor(r));r.energyLocked=true;}
  if(f.evolveHand||f.evolveDeck||f.devolveHand){const kind=f.evolveHand||f.evolveDeck?'evolve':'devolve';r.hunterChoice={kind,scope:f.evolveDeck?'deck':'hand',remaining:f.evolveDeck||f.evolveHand||f.devolveHand,stages:f.evolveStages||1};const n=hunterChoiceCandidates(r).length;if(!n)r.hunterChoice=null;else r.hunterChoice.remaining=Math.min(n,r.hunterChoice.remaining);}
  if(f.searchEvolvable&&r.hand.length<10){r.hunterChoice={kind:'search',scope:f.searchPile,evolvableOnly:true,remaining:f.searchEvolvable};const n=hunterChoiceCandidates(r).length;if(!n)r.hunterChoice=null;else r.hunterChoice.remaining=Math.min(n,r.hunterChoice.remaining,10-r.hand.length);}
  if(f.searchDraw&&r.draw.length&&r.hand.length<10)r.hunterChoice={kind:'search',remaining:Math.min(f.searchDraw,r.draw.length,10-r.hand.length)};
 }
-function evolveCardInstance(r,id,reverse=false){const c=C[id],to=reverse?c?.devolveTo:c?.evolveTo;if(to==null)return id;const newId=nextBattleCardId(r),entry={id:newId,origin:to};(r.battleCards??=[]).push(entry);hydrateBattleCard(entry);if(!reverse){r.evolutionCount=(r.evolutionCount||0)+1;if(r.evolutionBlock)gainBlock(r,r.evolutionBlock,'passive');if(r.evolutionStrength&&r.evolutionCount%3===0)r.str+=r.evolutionStrength;}return newId;}
+function evolveCardInstance(r,id,reverse=false){const c=C[id],to=reverse?c?.devolveTo:c?.evolveTo;if(to==null)return id;const newId=nextBattleCardId(r),entry={id:newId,origin:to};(r.battleCards??=[]).push(entry);hydrateBattleCard(entry);if(!reverse){r.evolutionCount=(r.evolutionCount||0)+1;if(r.evolutionBlock)gainBlock(r,r.evolutionBlock,'passive');for(const [interval,strength] of Object.entries(r.evolutionStrengthByInterval??{3:r.evolutionStrength||0}))if(r.evolutionCount%Number(interval)===0)r.str+=strength;}return newId;}
 const hunterPileBase=resolvePlayedCardPile;resolvePlayedCardPile=function(r,c,trigger=true){if(c.evolveTo!=null&&r.hp>0){r.discard.push(evolveCardInstance(r,c.id));return;}hunterPileBase(r,c,trigger);};
 function hunterChoiceCandidates(r){const p=r.hunterChoice;if(!p)return [];const piles=p.kind==='search'?[p.scope||'draw']:p.scope==='deck'?['hand','draw','discard','exhausted']:['hand'];let offset=0,out=[];for(const pile of piles){out.push(...(r[pile]||[]).map((id,pileIndex)=>({id,index:offset+pileIndex,pile,pileIndex})));offset+=(r[pile]||[]).length;}return out.filter(x=>!(p.chosenIndexes||[]).includes(x.index)).filter(x=>(p.kind==='search'&&(!p.evolvableOnly||C[x.id]?.evolveTo!=null))||(p.kind!=='search'&&(p.kind==='evolve'?C[x.id]?.evolveTo!=null:C[x.id]?.devolveTo!=null)));}
 function chooseHunterCard(index){const r=S.run,p=r?.hunterChoice;if(!r||!p||busy)return;const candidate=hunterChoiceCandidates(r).find(x=>x.index===index);if(!candidate)return;if(p.kind==='search'){if(r.hand.length<10)r.hand.push(r[candidate.pile].splice(candidate.pileIndex,1)[0]);p.remaining--;if(!p.remaining||!hunterChoiceCandidates(r).length||r.hand.length>=10)r.hunterChoice=null;}else{let evolved=candidate.id;for(let stage=0;stage<(p.stages||1);stage++)evolved=evolveCardInstance(r,evolved,p.kind==='devolve');r[candidate.pile][candidate.pileIndex]=evolved;(p.chosenIndexes??=[]).push(index);p.remaining--;if(!p.remaining||!hunterChoiceCandidates(r).length)r.hunterChoice=null;}if(r.enemies.every(e=>e.hp<=0)){r.hunterChoice=null;victory();}else render();}
 function skipHunterChoice(){if(S.run?.hunterChoice?.kind==='evolve'&&!busy){S.run.hunterChoice=null;render();}}
-function decayHunterStatus(r,e){e.laceration=Math.max(0,(e.laceration||0)-(e===r?1:1+(r.bleedRepeat||0)));e.vulnerable=Math.max(0,(e.vulnerable||0)-1);}
+function decayHunterStatus(r,e){e.laceration=Math.max(0,(e.laceration||0)-(e===r?1:1+(r.bleedDecay??r.bleedRepeat??0)));e.vulnerable=Math.max(0,(e.vulnerable||0)-1);}
 function hunterPlayerTurnEnd(r){decayHunterStatus(r,r);for(const e of r.enemies){if(e.temporaryLaceration){e.laceration=Math.max(0,(e.laceration||0)-e.temporaryLaceration);e.temporaryLaceration=0;}}}
 function hunterEnemyActionEnd(r,e){decayHunterStatus(r,e);if(e.hunterTempStrength){e.str=(e.str||0)+e.hunterTempStrength;e.hunterTempStrength=0;}e.hunterStun=false;}
-function resetHunterBattle(r){for(const key of ['laceration','vulnerable','evolutionCount','evolutionBlock','evolutionStrength','bleedCounter','bleedBonus','beastHunt','bleedRepeat','tracking','territory','damageReduction'])r[key]=0;r.energyLocked=false;r.hunterChoice=null;}
+function resetHunterBattle(r){for(const key of ['laceration','vulnerable','evolutionCount','evolutionBlock','evolutionStrength','bleedCounter','bleedBonus','beastHunt','bleedRepeat','tracking','territory','damageReduction'])r[key]=0;delete r.evolutionStrengthByInterval;delete r.beastHuntBleed;delete r.bleedDecay;r.energyLocked=false;r.hunterChoice=null;}
 const hunterChooseBase=choose;choose=function(type){const r=S.run,was=r?.mode;if(r&&was!=='battle'&&['fight','elite','boss'].includes(type))resetHunterBattle(r);hunterChooseBase(type);if(r===S.run&&r?.mode==='battle'&&was!=='battle'){resetHunterBattle(r);render();}};
-const hunterTurnStartBase=applyTurnStartBuffs;applyTurnStartBuffs=function(r){r.energyLocked=false;r.damageReduction=0;r.bleedCounter=0;hunterTurnStartBase(r);if(r.beastHunt&&r.hp>0){loseHP(r,r.beastHunt*effectFactor(r));if(r.hp>0)for(const e of r.enemies)addLaceration(r,e,r.beastHunt*effectFactor(r),{card:false});}};
+const hunterTurnStartBase=applyTurnStartBuffs;applyTurnStartBuffs=function(r){r.energyLocked=false;r.damageReduction=0;r.bleedCounter=0;hunterTurnStartBase(r);const bleed=r.beastHuntBleed??r.beastHunt??0;if((r.beastHunt||bleed)&&r.hp>0){loseHP(r,(r.beastHunt||0)*effectFactor(r));if(r.hp>0)for(const e of r.enemies)addLaceration(r,e,bleed*effectFactor(r),{card:false});}};
 const hunterBossBase=bossPlan;bossPlan=function(r){hunterBossBase(r);const e=r.enemies?.[0];if(e?.hunterStun){e.intent='stunned';e.move='スタン';}};
 const hunterTargetBase=needsEnemy;needsEnemy=function(c){const f=c.fx;return hunterTargetBase(c)||(!f.all&&!!(f.bleed||f.xBleed||f.vulnerable||f.vulnerableBleed||f.vulnerableDraw||f.vulnerableBlock||f.blockVulnerable||f.doubleVulnerable||f.stunAttack||f.enemyTempStrength));};
 const hunterCategoriesBase=cardCategories;cardCategories=c=>c.characterId==='hunter'?[...c.types,...(c.evolution?['進化']:[])]:hunterCategoriesBase(c);
@@ -66,8 +80,8 @@ if(f.bleedDraw)d=d.replace(/カードを\d+枚引く/,'カードを'+(f.bleedDra
 if(f.randomBleed)d='裂傷'+(f.bleedAmount+bonus)+'を'+f.randomBleed+'回、毎回ランダムな敵に付与。';
 if(f.bleedCounter)d=d.replace(/裂傷\d+/,'裂傷'+f.bleedCounter);
 if(f.bleedBonus)d=d.replace(/量\+\d+/,'量+'+f.bleedBonus);
-if(f.beastHunt)d='毎ターン開始時、HPを'+(f.beastHunt*factor)+'失い、敵全体に裂傷'+(f.beastHunt*factor)+'を付与。特殊。';
-if(f.bleedRepeat)d='この戦闘中、裂傷の発動回数+'+f.bleedRepeat+'。敵の裂傷のターン終了時の減少量+'+f.bleedRepeat+'。特殊。';
+if(f.beastHunt!=null)d='毎ターン開始時、HPを'+(f.beastHunt*factor)+'失い、敵全体に裂傷'+((f.beastHuntBleed??f.beastHunt)*factor)+'を付与。特殊。';
+if(f.bleedRepeat!=null)d='この戦闘中、裂傷の発動回数+'+f.bleedRepeat+'。敵の裂傷のターン終了時の減少量+'+(f.bleedDecay??f.bleedRepeat)+'。特殊。';
 if(f.vulnerable)d=d.replace(/脆弱\d+/,'脆弱'+f.vulnerable);
 if(f.blockVulnerable)d=d.replace(/につき脆弱\d+/,'につき脆弱'+f.blockVulnerable*factor);
 if(f.vulnerableStrength)d=d.replace(/筋力\d+/,'筋力'+f.vulnerableStrength);
@@ -75,7 +89,7 @@ if(f.vulnerableBleed){d=d.replace(/裂傷\d+/,'裂傷'+f.vulnerableBleed);if(bon
 if(f.vulnerableDraw)d=d.replace(/カードを\d+枚引く/,'カードを'+f.vulnerableDraw+'枚引く');
 if(f.tracking)d=d.replace(/カードを\d+枚引く/,'カードを'+f.tracking+'枚引く');
 if(f.enemyTempStrength)d=d.replace(/筋力-\d+/,'筋力-'+f.enemyTempStrength);
-if(f.evolutionStrength)d=d.replace(/筋力\d+/,'筋力'+f.evolutionStrength);
+if(f.evolutionStrength!=null)d=d.replace(/カードが\d+回進化/,'カードが'+(f.evolutionStrengthInterval??3)+'回進化').replace(/筋力\d+/,'筋力'+f.evolutionStrength);
 if(f.evolveDeck)d='デッキの進化可能なカードを'+f.evolveDeck+'枚まで選び、'+(f.evolveStages||1)+'段階進化させる。除外。';
 if(f.evolveHand)d='手札の進化可能なカードを'+f.evolveHand+'枚まで選び、'+(f.evolveStages||1)+'段階進化させる。除外。';
 if(f.searchEvolvable)d=(f.searchPile==='discard'?'捨て札':'山札')+'の進化可能なカードを'+f.searchEvolvable+'枚選び、手札に加える。';
