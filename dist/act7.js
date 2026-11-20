@@ -11,8 +11,8 @@ const GOLD_FOES={
  captain:['黄金鎧の傭兵長',135,90,[{d:12,steal:30},{cost:30,d:8,h:3,fallback:{d:5,h:3}},{cost:30,b:24,fallback:{b:8}},{cost:30,d:30,fallback:{d:18}}]],
  tax:['血宴の徴税官',120,0,[{d:6,h:2},{bloodAttack:12,d:14},{b:12},{d:5,h:3}]],
  collector:['蓄光の収集者',100,0,[{energySteal:1},{d:16},{b:8,energyBlock:4},{d:5,h:3}]],
- donorA:['黄金の献納者A',35,0,[]],
- donorB:['黄金の献納者B',35,0,[]],
+ donorA:['黄金の献納者A',35,0,[{supply:10},{b:8}]],
+ donorB:['黄金の献納者B',35,0,[{supply:10},{b:8}]],
  lord:['黄金卿',320,60,[{d:12,steal:20},{cost:40,d:6,h:4,fallback:{d:4,h:4}},{cost:40,energySteal:1,fallback:{b:10}},{bloodBlock:12,b:12},{d:22,energyAttack:3,steal:20},{wait:true}]]
 };
 const GOLD_NORMAL=['thief','vault','priest','blood','goblin'];
@@ -32,13 +32,14 @@ const GOLD_PATHS={
  lord:'M8 62L14 32 23 25 21 13 16 5 28 11 32 2 37 11 49 5 43 14 42 25 50 32 56 62M23 21H41M20 31L32 40 44 31M18 43L32 51 46 43V57L32 63 18 57ZM27 22L30 24M35 24L38 22M32 41V60M8 20V57M5 26H12'
 };
 function goldIcon(key){return '<svg class="enemy-art" viewBox="0 0 64 64" aria-hidden="true"><path d="'+GOLD_PATHS[key]+'" fill="currentColor" fill-opacity=".15" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';}
-function goldFoe(key,r=S.run){const [name,hp,gold]=GOLD_FOES[key];r.goldSerial=(r.goldSerial||0)+1;return Object.assign(enemy(name,goldIcon(key),hp,0),{act2:true,act7:true,goldKind:key,goldId:'gold-'+r.goldSerial,actionStep:0,str:0,nativeGold:gold,stolenBalance:0,stolenTotal:0,storedBlood:0,bloodTotal:0,heldEnergy:0,generatedGold:0,lightDamage:0,lightTurn:r.turn});}
-function goldEncounter(r,type){if(type==='boss')return ['donorA','donorB','lord'].map(k=>goldFoe(k,r));if(type==='elite'){r.goldElites??=[];if(!r.goldElites.length)r.goldElites=shuffle(['captain','tax','collector']);return [goldFoe(r.goldElites.pop(),r)];}r.goldFights=(r.goldFights||0)+1;return (r.goldFights<=3?[rand(GOLD_NORMAL)]:rand(GOLD_PAIRS)).map(k=>goldFoe(k,r));}
+function goldFoe(key,r=S.run){const [name,hp,gold]=GOLD_FOES[key];r.goldSerial=(r.goldSerial||0)+1;return Object.assign(enemy(name,goldIcon(key),typeof balanceGoldHp === "function" ? balanceGoldHp(key,hp) : hp,0),{act2:true,act7:true,goldKind:key,goldId:'gold-'+r.goldSerial,actionStep:0,str:0,nativeGold:gold,stolenBalance:0,stolenTotal:0,storedBlood:0,bloodTotal:0,heldEnergy:0,generatedGold:0,lightDamage:0,lightTurn:r.turn});}
+function goldPick(group,pool){return typeof balanceGoldPick==='function'?balanceGoldPick(group,pool):rand(pool);}
+function goldEncounter(r,type){if(type==='boss')return ['donorA','donorB','lord'].map(k=>goldFoe(k,r));if(type==='elite'){r.goldElites??=[];if(!r.goldElites.length)r.goldElites=shuffle(['captain','tax','collector']);return [goldFoe(r.goldElites.pop(),r)];}r.goldFights=(r.goldFights||0)+1;return (r.goldFights<=3?[goldPick('solo',GOLD_NORMAL)]:goldPick('pairs',GOLD_PAIRS)).map(k=>goldFoe(k,r));}
 function goldBalance(e){return (e.nativeGold||0)+(e.stolenBalance||0);}
 function goldReturnAmount(e){return (e.nativeGold||0)+(e.stolenTotal||0);}
 function goldSpend(e,n){if(goldBalance(e)<n)return false;const native=Math.min(e.nativeGold||0,n);e.nativeGold-=native;e.stolenBalance-=n-native;return true;}
 function goldSupplyTarget(r,e){if(e.goldKind.startsWith('donor'))return r.enemies.find(x=>x.goldKind==='lord'&&x.hp>0);return r.enemies.filter(x=>x!==e&&x.hp>0&&GOLD_FOES[x.goldKind]?.[3].some(a=>a.cost)).sort((a,b)=>goldBalance(a)-goldBalance(b)||r.enemies.indexOf(a)-r.enemies.indexOf(b))[0];}
-function goldAction(r,e,budget=goldBalance(e)){let raw;if(e.goldKind.startsWith('donor')){const supply=(r.turn%2===1)===(e.goldKind==='donorA');raw=supply?{supply:10}:{b:8};}else {const list=GOLD_FOES[e.goldKind][3];raw=list[e.actionStep%list.length];}let a={...raw};
+function goldAction(r,e,budget=goldBalance(e)){let raw;if(e.goldKind.startsWith('donor')){const supply=(r.turn%2===1)===(e.goldKind==='donorA');raw=GOLD_FOES[e.goldKind][3][supply?0:1];}else {const list=GOLD_FOES[e.goldKind][3];raw=list[e.actionStep%list.length];}let a={...raw};
  if(a.cost&&(budget<a.cost||a.needAlly&&!r.enemies.some(x=>x!==e&&x.hp>0))){a={...a.fallback,unfunded:true,wantedCost:a.cost};}
  if(a.supply){const cap=e.goldKind==='mint'?80:60,target=goldSupplyTarget(r,e);a.supply=Math.min(a.supply,Math.max(0,cap-e.generatedGold));if(!target||!a.supply)a={b:8};else a.supplyTarget=target.goldId;}
  if(a.bloodBlock){a.bloodUse=Math.min(a.bloodBlock,e.storedBlood);a.b+=a.bloodUse;}
@@ -79,4 +80,4 @@ const goldArtBase=destinationArt;destinationArt=function(id){if(id!==7)return go
 if(S.run?.act===7&&S.run.mode==='battle')planGold(S.run);
 if(!globalThis.ASHBOUND_HEADLESS)render();
 
-const goldForecastBase=forecastDamage;forecastDamage=function(r){if(r?.act!==7)return goldForecastBase(r);const player={...r,vulnerable:Math.max(0,(r.vulnerable||0)-1)};let total=0;for(const e of r.enemies){if(e.hp<=poisonLoss(e,r)||e.hunterStun||e.intent==='stunned')continue;const a=goldPreviewAction(r,e);if(a.d==null)continue;for(const n of goldDamagePreview(player,e,a)){const lost=Math.max(0,n-(player.block||0));player.block=Math.max(0,(player.block||0)-n);total+=lost+(lost>0?Math.max(0,(r.laceration||0)-1):0);player.hp=Math.max(0,player.hp-lost);}}return total;};
+const goldForecastBase=forecastDamage;forecastDamage=function(r){if(r?.act!==7||r.enemies.some(e=>!e.act7))return goldForecastBase(r);const player={...r,vulnerable:Math.max(0,(r.vulnerable||0)-1)};let total=0;for(const e of r.enemies){if(e.hp<=poisonLoss(e,r)||e.hunterStun||e.intent==='stunned')continue;const a=goldPreviewAction(r,e);if(a.d==null)continue;for(const n of goldDamagePreview(player,e,a)){const lost=Math.max(0,n-(player.block||0));player.block=Math.max(0,(player.block||0)-n);total+=lost+(lost>0?Math.max(0,(r.laceration||0)-1):0);player.hp=Math.max(0,player.hp-lost);}}return total;};

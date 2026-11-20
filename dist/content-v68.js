@@ -9,6 +9,6 @@ const roar68=updateContent68('咆哮',{desc:'敵全体に14ダメージを与え
 updateContent68('進化の牙',{desc:'4ダメージ。デッキの進化済みカード1枚につきダメージ+1。'});
 updateContent68('進化の鱗',{desc:'4ブロック。デッキの進化済みカード1枚につき、ブロック値+1。'});
 updateContent68('乱れ啄み',{cost:1});
-const contentDesc68=combatDesc;combatDesc=function(c,r){let text=contentDesc68(c,r);if(c.fx.blockRegen)text=cardBlockValue(r,c.fx.b)+'ブロック。現在のブロック値が15以上なら、再生'+c.fx.blockRegen+'を得る。';if(c.fx.recoverExcluded)text='除外されたカードからランダムなカードを'+c.fx.recoverExcluded+'枚、手札に加える。';if(c.fx.ex&&!isSpecialCard(c)&&!text.includes('除外。'))text+='除外。';return text;};
+const contentDesc68=combatDesc;combatDesc=function(c,r){let text=contentDesc68(c,r);if(c.fx.blockRegen)text=cardBlockValue(r,c.fx.b)+'ブロック。現在のブロック値が'+(c.fx.blockRegenThreshold??15)+'以上なら、再生'+c.fx.blockRegen+'を得る。';if(c.fx.recoverExcluded)text='除外されたカードからランダムなカードを'+c.fx.recoverExcluded+'枚、手札に加える。';if(c.fx.ex&&!isSpecialCard(c)&&!text.includes('除外。'))text+='除外。';return text;};
 for(const entry of S.run?.battleCards||[])hydrateBattleCard(entry);
 for(const entry of S.run?.generatedCards||[])hydrateGeneratedCard(entry);
