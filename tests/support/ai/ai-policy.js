@@ -82,5 +82,45 @@
  function choose(o,rng,axis,w){const ranked=o.actions.map(a=>({a,score:score(a,o,axis,w)})).sort((a,b)=>b.score-a.score);const best=ranked.filter(x=>Math.abs(x.score-ranked[0].score)<1e-8);return best[Math.floor(rng()*best.length)].a}
  function setOverrides(input={}){overrides={};const traitKeys=['frontDamage','frontBlock','scaling','draw','block','heal','selfHarm'],roleKeys=['attack','defense','draw','heal'];for(const [id,row] of Object.entries(input)){if(!/^\d+$/.test(id)||!row||typeof row!=='object')continue;overrides[id]={};if(Array.isArray(row.axes))overrides[id].axes=axes.filter(a=>row.axes.includes(a));for(const [kind,keys] of [['traits',traitKeys],['roles',roleKeys]])if(row[kind])overrides[id][kind]=Object.fromEntries(keys.map(k=>[k,!!row[kind][k]]));if(Array.isArray(row.keys))overrides[id].keys=axes.filter(a=>row.keys.includes(a));}return overrides}
  function keyCard(c,axis){return overrides[c.origin??c.id]?.keys?overrides[c.origin??c.id].keys.includes(axis):(config.keys[axis]||[]).includes(c.origin??c.id)}
- globalThis.AI_POLICY={setOverrides,keyCard,axes,names,config,tags,roles,pick,build,score,choose,incoming,traits,counts,healing,tolerance,horizon,evaluate,damageEstimate,blockEstimate,poisonTactics};
+
+ // Only use the visible erosion total, card marks and current attack intents.
+ function chooseForestAction(previous,o,axis,weight){
+  const {erosion,marks,atEnd}=o.forest;
+  const pending=atEnd?marks.reduce((sum,mark)=>sum+mark,0):0;
+  if(!erosion&&!marks.some(Boolean))return previous;
+  const attack=incoming(o);
+  const damage=Math.max(0,attack-o.block);
+  const margin=o.hp-erosion-pending-damage;
+  const pressure=margin<=0?5:margin<=10?2.5:1;
+  if(atEnd&&previous.type==='handChoice'&&['discard','exhaust'].includes(o.choice?.kind)){
+   return o.actions.filter(a=>a.type==='handChoice').reduce((best,next)=>marks[next.index]>marks[best.index]?next:best,previous);
+  }
+  if(!['play','endTurn','potion'].includes(previous.type))return previous;
+
+  function adjust(action){
+   if(action.type==='endTurn'){
+    if(erosion+pending>0&&margin<=0)return -140;
+    return -pending*(margin<=10?2:0.6);
+   }
+   if(action.type==='potion'){
+    const potion=o.potions[action.index];
+    return potion?.id==='heal'&&margin<=0?25:0;
+   }
+   const card=o.hand[action.index],mark=marks[action.index]||0;
+   const block=Math.min(damage,blockEstimate(card,o));
+   const hpCost=(card.fx.hpLoss||0)+(card.fx.selfDamage||0);
+   const markEffect=atEnd?mark:margin-mark<=10?-mark:0;
+   const rescue=margin<=0?(block-hpCost)*0.8:0;
+   return markEffect*pressure+rescue;
+  }
+  const ranked=action=>score(action,o,axis,weight)+adjust(action);
+  let best=previous,bestScore=ranked(previous),priorAdjustment=adjust(previous);
+  for(const action of o.actions){
+   if(!['play','endTurn','potion'].includes(action.type)||adjust(action)<=priorAdjustment)continue;
+   const value=ranked(action);
+   if(value>bestScore){best=action;bestScore=value;}
+  }
+  return best;
+ }
+ globalThis.AI_POLICY={chooseForestAction,setOverrides,keyCard,axes,names,config,tags,roles,pick,build,score,choose,incoming,traits,counts,healing,tolerance,horizon,evaluate,damageEstimate,blockEstimate,poisonTactics};
 })();
