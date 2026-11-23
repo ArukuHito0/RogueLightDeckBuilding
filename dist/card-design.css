@@ -26,14 +26,14 @@ body:has(#app .arena) .hand .card[data-card][data-card-frame] {
   padding: 0;
 }
 
-/* 上段は背景画像の比率を保つ。 */
+/* 元画像の外周をカードの外に出し、文字の基準位置を保つ。 */
 .card[data-card-frame]::before {
   content: "";
   position: absolute;
-  inset: 0;
+  inset: -2.87cqw -10.53cqw -10.29cqw -9.09cqw;
   z-index: -1;
-  border-top: 98cqw solid transparent;
-  border-image: var(--card-frame) 410 0 0 0 fill stretch;
+  border-top: 100.87cqw solid transparent;
+  border-image: var(--card-frame) 422 0 0 0 fill stretch;
   pointer-events: none;
 }
 /* タイプとレアリティに対応する透過テンプレート。 */
