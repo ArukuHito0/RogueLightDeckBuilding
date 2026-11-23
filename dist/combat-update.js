@@ -134,7 +134,7 @@ applyTurnStartBuffs=function(r){r.enemyPhase=false;r.damageCount=0;const {poison
  if(plate>0&&r.plate>0){gainBlock(r,plate,'passive');r.plate--}if(regen>0&&r.regen>0){healHP(r,regen);r.regen--}
 };
 endTurn=async function(){let r=S.run;if(busy||page!=='battle'||r.pendingChoice||r.hunterChoice||r.pendingDiscard||r.potionTarget!=null)return;busy=true;
- try{hunterPlayerTurnEnd(r);if(r.act===4&&typeof forestCheckErosion==='function'){forestCheckErosion(r);r.forestErosionSnapshot=r.forestErosion||0;}if(r.hp<=0){await animateEntity('player','death');finish(false);return;}r.enemyPhase=true;r.poisonCoat=0;expireGeneratedCards(r);r.str-=r.tempStr||0;r.agility=(r.agility||0)-(r.tempAgility||0);r.tempStr=0;r.tempAgility=0;r.discard.push(...r.hand);r.hand=[];
+ try{hunterPlayerTurnEnd(r);if(r.act===4&&typeof forestCheckErosion==='function'){if(typeof forestEndHandErosion==='function')forestEndHandErosion(r);forestCheckErosion(r);r.forestErosionSnapshot=r.forestErosion||0;}if(r.hp<=0){await animateEntity('player','death');finish(false);return;}r.enemyPhase=true;r.poisonCoat=0;expireGeneratedCards(r);r.str-=r.tempStr||0;r.agility=(r.agility||0)-(r.tempAgility||0);r.tempStr=0;r.tempAgility=0;r.discard.push(...r.hand);r.hand=[];
  for(let i=0;i<r.enemies.length;i++){let e=r.enemies[i];if(e.hp<=0||e.summonedTurn===r.turn)continue;if(!e.retainBlock&&!e.reading)e.block=0;
  for(let tick=0;tick<(r.poisonDouble===true?2:r.poisonDouble||1)&&e.hp>0;tick++)if(e.poison){let n=e.poison;e.poison--;dealDamage(e,n,{ignoreBlock:true});await animateEntity(i,'hit',n)}
  if(e.hp<=0){await animateEntity(i,'death');continue}
