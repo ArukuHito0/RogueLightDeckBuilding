@@ -1,12 +1,12 @@
 // v49: card categories and powers consumed for the encounter (not exhausted).
-const SPECIAL_EFFECTS=['engine','poisonDouble','passion','burn','thornGarden','forge','exhaustStrength','poisonAura','retainBlock','heartbeat','blockBonus'];
+const SPECIAL_EFFECTS=['engine','poisonDouble','passion','burn','thornGarden','forge','exhaustStrength','poisonAura','retainBlock','heartbeat','blockBonus','turnStartStrength'];
 function isSpecialCard(c){return !!c?.special;}
 function cardCategories(c){const f=c.fx||{};if(isSpecialCard(c))return ['特殊'];const types=[];if(f.d!=null||f.equalPoison||f.totalPoison||f.exactBlock)types.push('攻撃');if(f.b||f.strengthBlock||f.poisonBlock||f.exhaustBlock)types.push('防御');if(['p','reinfect','heal','s','agility','plate','regen','thorns','rage','thornShield','poisonCoat','empathy','doubleStr','strRegen','blockRegen','nextAttack','enemyStrength'].some(k=>f[k]))types.push('補助');return types.length?types:['補助'];}
 function resolvePlayedCardPile(r,c,trigger=true){if(isSpecialCard(c)){r.specialUses??={};r.specialUses[c.id]=(r.specialUses[c.id]||0)+1;return;}if(c.fx.ex)exhaustCard(r,c.id,trigger);else r.discard.push(c.id);}
 for(const name of ['血の盾','毒纏い','供物','茨の盾'])C.find(c=>c.name===name).rarity='common';
 reviseNamed('残火の刃','4ダメージ。この戦闘の除外済みカード1枚につきダメージ+1。',{d:4,exScale:1},{rarity:'common'});
 C.find(c=>c.name==='残灰の一撃').name='残火の大太刀';
-reviseNamed('巨人の血','筋力+4。既に筋力が4以上なら、再生5を得る。除外。',{s:4,strRegen:5,ex:1});
+reviseNamed('巨人の血','ターン開始時、筋力1を得る。',{turnStartStrength:1});
 reviseNamed('厚い城壁','18ブロック。次のターン開始時に8ブロック。',{b:18,nextBlock:8});
 reviseNamed('共感','対象の毒スタック数と等しい筋力を得る。対象は毒を全て失う。',{empathy:1});
 for(const c of C){if(SPECIAL_EFFECTS.some(k=>c.fx[k])){c.special=true;delete c.fx.ex;c.desc=c.desc.replace(/除外。/g,'')+'特殊。';}}
