@@ -36,25 +36,21 @@ body:has(#app .arena) .hand .card[data-card][data-card-frame] {
   border-image: var(--card-frame) 410 0 0 0 fill stretch;
   pointer-events: none;
 }
-/* 既存のレアリティ色を画像の深緑に重ね、枠の明暗を残す。 */
-.card[data-card-frame].rare { --card-rarity-tint: #46718e; --card-rarity-line: #81a5c4; }
-.card[data-card-frame].epic { --card-rarity-tint: #795087; --card-rarity-line: #b398c8; }
-.card[data-card-frame].token { --card-rarity-tint: #536977; --card-rarity-line: #9cacba; }
+/* 地色だけに旧配色を重ねる。円とタグは元の画像を表示する。 */
+.card[data-card-frame].rare { --card-tint-filter: url("#card-tint-rare"); }
+.card[data-card-frame].epic { --card-tint-filter: url("#card-tint-epic"); }
+.card[data-card-frame].token { --card-tint-filter: url("#card-tint-token"); }
 .card[data-card-frame]:is(.rare, .epic, .token)::after {
   content: "";
   position: absolute;
-  inset: 2% 1% 1% 2%;
-  clip-path: polygon(21% 0, 100% 0, 100% 100%, 0 100%, 0 10%, 21% 10%);
+  inset: 0;
   z-index: -1;
-  border-radius: inherit;
-  background: var(--card-rarity-tint);
-  mix-blend-mode: color;
-  opacity: .78;
+  border-top: 98cqw solid transparent;
+  border-image: var(--card-frame) 410 0 0 0 fill stretch;
+  filter: var(--card-tint-filter);
+  clip-path: polygon(21% 0, 100% 0, 100% 100%, 0 100%, 0 40.5cqw,
+    30% 40.5cqw, 30% 27cqw, 0 27cqw, 0 21cqw, 21% 21cqw);
   pointer-events: none;
-}
-.card[data-card-frame]:is(.rare, .epic, .token)::before {
-  border-radius: inherit;
-  box-shadow: 0 0 0 1px var(--card-rarity-line);
 }
 
 .card[data-card-frame] { --card-frame: url("card-frame-defense.webp"); }
