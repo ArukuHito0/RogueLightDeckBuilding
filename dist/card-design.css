@@ -1,66 +1,113 @@
-/* カード案の縁取り。カード内容と操作は既存の描画を使用する。 */
-.card[data-card-frame] {
+/* 同じ座標系でカードのタイトル、タイプ、イラストを配置する。 */
+:is(#app .card, .card)[data-card][data-card-frame] {
   isolation: isolate;
   position: relative;
-  background-image: radial-gradient(ellipse at 50% 40%, #ffffff0a, #0b130d40);
+  display: inline-flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  box-sizing: border-box;
+  padding: 7px 0 0;
+  border-radius: 9px;
+  background-image: radial-gradient(ellipse at 50% 48%, #ffffff10, #0b130d40);
   vertical-align: top;
+  overflow: visible;
 }
 .card[data-card-frame]::before {
   content: "";
   position: absolute;
-  inset: 0;
-  z-index: 2;
-  border-radius: inherit;
-  box-shadow: inset 0 0 0 1px #b8bb9e58;
+  inset: 3px;
+  border: 1px solid #b8bb9e42;
+  border-radius: 6px;
   pointer-events: none;
 }
-.card[data-card-frame] .art {
+.card[data-card-frame] .card-illustration {
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr);
   position: relative;
   isolation: isolate;
-  margin-top: 0;
-  background: none;
-}
-.card[data-card-frame] .art::before {
-  content: "";
-  position: absolute;
-  inset: -2.2rem -0.25rem -0.5rem;
-  z-index: -1;
+  width: 100%;
+  aspect-ratio: 1;
+  container-type: inline-size;
   background: var(--card-frame-art) center / 100% 100% no-repeat;
-  pointer-events: none;
 }
-.card[data-card-frame] h3 {
-  position: relative;
-  margin: 0 0 .4em;
-  padding-inline: 1.2em .25em;
-  overflow-wrap: anywhere;
-}
-.card[data-card-frame] .cost {
-  z-index: 3;
-  top: -.25em;
-  left: -.18em;
-  display: grid;
-  place-items: center;
-  line-height: 1;
-  box-shadow: inset 0 0 0 2px #17221b, inset 0 0 0 3px #c4a97260;
-}
-.card[data-card-frame] .card-category {
-  position: absolute;
-  z-index: 1;
-  top: 2.8em;
-  left: 0;
-  max-width: calc(100% - .6em);
+:is(#app .card, .card)[data-card][data-card-frame] .card-illustration > h3 {
+  box-sizing: border-box;
   margin: 0;
-  padding: .3em 1.1em .3em .4em;
+  padding: 10cqw 18cqw 2cqw;
+  text-align: center;
+  font-family: Georgia, "Yu Mincho", serif;
+  font-size: calc(8cqw * var(--text-scale, 1));
+  line-height: 1.14;
+  overflow-wrap: anywhere;
+  color: #f4edda;
+}
+:is(#app .card, .card)[data-card][data-card-frame] .card-illustration > .card-category {
+  position: relative;
+  inset: auto;
+  justify-self: start;
+  box-sizing: border-box;
+  min-width: 27%;
+  max-width: 80%;
+  margin: 0;
+  padding: .16em .98em .18em .55em;
+  font-size: calc(6.5cqw * var(--text-scale, 1));
+  line-height: 1.15;
   text-align: left;
   letter-spacing: normal;
   color: #f4edda;
   background: #26372a;
   clip-path: polygon(0 0, calc(100% - .65em) 0, 100% 50%, calc(100% - .65em) 100%, 0 100%);
   box-shadow: inset 0 1px #bca46d, inset 0 -1px #bca46d;
+  overflow-wrap: anywhere;
+}
+:is(#app .card, .card)[data-card][data-card-frame] .card-illustration > .art {
+  align-self: stretch;
+  justify-self: stretch;
+  display: grid;
+  place-items: center;
+  height: auto;
+  min-height: 37cqw;
+  margin: 0 0 16cqw;
+  border: 0;
+  background: radial-gradient(circle, transparent 0 51%, #c4a97236 52%, transparent 53%) center / 48cqw 48cqw no-repeat;
+  font-size: 30cqw;
+  line-height: 1;
+  color: #d4b77b;
+}
+:is(#app .card, .card)[data-card][data-card-frame] .art :is(.hunter-card-icon, .lucky-card-art) {
+  width: 34cqw;
+  height: 34cqw;
+  filter: none;
+}
+:is(#app .card, .card)[data-card][data-card-frame] > .cost {
+  z-index: 3;
+  top: -5px;
+  left: -4px;
+  width: 2.35em;
+  height: 2.35em;
+  display: grid;
+  place-items: center;
+  line-height: 1;
+  font-weight: 500;
+  background: #26382c;
+  color: #fff5dd;
+  box-shadow: inset 0 0 0 2px #17221b, inset 0 0 0 3px #c4a97260;
 }
 .card[data-card-frame] .latent-badge:not(.card-role-badge) { display: none; }
-.card[data-card-frame] .art :is(.hunter-card-icon, .lucky-card-art) { filter: none; }
-.card[data-card-frame] p { border-top: 0; }
+:is(#app .card, .card)[data-card][data-card-frame] > p {
+  flex: 1 0 auto;
+  display: block;
+  align-content: center;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 8px 8% 10px;
+  border: 0;
+  line-height: 1.5;
+  color: #f4edda;
+  overflow-wrap: anywhere;
+}
+.card[data-card-frame] > :is(.count, .card-source) { margin-inline: 8%; }
 .card[data-card-frame].common { background-color: #26362a; }
 .card[data-card-frame].rare { background-color: #243743; }
 .card[data-card-frame].epic { background-color: #392b43; }
