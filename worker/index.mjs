@@ -9,7 +9,7 @@ export default {async fetch(req,env){
     if(req.method!=='GET'&&req.method!=='HEAD')return new Response(null,{status:405});
     const name=url.pathname==='/'?'index.html':url.pathname.slice(1);
     const file=Object.hasOwn(ASSETS,name)?ASSETS[name]:null;
-    return file?new Response(req.method==='HEAD'?null:file[1],{headers:{'Content-Type':file[0],'Cache-Control':'no-cache','X-Content-Type-Options':'nosniff'}}):new Response('Not found',{status:404});
+    return file?new Response(req.method==='HEAD'?null:file[0]==='image/webp'?Uint8Array.from(atob(file[1]),byte=>byte.charCodeAt(0)):file[1],{headers:{'Content-Type':file[0],'Cache-Control':'no-cache','X-Content-Type-Options':'nosniff'}}):new Response('Not found',{status:404});
   }
   const id=req.headers.get('oai-authenticated-user-id');
   if(!id)return json({error:'sign_in_required'},401);
