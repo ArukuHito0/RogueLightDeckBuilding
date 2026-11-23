@@ -16,6 +16,44 @@
       .replace(/(<div class="art">[\s\S]*?<\/div>)(<small class="card-category">[^<]*<\/small>)(<h3>[\s\S]*?<\/h3>)/,
         '<div class="card-illustration">$3$2$1</div>');
   };
-  if (!globalThis.ASHBOUND_HEADLESS) render();
+  if (!globalThis.ASHBOUND_HEADLESS) {
+    let fitting = false;
+    function scheduleCardTextFit() {
+      if (fitting) return;
+      fitting = true;
+      requestAnimationFrame(() => {
+        fitting = false;
+        const range = document.createRange();
+        for (const text of document.querySelectorAll('.card[data-card-frame] > p')) {
+          text.style.removeProperty('--card-text-fit');
+          if (!text.clientHeight) continue;
+          range.selectNodeContents(text);
+          const style = getComputedStyle(text);
+          const bounds = text.getBoundingClientRect();
+          const zoom = bounds.height / text.offsetHeight;
+          const padding = parseFloat(style.paddingTop) + parseFloat(style.paddingBottom);
+          const available = bounds.height - padding * zoom;
+          const fits = () => text.scrollHeight <= text.clientHeight + 1 && range.getBoundingClientRect().height + 3 * zoom <= available;
+          if (fits()) continue;
+          let lower = 0;
+          let upper = 1;
+          for (let step = 0; step < 6; step++) {
+            const scale = (lower + upper) / 2;
+            text.style.setProperty('--card-text-fit', scale);
+            if (fits()) lower = scale;
+            else upper = scale;
+          }
+          text.style.setProperty('--card-text-fit', lower * 0.9);
+        }
+      });
+    }
+    const observer = new MutationObserver(scheduleCardTextFit);
+    observer.observe(document.body, {childList: true, subtree: true});
+    observer.observe(document.documentElement, {attributes: true, attributeFilter: ['style']});
+    window.addEventListener('resize', scheduleCardTextFit);
+    document.fonts?.ready.then(scheduleCardTextFit);
+    render();
+    scheduleCardTextFit();
+  }
 })();
 </script></body></html>

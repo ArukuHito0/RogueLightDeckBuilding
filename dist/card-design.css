@@ -8,6 +8,11 @@
   align-items: stretch;
   justify-content: flex-start;
   box-sizing: border-box;
+  width: clamp(152px, 44vw, 200px);
+  max-width: 100%;
+  min-height: 0;
+  height: auto !important;
+  aspect-ratio: 418 / 695;
   padding: 0;
   border: 0;
   border-radius: 8px;
@@ -15,7 +20,13 @@
   vertical-align: top;
   overflow: visible;
 }
-/* 上段は等倍比率を保ち、長い効果文には下段だけを伸ばす。 */
+body:has(#app .arena) .hand .card[data-card][data-card-frame] {
+  width: clamp(134px, 14vw, 190px);
+  min-height: 0;
+  padding: 0;
+}
+
+/* 上段は背景画像の比率を保つ。 */
 .card[data-card-frame]::before {
   content: "";
   position: absolute;
@@ -102,20 +113,22 @@
 }
 .card[data-card-frame] .latent-badge:not(.card-role-badge) { display: none; }
 :is(#app .card, .card)[data-card][data-card-frame] > p {
-  flex: 1 0 auto;
+  flex: 1 1 0;
+  min-height: 0;
   display: block;
-  align-content: center;
+  align-content: safe center;
   box-sizing: border-box;
   margin: 0;
-  min-height: 61cqw;
-  padding: 5cqw 9%;
+  padding: 3cqw 8%;
   border: 0;
-  font-size: calc(6.7cqw * var(--text-scale, 1));
+  font-size: max(8px, calc(7.2cqw * var(--text-scale, 1) * var(--card-text-fit, 1)));
   line-height: 1.5;
   color: #fff4dc;
   overflow-wrap: anywhere;
+  overflow-y: auto;
 }
 .card[data-card-frame] > :is(.count, .card-source) {
-  margin: -2cqw 8% 4cqw;
+  flex: 0 0 auto;
+  margin: 0 8% 3cqw;
   padding-top: 0;
 }
