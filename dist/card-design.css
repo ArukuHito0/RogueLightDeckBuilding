@@ -1,0 +1,72 @@
+/* カード案の縁取り。カード内容と操作は既存の描画を使用する。 */
+.card[data-card-frame] {
+  isolation: isolate;
+  position: relative;
+  background-image: radial-gradient(ellipse at 50% 40%, #ffffff0a, #0b130d40);
+  vertical-align: top;
+}
+.card[data-card-frame]::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 1px #b8bb9e58;
+  pointer-events: none;
+}
+.card[data-card-frame] .art {
+  position: relative;
+  isolation: isolate;
+  margin-top: 0;
+  background: none;
+}
+.card[data-card-frame] .art::before {
+  content: "";
+  position: absolute;
+  inset: -2.2rem -0.25rem -0.5rem;
+  z-index: -1;
+  background: var(--card-frame-art) center / 100% 100% no-repeat;
+  pointer-events: none;
+}
+.card[data-card-frame] h3 {
+  position: relative;
+  margin: 0 0 .4em;
+  padding-inline: 1.2em .25em;
+  overflow-wrap: anywhere;
+}
+.card[data-card-frame] .cost {
+  z-index: 3;
+  top: -.25em;
+  left: -.18em;
+  display: grid;
+  place-items: center;
+  line-height: 1;
+  box-shadow: inset 0 0 0 2px #17221b, inset 0 0 0 3px #c4a97260;
+}
+.card[data-card-frame] .card-category {
+  position: absolute;
+  z-index: 1;
+  top: 2.8em;
+  left: 0;
+  max-width: calc(100% - .6em);
+  margin: 0;
+  padding: .3em 1.1em .3em .4em;
+  text-align: left;
+  letter-spacing: normal;
+  color: #f4edda;
+  background: #26372a;
+  clip-path: polygon(0 0, calc(100% - .65em) 0, 100% 50%, calc(100% - .65em) 100%, 0 100%);
+  box-shadow: inset 0 1px #bca46d, inset 0 -1px #bca46d;
+}
+.card[data-card-frame] .latent-badge:not(.card-role-badge) { display: none; }
+.card[data-card-frame] .art :is(.hunter-card-icon, .lucky-card-art) { filter: none; }
+.card[data-card-frame] p { border-top: 0; }
+.card[data-card-frame].common { background-color: #26362a; }
+.card[data-card-frame].rare { background-color: #243743; }
+.card[data-card-frame].epic { background-color: #392b43; }
+.card[data-card-frame].token { background-color: #27343a; }
+.card[data-card-frame="attack"] { --card-frame-art: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20200%20100%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cfilter%20id%3D%22s%22%20x%3D%22-8%25%22%20y%3D%22-8%25%22%20width%3D%22116%25%22%20height%3D%22125%25%22%3E%3CfeDropShadow%20dx%3D%221.6%22%20dy%3D%222.8%22%20stdDeviation%3D%222%22%20flood-color%3D%22%23080e09%22%20flood-opacity%3D%22.83%22%2F%3E%3C%2Ffilter%3E%3C%2Fdefs%3E%3Cpath%20d%3D%22M3%205H197V65L100%2090%203%2065Z%22%20fill%3D%22%230c170f%22%20fill-opacity%3D%22.29%22%20stroke%3D%22%23c9ae77%22%20stroke-width%3D%221%22%20filter%3D%22url(%23s)%22%2F%3E%3C%2Fsvg%3E"); }
+.card[data-card-frame="support"] { --card-frame-art: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20200%20100%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cfilter%20id%3D%22s%22%20x%3D%22-8%25%22%20y%3D%22-8%25%22%20width%3D%22116%25%22%20height%3D%22125%25%22%3E%3CfeDropShadow%20dx%3D%221.6%22%20dy%3D%222.8%22%20stdDeviation%3D%222%22%20flood-color%3D%22%23080e09%22%20flood-opacity%3D%22.83%22%2F%3E%3C%2Ffilter%3E%3C%2Fdefs%3E%3Cpath%20d%3D%22M3%2014C3%202%20197%202%20197%2014V87C197%2075%203%2075%203%2087Z%22%20fill%3D%22%230c170f%22%20fill-opacity%3D%22.29%22%20stroke%3D%22%23c9ae77%22%20stroke-width%3D%221%22%20filter%3D%22url(%23s)%22%2F%3E%3C%2Fsvg%3E"); }
+.card[data-card-frame="defense"] { --card-frame-art: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20200%20100%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cfilter%20id%3D%22s%22%20x%3D%22-8%25%22%20y%3D%22-8%25%22%20width%3D%22116%25%22%20height%3D%22125%25%22%3E%3CfeDropShadow%20dx%3D%221.6%22%20dy%3D%222.8%22%20stdDeviation%3D%222%22%20flood-color%3D%22%23080e09%22%20flood-opacity%3D%22.83%22%2F%3E%3C%2Ffilter%3E%3C%2Fdefs%3E%3Cpath%20d%3D%22M7%205H193Q197%205%20197%209V85Q197%2089%20193%2089H7Q3%2089%203%2085V9Q3%205%207%205Z%22%20fill%3D%22%230c170f%22%20fill-opacity%3D%22.29%22%20stroke%3D%22%23c9ae77%22%20stroke-width%3D%221%22%20filter%3D%22url(%23s)%22%2F%3E%3C%2Fsvg%3E"); }
+.card[data-card-frame="special"] { --card-frame-art: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20200%20100%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cfilter%20id%3D%22s%22%20x%3D%22-8%25%22%20y%3D%22-8%25%22%20width%3D%22116%25%22%20height%3D%22125%25%22%3E%3CfeDropShadow%20dx%3D%221.6%22%20dy%3D%222.8%22%20stdDeviation%3D%222%22%20flood-color%3D%22%23080e09%22%20flood-opacity%3D%22.83%22%2F%3E%3C%2Ffilter%3E%3C%2Fdefs%3E%3Cpath%20d%3D%22M48%205H152L197%2032V63L152%2089H48L3%2063V32Z%22%20fill%3D%22%230c170f%22%20fill-opacity%3D%22.29%22%20stroke%3D%22%23c9ae77%22%20stroke-width%3D%221%22%20filter%3D%22url(%23s)%22%2F%3E%3C%2Fsvg%3E"); }
+.card[data-card-frame="neutral"] { --card-frame-art: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20200%20100%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cfilter%20id%3D%22s%22%20x%3D%22-8%25%22%20y%3D%22-8%25%22%20width%3D%22116%25%22%20height%3D%22125%25%22%3E%3CfeDropShadow%20dx%3D%221.6%22%20dy%3D%222.8%22%20stdDeviation%3D%222%22%20flood-color%3D%22%23080e09%22%20flood-opacity%3D%22.83%22%2F%3E%3C%2Ffilter%3E%3C%2Fdefs%3E%3Cpath%20d%3D%22M7%205H193Q197%205%20197%209V85Q197%2089%20193%2089H7Q3%2089%203%2085V9Q3%205%207%205Z%22%20fill%3D%22%230c170f%22%20fill-opacity%3D%22.29%22%20stroke%3D%22%23c9ae77%22%20stroke-width%3D%221%22%20filter%3D%22url(%23s)%22%2F%3E%3C%2Fsvg%3E"); }
