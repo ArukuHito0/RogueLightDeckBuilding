@@ -36,27 +36,23 @@ body:has(#app .arena) .hand .card[data-card][data-card-frame] {
   border-image: var(--card-frame) 410 0 0 0 fill stretch;
   pointer-events: none;
 }
-/* 地色だけに旧配色を重ねる。円とタグは元の画像を表示する。 */
-.card[data-card-frame].rare { --card-tint-filter: url("#card-tint-rare"); }
-.card[data-card-frame].epic { --card-tint-filter: url("#card-tint-epic"); }
-.card[data-card-frame].token { --card-tint-filter: url("#card-tint-token"); }
-.card[data-card-frame]:is(.rare, .epic, .token)::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  border-top: 98cqw solid transparent;
-  border-image: var(--card-frame) 410 0 0 0 fill stretch;
-  filter: var(--card-tint-filter);
-  clip-path: polygon(21% 0, 100% 0, 100% 100%, 0 100%, 0 40.5cqw,
-    30% 40.5cqw, 30% 27cqw, 0 27cqw, 0 21cqw, 21% 21cqw);
-  pointer-events: none;
-}
-
-.card[data-card-frame] { --card-frame: url("card-frame-defense.webp"); }
-.card[data-card-frame="attack"] { --card-frame: url("card-frame-attack.webp"); }
-.card[data-card-frame="support"] { --card-frame: url("card-frame-support.webp"); }
-.card[data-card-frame="special"] { --card-frame: url("card-frame-special.webp"); }
+/* タイプとレアリティに対応する透過テンプレート。 */
+.card[data-card-frame="attack"] { --card-frame: url("card-frame-common-attack.webp"); }
+.card[data-card-frame="support"] { --card-frame: url("card-frame-common-support.webp"); }
+.card[data-card-frame="defense"], .card[data-card-frame="neutral"] { --card-frame: url("card-frame-common-defense.webp"); }
+.card[data-card-frame="special"] { --card-frame: url("card-frame-common-special.webp"); }
+.card.rare[data-card-frame="attack"] { --card-frame: url("card-frame-rare-attack.webp"); }
+.card.rare[data-card-frame="support"] { --card-frame: url("card-frame-rare-support.webp"); }
+.card.rare[data-card-frame="defense"], .card.rare[data-card-frame="neutral"] { --card-frame: url("card-frame-rare-defense.webp"); }
+.card.rare[data-card-frame="special"] { --card-frame: url("card-frame-rare-special.webp"); }
+.card.epic[data-card-frame="attack"] { --card-frame: url("card-frame-epic-attack.webp"); }
+.card.epic[data-card-frame="support"] { --card-frame: url("card-frame-epic-support.webp"); }
+.card.epic[data-card-frame="defense"], .card.epic[data-card-frame="neutral"] { --card-frame: url("card-frame-epic-defense.webp"); }
+.card.epic[data-card-frame="special"] { --card-frame: url("card-frame-epic-special.webp"); }
+.card.token[data-card-frame="attack"] { --card-frame: url("card-frame-token-attack.webp"); }
+.card.token[data-card-frame="support"] { --card-frame: url("card-frame-token-support.webp"); }
+.card.token[data-card-frame="defense"], .card.token[data-card-frame="neutral"] { --card-frame: url("card-frame-token-defense.webp"); }
+.card.token[data-card-frame="special"] { --card-frame: url("card-frame-token-special.webp"); }
 
 .card[data-card-frame] .card-illustration {
   flex: 0 0 auto;
