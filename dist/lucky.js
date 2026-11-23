@@ -1,4 +1,4 @@
-function luckyPotentialPool(){return C.filter(c=>c.runOnly&&c.characterId==='lucky'&&!c.retired&&!c.token&&!c.evolution&&!c.generated&&!c.battleCopy&&c.id>=0);}
+function luckyPotentialPool(){return C.filter(c=>c.runOnly&&c.characterId==='lucky'&&!c.retired&&!c.outsideCardPool&&!c.token&&!c.evolution&&!c.generated&&!c.battleCopy&&c.id>=0);}
 // Lucky Girl: serializable resolution queue. No function or DOM reference is saved.
 const LUCKY_SKILL_TEXT='プレイしたカードをハンドに加えて役を作る。5枚揃った時、役の判定を行う。役を揃えると、その役のカードを手札に加える。複数の役を同時に揃えたとき、好きな方を選び手札に加える。Xコストはワイルドカード。全ての数字の代わりとなる。';
 EXPLORATION_SKILLS.poker={id:'poker',name:'ポーカー',characterId:'lucky',desc:LUCKY_SKILL_TEXT};
@@ -8,6 +8,9 @@ keywords.フォールド='カードの効果によって捨て札に送られた
 keywords.役='カード使用時にハンドに加えられず、除外する。ターン終了時に捨て札に移動しない。';
 keywords.ポーカー=LUCKY_SKILL_TEXT;
 function isLucky(r=S.run){return r?.characterId==='lucky';}
+function usesLuckyCards(r){
+  return !!r && (isLucky(r) || !!r.lucky || (r.deck||[]).some(id=>!C[id]?.runOnly&&C[id]?.fx?.luckyKey));
+}
 function luckyState(r=S.run){if(!r)return null;return r.lucky??={hand:[],queue:[],frames:{},serial:0,slotCount:0,failures:0,drawCount:0,zeroBonus:0,powers:{},streak:{},payout:{},hold:[],costs:{}};}
 function luckyOrigin(c){return C[c?.origin??c?.id]||c;}
 function luckyNumber(c){const source=luckyOrigin(c);return source?.xCost?'X':source?.cost??0;}
@@ -15,7 +18,7 @@ const luckyHydrateBase=hydrateBattleCard;
 hydrateBattleCard=function(entry){luckyHydrateBase(entry);const c=C[entry.id],source=C[entry.origin];if(c&&source?.characterId==='lucky'){c.role=!!source.role;c.token=!!source.token;c.axes=source.axes?[...source.axes]:['ポーカー'];}};
 for(const e of S.run?.battleCards||[])hydrateBattleCard(e);
 function luckyInstance(r,id){const entry={id:nextBattleCardId(r),origin:id};(r.battleCards??=[]).push(entry);hydrateBattleCard(entry);return entry.id;}
-function luckyPrepareInstances(r){for(const pile of ['hand','draw','discard','exhausted'])r[pile]=(r[pile]||[]).map(id=>C[id]&&id>=0?luckyInstance(r,id):id);}
+function luckyPrepareInstances(r){for(const pile of ['hand','draw','discard','exhausted'])r[pile]=(r[pile]||[]).map(id=>C[id]&&id>=0&&(isLucky(r)||C[id].fx?.luckyKey)?luckyInstance(r,id):id);}
 function luckyAddHand(r,id){(r.hand.length<10?r.hand:r.discard).push(id);}
 function luckyPush(r,tasks){luckyState(r).queue.unshift(...tasks.filter(Boolean));}
 function luckyTarget(r,preferred){return r.enemies[preferred]?.hp>0?preferred:r.enemies.findIndex(e=>e.hp>0);}
@@ -24,7 +27,7 @@ function luckyChoice(r,kind,title,candidates,n,extra={}){const l=luckyState(r);i
 function luckySelectTask(kind,n,extra={}){return {op:'select',kind,n,...extra};}
 const luckyTypesBase=cardCategories;cardCategories=function(c){return c?.characterId==='lucky'?c.types:luckyTypesBase(c);};
 const luckyCombatBase=combatCard;
-combatCard=function(id){let c=luckyCombatBase(id),r=S.run;if(!c||!isLucky(r))return c;const l=luckyState(r),f={...c.fx},key=f.luckyKey;
+combatCard=function(id){let c=luckyCombatBase(id),r=S.run;if(!c||!usesLuckyCards(r))return c;const l=luckyState(r),f={...c.fx},key=f.luckyKey;
 if(key==='zero')f.d+=l.zeroBonus||0;if(key==='drawAttack')f.d+=(l.drawCount||0)*(f.drawDamageFactor??1);
 if(key==='jackpot')f.h=l.slotCount||0;
 if(key==='streakAttack'||key==='streakBlock')f.slot=l.streak[id]||1;
@@ -47,7 +50,7 @@ if(effectFactor(r)>1)d+=' 【遺物：ダメージ・ブロック以外2倍／�
 let luckyCardDrawDepth=0;
 function luckyEffectDraw(n){luckyCardDrawDepth++;try{return draw(n);}finally{luckyCardDrawDepth--;}}
 const luckyDrawBase=draw;
-draw=function(n,baseline=false){const r=S.run;if(!isLucky(r))return luckyDrawBase(n,baseline);const l=luckyState(r);
+draw=function(n,baseline=false){const r=S.run;if(!usesLuckyCards(r))return luckyDrawBase(n,baseline);const l=luckyState(r);
 if(baseline){if(l.retained?.length){r.hand.push(...l.retained);l.retained=[];}n=Math.max(0,n-luckyBalanceNumber('custom','drawPenalty',1)*(l.powers.custom||0));}
 const before=r.hand.length,result=luckyDrawBase(n,baseline),count=r.hand.length-before;
 if(!baseline&&count>0&&luckyCardDrawDepth>0){const previous=l.drawCount||0;l.drawCount=previous+count;if(l.powers.force){const threshold=luckyBalanceNumber('force','drawThreshold',4);r.str+=Math.floor((previous%threshold+count)/threshold)*l.powers.force*luckyBalanceNumber('force','drawStrength',1);}}
@@ -118,7 +121,7 @@ if(isAttackCard50(c)){ctx.card.fx.attackBonus=r.nextAttackBonus||0;r.nextAttackB
 l.frames[frame]=ctx;luckyPush(r,[...luckyAttachFrame(luckyActions(r,ctx),frame),{op:'finish',frame}]);return true;}
 function luckyDiscardTasks(r,ids){return ids.map(id=>({op:'discard',id}));}
 let luckyDraining=false;
-function luckyPump(r=S.run){if(!isLucky(r)||luckyDraining||S.run!==r||(r.lucky?.slotPresentation||r.lucky?.autoPresentation))return;const l=luckyState(r);luckyDraining=true;try{let steps=0;while(l.queue.length&&!l.autoPresentation&&!l.slotPresentation&&!l.choice&&!r.pendingChoice&&!r.hunterChoice&&r.hp>0&&S.run===r){if(++steps>300){if(!globalThis.ASHBOUND_HEADLESS)setTimeout(()=>luckyPump(r),0);break;}const t=l.queue.shift(),ctx=l.frames[t.frame],c=ctx?.card;
+function luckyPump(r=S.run){if(!usesLuckyCards(r)||luckyDraining||S.run!==r||(r.lucky?.slotPresentation||r.lucky?.autoPresentation))return;const l=luckyState(r);luckyDraining=true;try{let steps=0;while(l.queue.length&&!l.autoPresentation&&!l.slotPresentation&&!l.choice&&!r.pendingChoice&&!r.hunterChoice&&r.hp>0&&S.run===r){if(++steps>300){if(!globalThis.ASHBOUND_HEADLESS)setTimeout(()=>luckyPump(r),0);break;}const t=l.queue.shift(),ctx=l.frames[t.frame],c=ctx?.card;
 switch(t.op){
 case 'attack':luckyAttack(r,ctx,t.d,t.h,t.all,t.randomEach,t.randomOne);break;
 case 'block':gainBlock(r,t.n);break;
@@ -179,39 +182,40 @@ l.choice=null;luckyPump(r);}
 const luckyBasePlay=base.play;
 let luckySuppressPoker=false,luckyForceExhaustId=null,luckyExistingCall=false;
 function luckyPlayExistingAuto(r,t,aim){const previous=target;target=aim;r.hand.push(t.id);luckySuppressPoker=!!t.suppress||!!C[t.id]?.act6Junk;luckyForceExhaustId=t.forceExhaust?t.id:null;try{luckyCardDrawDepth++;luckyBasePlay(r.hand.length-1,{free:true});}finally{luckyCardDrawDepth--;target=previous;luckySuppressPoker=false;luckyForceExhaustId=null;}}
-base.play=function(i,options={}){const r=S.run;if(!isLucky(r))return luckyBasePlay(i,options);const l=luckyState(r);if(l.slotPresentation||l.choice||r.pendingChoice||r.hunterChoice||l.queue.length)return;const id=r.hand[i],c=combatCard(id);if(!c||(!options.free&&r.energy<c.cost)||!canPlayHunterCard(c,r,!!options.free))return;
+base.play=function(i,options={}){const r=S.run;if(!usesLuckyCards(r))return luckyBasePlay(i,options);const l=luckyState(r);if(l.slotPresentation||l.choice||r.pendingChoice||r.hunterChoice||l.queue.length)return;const id=r.hand[i],c=combatCard(id);if(!c||(!options.free&&r.energy<c.cost)||!canPlayHunterCard(c,r,!!options.free))return;
 if(c.fx.luckyKey){r.hand.splice(i,1);luckyBegin(r,id,options);luckyPump(r);}else{luckyExistingCall=true;try{luckyCardDrawDepth++;luckyBasePlay(i,options);}finally{luckyCardDrawDepth--;luckyExistingCall=false;}luckyPump(r);}};
 const luckyResolvedBase=onCardResolved;
 onCardResolved=function(r,c){luckyResolvedBase(r,c);if(isLucky(r)&&!c.fx.luckyKey)luckyPush(r,[{op:'poker',card:{id:c.id,origin:c.origin,cost:c.cost,xCost:c.xCost,role:c.role},suppress:luckySuppressPoker}]);};
 const luckyPileBase=resolvePlayedCardPile;
 resolvePlayedCardPile=function(r,c,trigger=true){if(isLucky(r)&&c.id===luckyForceExhaustId){exhaustCard(r,c.id,trigger);return;}return luckyPileBase(r,c,trigger);};
-const luckyCompleteBase=completeCardResolution;completeCardResolution=function(r,c){if(isLucky(r)){if(!luckyDraining&&!luckyExistingCall)luckyPump(r);return;}return luckyCompleteBase(r,c);};
+const luckyCompleteBase=completeCardResolution;completeCardResolution=function(r,c){if(usesLuckyCards(r)){if(!luckyDraining&&!luckyExistingCall)luckyPump(r);return;}return luckyCompleteBase(r,c);};
 const luckyChooseHandBase=chooseHand;
-chooseHand=function(i){const r=S.run,p=r?.pendingChoice;if(p?.luckyDiscard){const choice=r.lucky?.choice,index=choice?.candidates.findIndex(x=>x.id===r.hand[i]);if(index>=0)luckyChoose(index);return;}if(!isLucky(r)||p?.kind!=='discard')return luckyChooseHandBase(i);if(busy||p.inspect||i<0||i>=r.hand.length)return;const id=r.hand.splice(i,1)[0],l=luckyState(r);(l.pendingDiscards??=[]).push(id);p.remaining=(p.remaining||1)-1;if(p.remaining>0&&r.hand.length){render();return;}if(p.breakTarget!=null&&r.enemies[p.breakTarget]){r.enemies[p.breakTarget].block=0;if(typeof clearArchiveReading==='function')clearArchiveReading(r.enemies[p.breakTarget]);};r.pendingChoice=null;r.pendingDiscard=0;luckyPush(r,[...luckyDiscardTasks(r,l.pendingDiscards.splice(0)),...(p.draw?[{op:'draw',n:p.draw}]:[])]);luckyPump(r);};
+chooseHand=function(i){const r=S.run,p=r?.pendingChoice;if(p?.luckyDiscard){const choice=r.lucky?.choice,index=choice?.candidates.findIndex(x=>x.id===r.hand[i]);if(index>=0)luckyChoose(index);return;}if(!usesLuckyCards(r)||p?.kind!=='discard')return luckyChooseHandBase(i);if(busy||p.inspect||i<0||i>=r.hand.length)return;const id=r.hand.splice(i,1)[0],l=luckyState(r);(l.pendingDiscards??=[]).push(id);p.remaining=(p.remaining||1)-1;if(p.remaining>0&&r.hand.length){render();return;}if(p.breakTarget!=null&&r.enemies[p.breakTarget]){r.enemies[p.breakTarget].block=0;if(typeof clearArchiveReading==='function')clearArchiveReading(r.enemies[p.breakTarget]);};r.pendingChoice=null;r.pendingDiscard=0;luckyPush(r,[...luckyDiscardTasks(r,l.pendingDiscards.splice(0)),...(p.draw?[{op:'draw',n:p.draw}]:[])]);luckyPump(r);};
 const luckyTurnStartBase=applyTurnStartBuffs;
-applyTurnStartBuffs=function(r){luckyTurnStartBase(r);if(!isLucky(r))return;const l=luckyState(r);r.energy=Math.max(0,r.energy-(l.debt||0));l.debt=0;gainEnergy(r,l.delayedEnergy||0);l.delayedEnergy=0;l.costs={};l.freeCosts={};l.hold=[];};
+applyTurnStartBuffs=function(r){luckyTurnStartBase(r);if(!usesLuckyCards(r))return;const l=luckyState(r);r.energy=Math.max(0,r.energy-(l.debt||0));l.debt=0;gainEnergy(r,l.delayedEnergy||0);l.delayedEnergy=0;l.costs={};l.freeCosts={};l.hold=[];};
 const luckyEndBase=endTurn;
-endTurn=async function(){const r=S.run;if(!isLucky(r))return luckyEndBase();const l=luckyState(r);if(busy||r.pendingChoice||r.hunterChoice||r.pendingDiscard||r.potionTarget!=null||l.choice||l.queue.length)return;const keep=r.hand.filter(id=>C[id]?.role||l.hold.includes(id));r.hand=r.hand.filter(id=>!keep.includes(id));l.retained=keep;await luckyEndBase();if(S.run===r&&r.mode==='battle')luckyPump(r);};
+endTurn=async function(){const r=S.run;if(!usesLuckyCards(r))return luckyEndBase();const l=luckyState(r);if(busy||r.pendingChoice||r.hunterChoice||r.pendingDiscard||r.potionTarget!=null||l.choice||l.queue.length)return;const keep=r.hand.filter(id=>C[id]?.role||l.hold.includes(id));r.hand=r.hand.filter(id=>!keep.includes(id));l.retained=keep;await luckyEndBase();if(S.run===r&&r.mode==='battle')luckyPump(r);};
 const luckyChooseBattleBase=choose;
-choose=function(type){const r=S.run,was=r?.mode,starting=isLucky(r)&&was!=='battle'&&['fight','elite','boss','unknown'].includes(type);if(starting)r.lucky=null;const result=luckyChooseBattleBase(type);if(starting&&S.run===r&&r.mode==='battle'){luckyPrepareInstances(r);luckyPump(r);}return result;};
-const luckyFinishRunBase=finish;finish=function(...args){const r=S.run;if(isLucky(r)){const l=luckyState(r);l.hand=[];l.queue=[];l.choice=null;l.frames={};}return luckyFinishRunBase(...args);};
+choose=function(type){const r=S.run,was=r?.mode,starting=usesLuckyCards(r)&&was!=='battle'&&['fight','elite','boss','unknown'].includes(type);if(starting)r.lucky=null;const result=luckyChooseBattleBase(type);if(starting&&S.run===r&&r.mode==='battle'){luckyPrepareInstances(r);luckyPump(r);}return result;};
+const luckyFinishRunBase=finish;finish=function(...args){const r=S.run;if(usesLuckyCards(r)){const l=luckyState(r);l.hand=[];l.queue=[];l.choice=null;l.frames={};}return luckyFinishRunBase(...args);};
 const luckyVictoryBase=victory;
-victory=function(){const r=S.run;if(isLucky(r)){const l=luckyState(r);l.queue=[];l.choice=null;l.hand=[];l.frames={};l.retained=[];}return luckyVictoryBase();};
+victory=function(){const r=S.run;if(usesLuckyCards(r)){const l=luckyState(r);l.queue=[];l.choice=null;l.hand=[];l.frames={};l.retained=[];}return luckyVictoryBase();};
 // Shop packs use the same card-type lineup for every explorer.
 const luckyMatchesBase=packMatches;packMatches=function(c,axis){return c?.characterId==='lucky'?(c.axes||[]).includes(axis):luckyMatchesBase(c,axis);};
 const luckyWireBase=wireBattle;wireBattle=function(){if(S.run?.lucky?.choice)return;luckyWireBase();};
 function luckyChoiceHTML(r){const p=r.lucky?.choice;if(!p||p.kind==='discard'||p.kind==='top')return '';return '<div class="lucky-choice-overlay" role="dialog" aria-modal="true" aria-label="'+escapeHTML(p.title)+'"><section class="lucky-choice-panel"><h2>'+escapeHTML(p.title)+'</h2><p>残り '+p.remaining+'枚'+(p.kind==='top'?'（最初に選んだカードを次に引きます）':'')+'</p><div class="cards">'+p.candidates.map((x,i)=>'<div class="lucky-option">'+card(x.id,'luckyChoose('+i+')')+'</div>').join('')+'</div>'+(p.optional?'<button onclick="luckyFinishChoice()">ここまでで決定</button>':'')+'</section></div>';}
-const luckyBattleBase=battle;battle=function(){const r=S.run;luckySyncDiscardChoice(r);let html=luckyBattleBase();if(!isLucky(r))return html;const l=luckyState(r);let status='';for(const [key,label]of [['royal','ロイヤルポーカー'],['master','ポーカーマスター'],['custom','カスタムマシン'],['mental','メンタルブロック'],['tension','テンション'],['mulligan','マリガン'],['startup','スタートアップ'],['force','フォース'],['throw','スローアウェイ']])if(l.powers[key])status+='<span class="status-help" tabindex="0">'+label+' '+l.powers[key]+'<aside class="tooltip">'+C[LUCKY_IDS[key]].desc+'</aside></span>';
+const luckyBattleBase=battle;battle=function(){const r=S.run;luckySyncDiscardChoice(r);let html=luckyBattleBase();if(!usesLuckyCards(r))return html;const l=luckyState(r);let status='';for(const [key,label]of [['royal','ロイヤルポーカー'],['master','ポーカーマスター'],['custom','カスタムマシン'],['mental','メンタルブロック'],['tension','テンション'],['mulligan','マリガン'],['startup','スタートアップ'],['force','フォース'],['throw','スローアウェイ']])if(l.powers[key])status+='<span class="status-help" tabindex="0">'+label+' '+l.powers[key]+'<aside class="tooltip">'+C[LUCKY_IDS[key]].desc+'</aside></span>';
 html=html.replace('<div class="player-status">','<div class="player-status">'+status);
-const poker='<section class="lucky-table"><div class="lucky-poker"><strong>ポーカー</strong><span class="poker-hand">'+Array.from({length:5},(_,i)=>'<span class="'+(i<l.hand.length?'filled':'')+'">'+(l.hand[i]??'·')+'</span>').join('')+'</span><small>スロット '+l.slotCount+'回 ／ 効果ドロー '+l.drawCount+'枚</small></div>'+(l.lastSlot?'<div class="lucky-slot-result '+(l.lastSlot.success?'win':'lose')+'" role="status"><strong>'+escapeHTML(l.lastSlot.name)+'：'+(l.lastSlot.success?'成功':'失敗')+'</strong><span>'+l.lastSlot.kind+' '+l.lastSlot.matches+' / '+l.lastSlot.threshold+'</span><div>'+l.lastSlot.seen.map(id=>'<span title="'+escapeHTML(C[id]?.name||'')+'">'+escapeHTML(C[id]?.name||'')+'</span>').join('')+'</div></div>':'')+'</section>';
+const pokerHand = isLucky(r) ? '<strong>ポーカー</strong><span class="poker-hand">'+Array.from({length:5},(_,i)=>'<span class="'+(i<l.hand.length?'filled':'')+'">'+(l.hand[i]??'·')+'</span>').join('')+'</span>' : '';
+const poker='<section class="lucky-table"><div class="lucky-poker">' + pokerHand + '<small>スロット '+l.slotCount+'回 ／ 効果ドロー '+l.drawCount+'枚</small></div>'+(l.lastSlot?'<div class="lucky-slot-result '+(l.lastSlot.success?'win':'lose')+'" role="status"><strong>'+escapeHTML(l.lastSlot.name)+'：'+(l.lastSlot.success?'成功':'失敗')+'</strong><span>'+l.lastSlot.kind+' '+l.lastSlot.matches+' / '+l.lastSlot.threshold+'</span><div>'+l.lastSlot.seen.map(id=>'<span title="'+escapeHTML(C[id]?.name||'')+'">'+escapeHTML(C[id]?.name||'')+'</span>').join('')+'</div></div>':'')+'</section>';
 if(l.choice?.kind==='discard'&&l.choice.optional)html+='<button class="inspect-choice lucky-discard-done" onclick="luckyFinishChoice()">ここまでで決定</button>';
 html=html.replace('<div class="combat-controls">',poker+'<div class="combat-controls">');return html+luckyChoiceHTML(r);};
 const luckyCardBase=card;card=function(id,action='',extra=''){const c=C[id];let html=luckyCardBase(id,action,extra);if(c?.role)html=html.replace('<span class="latent-badge">潜在</span>','<span class="latent-badge">役</span>').replace(/<small class="card-category">.*?<\/small>/,'<small class="card-category">トークン・役</small>');return html;};
 function luckySyncDiscardChoice(r){const p=r?.lucky?.choice;if(p?.kind==='discard'&&!r.pendingChoice)r.pendingChoice={kind:'discard',remaining:p.remaining,luckyDiscard:true};}
 const luckyRenderBase=render;render=function(){luckySyncDiscardChoice(S.run);luckyRenderBase();if(page==='battle'&&S.run?.lucky?.choice){document.querySelectorAll('.lucky-choice-panel .lucky-option .card').forEach((el,index)=>{el.classList.remove('playable','unplayable','empowered');el.onclick=()=>luckyChoose(index);});}};
 // Resume only queue data; never replay a completed effect.
-if(isLucky(S.run)){luckyState(S.run);for(const entry of S.run.battleCards||[])hydrateBattleCard(entry);}
-if(!globalThis.ASHBOUND_HEADLESS){if(isLucky(S.run)&&S.run.mode==='battle'&&S.run.lucky?.queue.length&&!S.run.lucky.choice)luckyPump(S.run);else render();}
+if(usesLuckyCards(S.run)){luckyState(S.run);for(const entry of S.run.battleCards||[])hydrateBattleCard(entry);}
+if(!globalThis.ASHBOUND_HEADLESS){if(usesLuckyCards(S.run)&&S.run.mode==='battle'&&S.run.lucky?.queue.length&&!S.run.lucky.choice)luckyPump(S.run);else render();}
 const LUCKY_ROLE_RULES={pair:'同じ数字2枚が2組',straight:'0～3の連続する4枚',blackjack:'1・0・1・0・1の順番',three:'ハンドの全てが3コスト',five:'ハンドの全てが0コスト'};
 function luckyRolesHTML(){return '<div class="cards lucky-role-list">'+Object.entries(LUCKY_ROLE_IDS).map(([key,id])=>'<div><p>'+LUCKY_ROLE_RULES[key]+'</p>'+card(id)+'</div>').join('')+'</div>';}
 function luckyShowRoles(){if(!isLucky(S.run))return;luckyState(S.run).inspectRoles=true;render();}

@@ -490,6 +490,48 @@ codexTypes = function (card) {
   return cardTableTypes.has(card.origin ?? card.id) ? cardCategories(card) : originalCodexTypes(card);
 };
 
+// シート12のカードID付き明細を、基礎・潜在の入手先として使用する。
+const cardPoolByRarity = {
+  basic: {
+    common: [0, 1, 2, 3, 4, 23, 45, 46, 47, 51, 77, 78, 82, 125, 140, 142, 144, 145, 151, 155, 178, 183, 198, 202, 219, 221],
+    rare: [5, 6, 7, 8, 9, 10, 50, 55, 56, 57, 62, 69, 72, 76, 79, 81, 89, 138, 204, 211, 212, 220, 229],
+    epic: [11, 12, 13, 14, 15, 49],
+  },
+  wanderer: {
+    common: [25, 27, 30, 41, 60, 70, 71, 87],
+    rare: [22, 28, 34, 38, 42, 44, 53, 63, 73, 75, 86, 90, 91, 92],
+    epic: [16, 17, 19, 20, 21, 24, 37, 54],
+  },
+  hunter: {
+    common: [93, 96, 99, 102, 111, 127, 128, 146, 152, 157, 168, 170],
+    rare: [108, 114, 120, 122, 129, 130, 133, 135, 159, 165],
+    epic: [105, 134, 137, 143, 148, 149, 156, 166],
+  },
+  lucky: {
+    common: [171, 175, 181, 195, 196, 203, 206, 213],
+    rare: [176, 177, 180, 182, 184, 186, 192, 193, 199, 200, 205, 210, 214, 222, 228],
+    epic: [172, 173, 185, 188, 189, 190, 207],
+  },
+};
+const listedCardPoolIds = new Set();
+for (const [pool, rarities] of Object.entries(cardPoolByRarity)) {
+  for (const [rarity, ids] of Object.entries(rarities)) {
+    for (const id of ids) {
+      const card = C[id];
+      listedCardPoolIds.add(id);
+      card.runOnly = pool !== 'basic';
+      card.rarity = rarity;
+      // 共通化したカードも、元の探索者に紐づく戦闘処理を使う。
+      if (card.runOnly) card.characterId = pool;
+    }
+  }
+}
+for (const card of C) {
+  if (card.runOnly && !card.token && !card.evolution && !listedCardPoolIds.has(card.id)) {
+    card.outsideCardPool = true;
+  }
+}
+
 for (const entry of S.run?.battleCards ?? []) hydrateBattleCard(entry);
 for (const entry of S.run?.generatedCards ?? []) hydrateGeneratedCard(entry);
 
