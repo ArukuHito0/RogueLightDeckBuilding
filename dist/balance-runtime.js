@@ -52,7 +52,7 @@ const balanceEffectLabels = {
   passionHp:'ターン開始時のHP消費', strMultiplier:'筋力倍率', poisonTicks:'毒の発動回数',
   heartbeatRefund:'エナジーの還元量', poisonDraw:'毒対象でのドロー枚数',
   d:'ダメージ', b:'ブロック', h:'ヒット回数', p:'毒', s:'筋力', heal:'HP回復',
-  draw:'ドロー枚数', energy:'エナジー', bleed:'裂傷', vulnerable:'脆弱', agility:'敏捷',
+  draw:'ドロー枚数', energy:'エナジー', bleed:'裂傷', vulnerable:'脆弱', agility:'守護', turnStartStrength:'ターン開始時の筋力',
   plate:'プレート', thorns:'棘', selfBleed:'自身への裂傷', selfPoison:'自身への毒',
   selfWeak:'自身への脱力', enemyStrength:'敵の筋力', enemyTempStrength:'敵の一時筋力低下',
   chooseExhaust:'除外枚数', discard:'捨てる枚数', copyDiscard:'捨札の複製枚数',
@@ -568,7 +568,8 @@ const balanceDescriptionPatterns = {
   heal: /(?<=HPを?)\d+(?=回復)/g,
   energy: /(?<=エナジー(?:\+|を))\d+/g,
   s: /(?<=筋力(?:\+|を))-?\d+/g,
-  agility: /(?<=敏捷(?:\+|を))-?\d+/g,
+  agility: /(?<=守護\+|敏捷(?:\+|を))-?\d+/g,
+  turnStartStrength: /(?<=筋力)\d+(?=を得る)/g,
   bleed: /(?<=裂傷を?)\d+(?=付与)/g,
   vulnerable: /(?<=脆弱を?)\d+(?=付与)/g,
   discard: /\d+(?=枚捨てる)/g,
@@ -604,6 +605,12 @@ function balanceCardDescription({id, effects, detail}, overrides) {
     if (value === undefined || value === field.value) continue;
     const pattern = balanceDescriptionPatterns[field.key];
     const scale = field.key==='lowHpOnly' ? 100 : 1;
+    if (field.key === 'agility' && field.value < 0 && detail.includes(`守護を${-field.value}失う`)) {
+      const phrase = value <= 0 ? `守護を${-value}失う` : `守護を${value}得る`;
+      const match = `守護を${-field.value}失う`;
+      bindings.set(detail.indexOf(match), [{field, value:phrase, length:match.length}]);
+      continue;
+    }
     const matches = pattern ? [...detail.matchAll(pattern)].filter(match => Number(match[0]) === Math.round(field.value*scale*100)/100) : [];
     if (matches.length === 1) {
       const match = matches[0];
