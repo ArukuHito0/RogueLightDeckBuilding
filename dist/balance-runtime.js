@@ -629,7 +629,6 @@ const balanceDescriptionPatterns = {
   lowHpOnly: /\d+(?=%以下)/g,
 };
 
-const balanceDescriptionNotes = new Map();
 function balanceEffectiveEffect(overrides, field) {
   const direct=overrides[field.id];
   if(direct!==undefined)return direct;
@@ -638,9 +637,8 @@ function balanceEffectiveEffect(overrides, field) {
   const id=field.id.slice(0,field.id.lastIndexOf(':')+1)+legacy[0];
   return overrides[id]===undefined?undefined:overrides[id]*legacy[1];
 }
-function balanceCardDescription({id, effects, detail}, overrides) {
+function balanceCardDescription({effects, detail}, overrides) {
   const bindings = new Map();
-  const notes = [];
   for (const field of effects) {
     if(field.hidden)continue;
     const value = balanceEffectiveEffect(overrides,field);
@@ -659,8 +657,6 @@ function balanceCardDescription({id, effects, detail}, overrides) {
       const candidates = bindings.get(match.index) ?? [];
       candidates.push({field, value:Math.round(value*scale*100)/100, length:match[0].length});
       bindings.set(match.index, candidates);
-    } else {
-      notes.push(field.label + ' ' + field.value + ' → ' + value);
     }
   }
   let description = detail;
@@ -668,21 +664,10 @@ function balanceCardDescription({id, effects, detail}, overrides) {
     if (candidates.length === 1) {
       const {value, length} = candidates[0];
       description = description.slice(0, index) + value + description.slice(index + length);
-    } else {
-      for (const {field, value} of candidates) notes.push(field.label + ' ' + field.value + ' → ' + value);
     }
   }
-  const note = notes.length ? ' 【調整後：' + notes.join('／') + '】' : '';
-  balanceDescriptionNotes.set(String(id), note);
-  return description + note;
+  return description;
 }
-
-const balanceCombatDesc = combatDesc;
-combatDesc = function (card, run) {
-  const description = balanceCombatDesc(card, run);
-  const note = balanceDescriptionNotes.get(String(card.origin ?? card.id));
-  return note && !description.includes('【調整後：') ? description + note : description;
-};
 
 let balanceActive;
 function balanceApply(input) {
