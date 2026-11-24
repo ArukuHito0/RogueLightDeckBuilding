@@ -7,7 +7,7 @@
   width: var(--reveal-card-width);
 }
 /* 添付画像をカード幅に合わせ、見本の座標にカード情報を重ねる。 */
-:is(#app .card, .card)[data-card][data-card-frame] {
+:is(#app .card, .card):is([data-card],[data-card-preview])[data-card-frame] {
   position: relative;
   isolation: isolate;
   container-type: inline-size;
@@ -28,7 +28,7 @@
   vertical-align: top;
   overflow: visible;
 }
-body:has(#app .arena) .hand .card[data-card][data-card-frame] {
+body:has(#app .arena) .hand .card:is([data-card],[data-card-preview])[data-card-frame] {
   width: clamp(134px, 14vw, 190px);
   min-height: 0;
   padding: 0;
@@ -69,7 +69,7 @@ body:has(#app .arena) .hand .card[data-card][data-card-frame] {
   position: relative;
   height: 98cqw;
 }
-:is(#app .card, .card)[data-card][data-card-frame] .card-illustration > h3 {
+:is(#app .card, .card):is([data-card],[data-card-preview])[data-card-frame] .card-illustration > h3 {
   position: absolute;
   inset: 13cqw 15% auto;
   margin: 0;
@@ -81,7 +81,7 @@ body:has(#app .arena) .hand .card[data-card][data-card-frame] {
   overflow-wrap: anywhere;
   color: #fff4dc;
 }
-:is(#app .card, .card)[data-card][data-card-frame] .card-illustration > .card-category {
+:is(#app .card, .card):is([data-card],[data-card-preview])[data-card-frame] .card-illustration > .card-category {
   position: absolute;
   top: 27.8cqw;
   left: 3%;
@@ -99,7 +99,7 @@ body:has(#app .arena) .hand .card[data-card][data-card-frame] {
   color: #fff4dc;
   background: transparent;
 }
-:is(#app .card, .card)[data-card][data-card-frame] .card-illustration > .art {
+:is(#app .card, .card):is([data-card],[data-card-preview])[data-card-frame] .card-illustration > .art {
   position: absolute;
   top: 34cqw;
   left: 26%;
@@ -114,11 +114,11 @@ body:has(#app .arena) .hand .card[data-card][data-card-frame] {
   line-height: 1;
   color: #d4b77b;
 }
-:is(#app .card, .card)[data-card][data-card-frame] .art :is(.hunter-card-icon, .lucky-card-art) {
+:is(#app .card, .card):is([data-card],[data-card-preview])[data-card-frame] .art :is(.hunter-card-icon, .lucky-card-art) {
   width: 34cqw;
   height: 34cqw;
 }
-:is(#app .card, .card)[data-card][data-card-frame] > .cost {
+:is(#app .card, .card):is([data-card],[data-card-preview])[data-card-frame] > .cost {
   position: absolute;
   z-index: 2;
   top: .5cqw;
@@ -136,7 +136,7 @@ body:has(#app .arena) .hand .card[data-card][data-card-frame] {
   color: #fff4dc;
 }
 .card[data-card-frame] .latent-badge:not(.card-role-badge) { display: none; }
-:is(#app .card, .card)[data-card][data-card-frame] > p {
+:is(#app .card, .card):is([data-card],[data-card-preview])[data-card-frame] > p {
   flex: 1 1 0;
   min-height: 0;
   display: block;

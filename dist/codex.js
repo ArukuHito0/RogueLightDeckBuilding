@@ -28,8 +28,62 @@ function decorateEvolutionCard(html,c){if(!c?.evolution)return html;html=html.re
 const cardEvolutionBase=card;card=function(id,action='',extra=''){return decorateEvolutionCard(cardEvolutionBase(id,action,extra),C[id]);};
 function hideEvolutionPreview(){document.getElementById('evolution-preview')?.remove?.();}
 function evolutionPreviewPosition(rect,width,height,viewportWidth,viewportHeight){return {left:Math.max(8,Math.min(rect.left-width-12,viewportWidth-width-8)),top:Math.max(8,Math.min(rect.top,viewportHeight-height-8))};}
-function showEvolutionPreview(wrap){const source=wrap.querySelector('[data-card]'),c=C[source?.dataset.card],next=C[c?.evolveTo];hideEvolutionPreview();if(!next||busy||drag)return;const node=document.createElement('aside');node.id='evolution-preview';node.className='evolution-preview';node.setAttribute('role','tooltip');node.setAttribute('aria-label','進化先：'+next.name);node.innerHTML=decorateEvolutionCard(cardEvolutionBase(next.id),next);node.querySelectorAll('[data-card]').forEach(el=>el.removeAttribute('data-card'));node.querySelectorAll('button').forEach(el=>{el.tabIndex=-1;el.setAttribute('aria-disabled','true');el.classList.remove('playable','unplayable','empowered');});document.body.appendChild(node);const rect=source.getBoundingClientRect(),position=evolutionPreviewPosition(rect,node.offsetWidth,node.offsetHeight,window.innerWidth,window.innerHeight);node.style.left=position.left+'px';node.style.top=position.top+'px';}
-function wireEvolutionPreviews(){document.querySelectorAll('.card-wrap').forEach(wrap=>{const source=wrap.querySelector('[data-card]');if(C[source?.dataset.card]?.evolveTo==null)return;wrap.onmouseenter=()=>showEvolutionPreview(wrap);wrap.onmouseleave=hideEvolutionPreview;wrap.onfocusin=()=>showEvolutionPreview(wrap);wrap.onfocusout=hideEvolutionPreview;});}
+function cardPreviewTargets(c) {
+  const targets = [];
+  const next = C[c?.evolveTo];
+  if (next) targets.push({label:'進化先', card:next});
+  if (c?.fx?.tokenSword > 0) targets.push({label:'生成先', token:'sword'});
+  if (c?.fx?.tokenKnife > 0) targets.push({label:'生成先', token:'knife'});
+  const origin = C[c?.origin ?? c?.id];
+  if (c?.fx?.copyDiscard > 0 && origin) targets.push({label:'生成先', card:origin});
+  return targets;
+}
+function renderCardPreview(target) {
+  if (!target.token) return card(target.card.id);
+  let id = nextBattleCardId(S.run || {});
+  while (C[id]) id--;
+  hydrateBattleCard({id, token:target.token});
+  try {
+    return card(id);
+  } finally {
+    delete C[id];
+  }
+}
+function showEvolutionPreview(wrap) {
+  const source = wrap.querySelector('[data-card]');
+  const targets = cardPreviewTargets(C[source?.dataset.card]);
+  hideEvolutionPreview();
+  if (!targets.length || busy || drag) return;
+  const node = document.createElement('aside');
+  node.id = 'evolution-preview';
+  node.className = 'evolution-preview';
+  node.setAttribute('role','tooltip');
+  node.setAttribute('aria-label',targets.map(target => target.label + '：' + (target.card || TOKEN_DEFS[target.token]).name).join('、'));
+  node.innerHTML = targets.map(renderCardPreview).join('');
+  node.querySelectorAll('[data-card]').forEach(el => {
+    el.setAttribute('data-card-preview','');
+    el.removeAttribute('data-card');
+  });
+  node.querySelectorAll('button').forEach(el => {
+    el.tabIndex = -1;
+    el.setAttribute('aria-disabled','true');
+    el.classList.remove('playable','unplayable','empowered');
+  });
+  document.body.appendChild(node);
+  const position = evolutionPreviewPosition(source.getBoundingClientRect(),node.offsetWidth,node.offsetHeight,window.innerWidth,window.innerHeight);
+  node.style.left = position.left + 'px';
+  node.style.top = position.top + 'px';
+}
+function wireEvolutionPreviews() {
+  document.querySelectorAll('.card-wrap').forEach(wrap => {
+    const source = wrap.querySelector('[data-card]');
+    if (!cardPreviewTargets(C[source?.dataset.card]).length) return;
+    wrap.onmouseenter = () => showEvolutionPreview(wrap);
+    wrap.onmouseleave = hideEvolutionPreview;
+    wrap.onfocusin = () => showEvolutionPreview(wrap);
+    wrap.onfocusout = hideEvolutionPreview;
+  });
+}
 keywords.進化='使用後、進化先のカードに変化する。進化後のカードは報酬や生成からは取得できない。戦闘終了時、進化の段階はリセットされる。';
 const renderCodexBase=render;
 render=function(){if(globalThis.ASHBOUND_LOADING)return;hideEvolutionPreview();renderCodexBase();if(page==='book'&&bookType==='run'){const input=$('codex-query');if(input)bindCodexQuery(input);}wireEvolutionPreviews();};
