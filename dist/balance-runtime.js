@@ -476,7 +476,7 @@ const cardTableRows = [
 const cardTableEffectCorrections = {
   1:{b:5}, 5:{p:1}, 12:{d:21}, 13:{b:7}, 14:{p:4}, 15:{hpLoss:5},
   42:{draw:0}, 51:{d:6}, 53:{attackDiscount:1}, 55:{heartbeatThreshold:6}, 60:{s:2,agility:2},
-  69:{forge:3}, 72:{d:28}, 78:{plate:4}, 79:{b:14,hpLoss:7}, 90:{s:3},
+  69:{forge:3}, 72:{d:28}, 78:{plate:4}, 79:{b:14,hpLoss:7},
   37:{blockDamageIgnoresStrength:1}, 125:{bleed:2}, 138:{vulnerable:2}, 142:{b:6}, 156:{d:40},
   171:{d:8}, 175:{slot:2}, 176:{d:28}, 177:{randomAttack:0}, 182:{d:4},
   183:{d:5}, 184:{d:4}, 193:{slot:2}, 195:{draw:4}, 213:{slot:2}, 221:{b:4},
@@ -593,7 +593,8 @@ function balanceValidate(input) {
   settings.cardEffects = {};
   for (const [id, value] of Object.entries(effectValues)) {
     if (!balanceNumberValid(balanceEffectFields.get(id), value)) throw Error('カード効果に無効な項目または数値があります。');
-    settings.cardEffects[id] = value;
+    // 旧版に保存された正々堂々の筋力2を現行値へ移行する。
+    settings.cardEffects[id] = id === '90:s' && value === 2 ? 3 : value;
   }
   return settings;
 }

@@ -154,6 +154,23 @@ const vm = require('node:vm');
     assert.match(venom.desc, /毒を2与える/);
     r.carriedRelic = null;
 
+    const fairPlay = 90;
+    assert.equal(C[fairPlay].fx.s, 3);
+    const snapshot = {...ASHBOUND_BALANCE_SETTINGS, cardEffects:{'90:s':2}};
+    balanceApply(snapshot);
+    assert.equal(C[fairPlay].fx.s, 3);
+    assert.match(C[fairPlay].desc, /筋力3を得る/);
+    r.hand = [luckyInstance(r, fairPlay)];
+    r.energy = 20;
+    const strengthBeforeFairPlay = r.str;
+    const enemyStrengthBeforeFairPlay = r.enemies[0].str || 0;
+    base.play(0);
+    assert.equal(r.str, strengthBeforeFairPlay + 3);
+    assert.equal(r.enemies[0].str, enemyStrengthBeforeFairPlay + 1);
+    balanceApply({...snapshot, cardEffects:{'90:s':4}});
+    assert.equal(C[fairPlay].fx.s, 4);
+    balanceApply(ASHBOUND_BALANCE_SETTINGS);
+
     r.mode = 'map';
     page = 'map';
     choose('fight');
