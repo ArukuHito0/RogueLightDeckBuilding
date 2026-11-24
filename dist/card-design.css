@@ -12,7 +12,7 @@
   max-width: 100%;
   min-height: 0;
   height: auto !important;
-  aspect-ratio: 418 / 695;
+  aspect-ratio: 418 / 665;
   padding: 0;
   border: 0;
   border-radius: 8px;
@@ -30,10 +30,12 @@ body:has(#app .arena) .hand .card[data-card][data-card-frame] {
 .card[data-card-frame]::before {
   content: "";
   position: absolute;
-  inset: -2.87cqw -10.53cqw -10.29cqw -9.09cqw;
+  top: calc(-100cqw * 12 / 418);
+  left: calc(-100cqw * 38 / 418);
+  width: calc(100cqw * 500 / 418);
+  aspect-ratio: 500 / 720;
   z-index: -1;
-  border-top: 100.87cqw solid transparent;
-  border-image: var(--card-frame) 422 0 0 0 fill stretch;
+  background: var(--card-frame) center / contain no-repeat;
   pointer-events: none;
 }
 /* タイプとレアリティに対応する透過テンプレート。 */
