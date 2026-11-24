@@ -93,7 +93,7 @@ case 'loan':energy(f.energy);add('debt',{n:factor});break;
 case 'cash':drawN(Math.max(0,(l.slotCount||0)-(l.failures||0)));break;
 case 'gather':drawN(f.draw);break;
 case 'push':energy(f.energy);break;
-case 'pickup':select('recover',luckyBalanceNumber(k,'recoverCount',1)*factor,{pile:'discard'});break;
+case 'pickup':select('recover',luckyBalanceNumber(k,'recoverCount',1)*factor,{pile:'discard',autoPlay:true});break;
 case 'doubleDown':add('multiplyEnergy',{n:luckyBalanceNumber(k,'energyMultiplier',2)*factor});break;
 case 'swap':drawN(f.draw);select('top',luckyBalanceNumber(k,'returnCount',3)*factor);break;
 case 'deal':select('deckTop',luckyBalanceNumber(k,'topCount',5)*factor);break;
@@ -173,11 +173,12 @@ if(!l.queue.length&&!l.choice&&!r.pendingChoice&&!r.hunterChoice&&r.enemies.ever
 function luckyChoose(index){const r=S.run,l=r?.lucky,p=l?.choice;if(!p||busy||r.pendingChoice?.inspect)return;if(p.kind==='top'){luckyTopPrepare(r);const item=p.candidates[index],slot=p.topSlots.indexOf(null);if(item&&slot>=0)luckyTopPlace(item.id,slot);return;}const item=p.candidates[index];if(!item)return;
 if(p.kind==='role'){luckyAddHand(r,luckyInstance(r,item.id));l.choice=null;luckyPump(r);return;}
 const pile=r[item.pile],at=pile?.indexOf(item.id);if(at==null||at<0)return;
-if(p.kind==='hold'){l.hold.push(item.id);}else{pile.splice(at,1);p.selected.push(item.id);if(p.kind==='recover'||p.kind==='take'){luckyAddHand(r,item.id);if(p.kind==='take')(l.freeCosts??={})[item.id]=r.turn;}else if(p.kind==='exhaust')exhaustCard(r,item.id);}
-p.candidates.splice(index,1);p.remaining--;if(p.kind==='deckTop'&&(p.remaining<=0||!p.candidates.length)){p.kind='top';p.topPool=p.selected.splice(0);p.topSlots=Array(p.topPool.length).fill(null);p.remaining=p.topPool.length;render();return;}if(p.kind==='discard'&&r.pendingChoice?.luckyDiscard)r.pendingChoice.remaining=p.remaining;if(p.remaining<=0||!p.candidates.length||(['recover','take'].includes(p.kind)&&r.hand.length>=10))luckyFinishChoice(r);else render();}
+if(p.kind==='hold'){l.hold.push(item.id);}else{pile.splice(at,1);p.selected.push(item.id);if((p.kind==='recover'&&!p.autoPlay)||p.kind==='take'){luckyAddHand(r,item.id);if(p.kind==='take')(l.freeCosts??={})[item.id]=r.turn;}else if(p.kind==='exhaust')exhaustCard(r,item.id);}
+p.candidates.splice(index,1);p.remaining--;if(p.kind==='deckTop'&&(p.remaining<=0||!p.candidates.length)){p.kind='top';p.topPool=p.selected.splice(0);p.topSlots=Array(p.topPool.length).fill(null);p.remaining=p.topPool.length;render();return;}if(p.kind==='discard'&&r.pendingChoice?.luckyDiscard)r.pendingChoice.remaining=p.remaining;if(p.remaining<=0||!p.candidates.length||(!p.autoPlay&&['recover','take'].includes(p.kind)&&r.hand.length>=10))luckyFinishChoice(r);else render();}
 function luckyFinishChoice(r=S.run){const l=r?.lucky,p=l?.choice;if(!p||r.pendingChoice?.inspect)return;
 if(p.kind==='top'){luckyTopPrepare(r);if(p.topSlots.some(id=>id==null))return;p.selected=[...p.topSlots];if(r.pendingChoice?.luckyTop)r.pendingChoice=null;for(const id of [...p.selected].reverse())r.draw.push(id);}
 if(p.kind==='discard'&&r.pendingChoice?.luckyDiscard)r.pendingChoice=null;
+if(p.autoPlay)luckyPush(r,p.selected.map(id=>({op:'auto',id})));
 if(p.kind==='discard')luckyPush(r,[...luckyDiscardTasks(r,p.selected),...(p.redraw?[{op:'draw',n:p.selected.length}]:[])]);
 l.choice=null;luckyPump(r);}
 const luckyBasePlay=base.play;

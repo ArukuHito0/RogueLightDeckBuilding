@@ -11,7 +11,7 @@ const addedCards31=[
 ['茨の盾',1,'♧','このターンの間、敵の攻撃をブロックで防ぐたび、攻撃した敵に4ダメージ。','rare',true,{thornShield:4},'棘'],
 ['針山',1,'♠','棘3を得る。除外。','common',true,{thorns:3,ex:1},'棘'],
 ['茨の園',2,'♧','この戦闘中、ターン開始時に棘1を得る。除外。','epic',true,{thornGarden:1,ex:1},'棘'],
-['鍛え直し',2,'⚒','この戦闘中、斬撃を使うたび、この戦闘のすべての斬撃のダメージ+1。除外。','rare',true,{forge:1,ex:1},'筋力'],
+['鍛え直し',2,'⚒','この戦闘中、斬撃のダメージ+3。特殊。','rare',true,{forge:3},'筋力'],
 ['血の槍',1,'†','HPを4失う。14ダメージ。','common',true,{hpLoss:4,d:14},'HP喪失'],
 ['血の盾',1,'▱','HPを7失う。30ブロック。','rare',true,{hpLoss:7,b:30},'HP喪失'],
 ['復讐',4,'⚔','30ダメージ。この戦闘中、HPを失うたびコスト-1（最低0）。','rare',true,{d:30,revenge:1},'HP喪失'],
@@ -54,8 +54,9 @@ combatCard=function(id){let c=C[id],r=S.run;if(!c||!r)return c;let fx={...c.fx},
  }
  if(fx.p&&hasRelic('poison_boost',r)){fx.p++;desc=desc.replace(/毒を\d+付与/,`毒を${fx.p}付与`)}
  if(hasRelic('poison_boost',r)){if(fx.poisonAura)fx.poisonAura++;if(fx.poisonCoat)fx.poisonCoat++;if(fx.reinfect)fx.reinfectBonus=1;}
- if(fx.revenge)cost=Math.max(0,cost-(r.hpLossCount||0));
+ if(fx.revenge)cost=Math.max(1,cost-(r.hpLossCount||0));
  if(hasRelic('double_cards',r))cost++;
+ if(r.attackCostDiscount&&r.hand.includes(id)&&cardCategories(c)[0]==='攻撃')cost=Math.max(0,cost-r.attackCostDiscount);
  if(c.id===0||c.origin===0){fx.d+=(r.strikeBonus||0);desc=desc.replace(/\d+ダメージ/,`${fx.d}ダメージ`)}
  return {...c,cost,fx,desc}
 };
@@ -76,7 +77,7 @@ gainBlock=function(r,n,source='card'){if(r.hp<=0)return 0;return withEffectChain
 exhaustCard=function(r,id,trigger=true){(r.exhausted??=[]).push(id);if(trigger){if(r.exhaustStrength){r.exhaustStrengthCount=(r.exhaustStrengthCount||0)+1;if(r.exhaustStrengthCount%(r.exhaustStrengthInterval??3)===0)r.str+=r.exhaustStrength;}const block=r.exhaustEngineBlock??3*(r.exhaustEngine||0);if(block)gainBlock(r,block,'passive')}};
 onCardResolved=function(r,c){if(c.cost===0&&hasRelic('zero_block',r))gainBlock(r,1,'relic')};
 // Reset persistent-in-battle engines between encounters, including resumed runs.
-const newBattle31=choose;choose=function(type){let r=S.run;if(!r)return;let wasBattle=r.mode==='battle';newBattle31(type);if(S.run===r&&r.mode==='battle'&&!wasBattle){for(const k of ['burn','rage','thornShield','thorns','thornGarden','forge','strikeBonus','hpLossCount','exhaustStrength','damageCount','passionHp','exhaustStrengthCount','poisonAura','poisonCoat','nextAttackBonus','bloodBlessing','turnStartStrength'])r[k]=0;delete r.exhaustEngineBlock;delete r.passionBlocks;r.bloodBlessingTurn=null;r.enemyPhase=false;r.specialUses={};r.battleCards=[];r.callTurn=0;render()}};
+const newBattle31=choose;choose=function(type){let r=S.run;if(!r)return;let wasBattle=r.mode==='battle';newBattle31(type);if(S.run===r&&r.mode==='battle'&&!wasBattle){for(const k of ['burn','rage','thornShield','thorns','thornGarden','forge','strikeBonus','attackCostDiscount','hpLossCount','exhaustStrength','damageCount','passionHp','exhaustStrengthCount','poisonAura','poisonCoat','nextAttackBonus','bloodBlessing','turnStartStrength'])r[k]=0;delete r.exhaustEngineBlock;delete r.passionBlocks;r.bloodBlessingTurn=null;r.enemyPhase=false;r.specialUses={};r.battleCards=[];r.callTurn=0;render()}};
 base.play=function(i,options={}){let r=S.run,c=combatCard(r?.hand[i]);if(c&&options.free&&typeof swampRejectAuto==='function'&&swampRejectAuto(r,c)){r.hand.splice(i,1);r.discard.push(c.id);return;}if(!c||c.retired||(!options.free&&r.energy<c.cost)||r.pendingChoice||r.hunterChoice||r.pendingDiscard||r.potionTarget!=null||!canPlayHunterCard(c,r))return;let attackHpLoss=0;let paidCost=options.free?0:c.cost;let f=c.fx,wasHeartbeat=r.heartbeat,str=r.str,preExcluded=[...(r.exhausted||[])];target=r.enemies[target]?.hp>0?target:r.enemies.findIndex(e=>e.hp>0);let hadPoison=(r.enemies[target]?.poison||0)>0;r.energy-=paidCost;r.hand.splice(i,1);if(typeof forestCardUsed==='function')forestCardUsed(r,c.id);if(typeof swampCardUsed==='function')swampCardUsed(r,c,options);
  if(isAttackCard50(c)){f.attackBonus=r.nextAttackBonus||0;r.nextAttackBonus=0;}
  if(f.hpLoss&&!f.lossAfterBlock)loseHP(r,f.hpLoss);
@@ -84,7 +85,8 @@ base.play=function(i,options={}){let r=S.run,c=combatCard(r?.hand[i]);if(c&&opti
  if(f.randomAttack){for(let h=0;h<(f.h??1);h++){let alive=r.enemies.filter(e=>e.hp>0);if(!alive.length)break;let e=rand(alive);attackHpLoss+=cardAttack(e,previewDamage(c,r,e))}}
  else for(let e of f.all?r.enemies.filter(e=>e.hp>0):[r.enemies[target]]){if(!e)continue;if(f.d!=null||f.totalPoison||f.equalPoison||f.exactBlock)for(let h=0;h<(f.h??1)&&e.hp>0;h++)attackHpLoss+=cardAttack(e,previewDamage(c,r,e));if(f.p&&e.hp>0)addPoison(e,f.p);if(f.reinfect&&e.hp>0)addPoison(e,(e.poisonTotal||0)*f.reinfect+(f.reinfectBonus||0));if(f.breakBlock){e.block=0;if(typeof clearArchiveReading==='function')clearArchiveReading(e);}}
  resolveHunterEffects(r,c);
- if((c.id===0||c.origin===0)&&r.forge)r.strikeBonus=(r.strikeBonus||0)+r.forge;
+ if(f.forge)r.strikeBonus=(r.strikeBonus||0)+f.forge;
+ if(f.attackDiscount)r.attackCostDiscount=(r.attackCostDiscount||0)+f.attackDiscount;
  if(f.enemyStrength&&r.enemies[target]?.hp>0)r.enemies[target].str=(r.enemies[target].str||0)+f.enemyStrength;
  if(f.nextAttack)r.nextAttackBonus=(r.nextAttackBonus||0)+f.nextAttack;
  if(f.bloodBlessing)r.bloodBlessing=(r.bloodBlessing||0)+f.bloodBlessing;
@@ -105,7 +107,7 @@ base.play=function(i,options={}){let r=S.run,c=combatCard(r?.hand[i]);if(c&&opti
   r.exhaustEngineBlock=(r.exhaustEngineBlock??3*(r.exhaustEngine||0))+(f.engineBlock??3*f.engine);
   r.exhaustEngine=(r.exhaustEngine||0)+f.engine;
  }
- for(const k of ['agility','plate','regen','blockBonus','passion','burn','rage','thornShield','thorns','thornGarden','forge','exhaustStrength','poisonAura','poisonCoat','turnStartStrength'])if(f[k])r[k]=(r[k]||0)+f[k];
+ for(const k of ['agility','plate','regen','blockBonus','passion','burn','rage','thornShield','thorns','thornGarden','exhaustStrength','poisonAura','poisonCoat','turnStartStrength'])if(f[k])r[k]=(r[k]||0)+f[k];
  if(f.passion){
   r.passionHp=(r.passionHp||0)+(f.passionHp??1);
   const blocks=r.passionBlocks??=Array((r.passion||0)-f.passion).fill(5);
@@ -136,7 +138,7 @@ applyTurnStartBuffs=function(r){r.enemyPhase=false;r.damageCount=0;const {poison
  if(plate>0&&r.plate>0){gainBlock(r,plate,'passive');r.plate--}if(regen>0&&r.regen>0){healHP(r,regen);r.regen--}
 };
 endTurn=async function(){let r=S.run;if(busy||page!=='battle'||r.pendingChoice||r.hunterChoice||r.pendingDiscard||r.potionTarget!=null)return;busy=true;
- try{hunterPlayerTurnEnd(r);if(r.act===4&&typeof forestCheckErosion==='function'){if(typeof forestEndHandErosion==='function')forestEndHandErosion(r);forestCheckErosion(r);r.forestErosionSnapshot=r.forestErosion||0;}if(r.hp<=0){await animateEntity('player','death');finish(false);return;}r.enemyPhase=true;r.poisonCoat=0;expireGeneratedCards(r);r.str-=r.tempStr||0;r.agility=(r.agility||0)-(r.tempAgility||0);r.tempStr=0;r.tempAgility=0;r.discard.push(...r.hand);r.hand=[];
+ try{hunterPlayerTurnEnd(r);if(r.act===4&&typeof forestCheckErosion==='function'){if(typeof forestEndHandErosion==='function')forestEndHandErosion(r);forestCheckErosion(r);r.forestErosionSnapshot=r.forestErosion||0;}if(r.hp<=0){await animateEntity('player','death');finish(false);return;}r.enemyPhase=true;r.poisonCoat=0;expireGeneratedCards(r);r.str-=r.tempStr||0;r.agility=(r.agility||0)-(r.tempAgility||0);r.tempStr=0;r.tempAgility=0;r.attackCostDiscount=0;r.discard.push(...r.hand);r.hand=[];
  for(let i=0;i<r.enemies.length;i++){let e=r.enemies[i];if(e.hp<=0||e.summonedTurn===r.turn)continue;if(!e.retainBlock&&!e.reading)e.block=0;
  for(let tick=0;tick<(r.poisonDouble===true?2:r.poisonDouble||1)&&e.hp>0;tick++)if(e.poison){let n=e.poison;e.poison--;dealDamage(e,n,{ignoreBlock:true});await animateEntity(i,'hit',n)}
  if(e.hp<=0){await animateEntity(i,'death');continue}
@@ -159,7 +161,7 @@ combatDesc=function(c,r){let d=descRelicsBase(c,r),f=c.fx,e=r.enemies[target];
  if(f.b)d=d.replace(/<strong class="boost">\d+ブロック<\/strong>/,`<strong class="boost">${cardBlockValue(r,f.b)}ブロック</strong>`);
  if(f.exScale)d=`${previewDamage(c,r,e)}ダメージ。除外済み1枚につき+${f.exScale}。${f.ex?'除外。':''}`;
  if(f.blockScale)d=`${previewDamage(c,r,e)}ダメージ（基礎${f.d}＋筋力＋ブロック×${f.blockScale}、端数切り捨て）。${f.b?cardBlockValue(r,f.b)+'ブロック。':''}`;
- if(f.strengthBlock)d=`筋力スタック分のブロック。現在 <strong class="boost">${cardBlockValue(r,r.str*f.strengthBlock)}ブロック</strong>。`;
+ if(f.strengthBlock)d=`筋力スタック分のブロック。このターンの間、手札の攻撃カードのコストを${f.attackDiscount||0}減らす。現在 <strong class="boost">${cardBlockValue(r,r.str*f.strengthBlock)}ブロック</strong>。`;
  if(f.exhaustBlock)d=`除外済みカード${f.exhaustBlockInterval??2}枚につき${f.exhaustBlock}ブロック。現在 <strong class="boost">${cardBlockValue(r,Math.floor(exhaustedCount(r)/(f.exhaustBlockInterval??2))*f.exhaustBlock)}ブロック</strong>。除外。`;
  if(f.strBonus)d=`筋力+${f.s}。既に筋力${f.strBonusThreshold??4}以上なら、さらに+${f.strBonus}。除外。`;
  if(f.doubleStr)d=`現在の筋力を${f.strMultiplier||2}倍にする。除外。`;
@@ -175,7 +177,7 @@ const chooseHand31=chooseHand;chooseHand=function(i){chooseHand31(i);let r=S.run
 const bonus31=bonusReady;bonusReady=(c,r)=>bonus31(c,r)||!!(c.fx.poisonDraw&&(r.enemies[target]?.poison||0)>0)||!!(c.fx.revenge&&r.hpLossCount);
 const card31=card;card=function(id,action='',extra=''){let s=card31(id,action,extra);if(C[id]?.token)s=s.replace('TOKEN / 潜在','TOKEN / 戦闘限定');return s};
 const battle31=battle;battle=function(){let r=S.run,html=battle31(),status='';for(const [key,label,desc]of [
- ['poisonAura','汚染地域','ターン開始時、敵全体に表示値の毒を付与。'],['poisonCoat','毒纏い','このターン、カード攻撃1ヒットごとに表示値の毒を付与。'],['thorns','棘',keywords.棘],['burn','焼身','カードからブロック獲得時、ランダムな敵に表示値のダメージ。'],['rage','激昂','ダメージでHPが減った時、表示値のブロック。次の自分のターン開始まで。'],['thornShield','茨の盾','敵の攻撃をブロックで防ぐたび、表示値の反撃。次の自分のターン開始まで。'],['thornGarden','茨の園','ターン開始時に表示値の棘を得る。'],['forge','鍛え直し','斬撃を使うごとに、以後の斬撃のダメージが表示値増加。'],['exhaustStrength','灰の肉体','カードを3枚除外するたび表示値の筋力。']])if(r[key])status+=`<span class="status-help" tabindex="0">${label} ${r[key]}<aside class="tooltip">${desc}</aside></span>`;
+ ['poisonAura','汚染地域','ターン開始時、敵全体に表示値の毒を付与。'],['poisonCoat','毒纏い','このターン、カード攻撃1ヒットごとに表示値の毒を付与。'],['thorns','棘',keywords.棘],['burn','焼身','カードからブロック獲得時、ランダムな敵に表示値のダメージ。'],['rage','激昂','ダメージでHPが減った時、表示値のブロック。次の自分のターン開始まで。'],['thornShield','茨の盾','敵の攻撃をブロックで防ぐたび、表示値の反撃。次の自分のターン開始まで。'],['thornGarden','茨の園','ターン開始時に表示値の棘を得る。'],['strikeBonus','鍛え直し','この戦闘中、斬撃のダメージが表示値増加。'],['exhaustStrength','灰の肉体','カードを3枚除外するたび表示値の筋力。']])if(r[key])status+=`<span class="status-help" tabindex="0">${label} ${r[key]}<aside class="tooltip">${desc}</aside></span>`;
  if(hasRelic('three_damage',r))status+=`<span class="status-help" tabindex="0">連戦の鼓舞 ${r.damageCount%3||0}/3<aside class="tooltip">${hitRelic.text}</aside></span>`;
  html=html.replace('<div class="player-status">','<div class="player-status">'+status);
  let p=r.pendingChoice;if(p?.kind==='recoverExcluded'){html+=`<div class="pile-overlay recovery-overlay" role="dialog" aria-modal="true" aria-label="除外されたカードを選択"><div class="pile-panel"><h2>除外されたカードを手札へ</h2><p>残り${p.remaining}枚を選んでください。手札が10枚になった時点で終了します。</p><div class="cards">${p.eligible.map((id,i)=>card(id,`recoverExcludedCard(${i})`)).join('')}</div></div></div>`}return html};
