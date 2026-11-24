@@ -48,3 +48,33 @@ startSelectedCharacter = async function () {
     loadingRunBalance = false;
   }
 };
+
+const explorationEncounterBase = choose;
+choose = function (type) {
+  const r = S.run, previousMode = r?.mode;
+  const result = explorationEncounterBase(type);
+  if (!r || r !== S.run || previousMode === 'battle' || r.mode !== 'battle' || r.explorationOpeningDone) return result;
+  r.explorationOpeningDone = true;
+  switch (explorationSkill(r)?.id) {
+    case 'prepared':
+      if (r.hp >= r.max * .75) gainEnergy(r, 1);
+      break;
+    case 'wounded':
+      updateWoundedStrength(r);
+      break;
+    case 'questPoker':
+      ensurePokerQuest(r);
+      break;
+    case 'handPoker':
+      r.hand = r.hand.map(() => luckyInstance(r, rand(Object.values(LUCKY_ROLE_IDS))));
+      break;
+    case 'fortuneHand':
+      queueFortuneHand(r);
+      luckyPump(r);
+      break;
+    default:
+      return result;
+  }
+  render();
+  return result;
+};
