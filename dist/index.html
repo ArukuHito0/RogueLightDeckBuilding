@@ -11,7 +11,7 @@
     if (!label) return markup;
     const frame = frameByType.get(label.split('・')[0]) ?? 'neutral';
     return markup
-      .replace(/\bdata-card="\d+"/, value => value + ' data-card-frame="' + frame + '"')
+      .replace(/\bdata-card="-?\d+"/, value => value + ' data-card-frame="' + frame + '"')
       .replace('<span class="latent-badge">役</span>', '<span class="latent-badge card-role-badge">役</span>')
       .replace(/(<div class="art">[\s\S]*?<\/div>)(<small class="card-category">[^<]*<\/small>)(<h3>[\s\S]*?<\/h3>)/,
         '<div class="card-illustration">$3$2$1</div>');
