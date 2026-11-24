@@ -1,3 +1,11 @@
+.reward .reveal-list {
+  --reveal-card-width: clamp(152px, 44vw, 200px);
+  gap: 20px;
+}
+.reward .reveal-list .flip-shell:has([data-card-frame]) {
+  flex: 0 0 auto;
+  width: var(--reveal-card-width);
+}
 /* 添付画像をカード幅に合わせ、見本の座標にカード情報を重ねる。 */
 :is(#app .card, .card)[data-card][data-card-frame] {
   position: relative;
@@ -8,7 +16,7 @@
   align-items: stretch;
   justify-content: flex-start;
   box-sizing: border-box;
-  width: clamp(152px, 44vw, 200px);
+  width: var(--reveal-card-width, clamp(152px, 44vw, 200px));
   max-width: 100%;
   min-height: 0;
   height: auto !important;

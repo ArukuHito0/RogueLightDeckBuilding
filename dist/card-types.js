@@ -6,7 +6,7 @@ function resolvePlayedCardPile(r,c,trigger=true){if(isSpecialCard(c)){r.specialU
 for(const name of ['血の盾','毒纏い','供物','茨の盾'])C.find(c=>c.name===name).rarity='common';
 reviseNamed('残火の刃','4ダメージ。この戦闘の除外済みカード1枚につきダメージ+1。',{d:4,exScale:1},{rarity:'common'});
 C.find(c=>c.name==='残灰の一撃').name='残火の大太刀';
-reviseNamed('巨人の血','ターン開始時、筋力1を得る。',{turnStartStrength:1});
+reviseNamed('巨人の血','ターン開始時、筋力1を得る。',{turnStartStrength:1},{cost:3});
 reviseNamed('厚い城壁','18ブロック。次のターン開始時に8ブロック。',{b:18,nextBlock:8});
 reviseNamed('共感','対象の毒スタック数と等しい筋力を得る。対象は毒を全て失う。',{empathy:1});
 for(const c of C){if(SPECIAL_EFFECTS.some(k=>c.fx[k])){c.special=true;delete c.fx.ex;c.desc=c.desc.replace(/除外。/g,'')+'特殊。';}}
