@@ -35,7 +35,7 @@ if(key==='payout')f.b+=Math.max(0,(l.failures||0)-(l.payout[id]||0))*3;
 let cost=c.cost;const baseCost=luckyNumber(c);
 if(l.mysteryTurn===r.turn){const k=String(id);if(l.costs[k]==null)l.costs[k]=Math.floor(Math.random()*4);cost=l.costs[k]+(hasRelic('double_cards',r)?1:0);if(r.freeze&&(f.b||f.strengthBlock||f.poisonBlock||f.exhaustBlock))cost++;}
 if(l.freeCosts?.[id]===r.turn)cost=0;
-if(f.slot){if(l.nextFree)cost=0;if(l.nextGuarantee)cost+=l.guaranteeCost||1;}
+if(f.slot&&l.nextFree)cost=0;
 return {...c,fx:f,cost:Math.max(0,cost),baseCost};};
 const luckyNeedsBase=needsEnemy;needsEnemy=function(c){if(c?.fx.luckyKey)return c.types[0]==='攻撃'&&!c.fx.all&&!c.fx.randomOne&&!c.fx.randomAttack||c.fx.luckyKey==='knock';return luckyNeedsBase(c);};
 const luckyCanPlayBase=canPlayHunterCard;canPlayHunterCard=function(c,r){return !r?.lucky?.choice&&luckyCanPlayBase(c,r);};
@@ -116,7 +116,7 @@ return a;}
 function luckyAttachFrame(tasks,frame){return tasks.map(t=>({...t,frame}));}
 function luckyBegin(r,id,options={},c=combatCard(id)){const l=luckyState(r);if(c&&options.free&&typeof swampRejectAuto==='function'&&swampRejectAuto(r,c)){r.discard.push(id);return false;}if(!c||(!options.free&&r.energy<c.cost))return false;if(typeof forestCardUsed==='function')forestCardUsed(r,id);const paid=options.free?0:c.cost;if(!options.free)r.energy-=paid;
 if(typeof swampCardUsed==='function')swampCardUsed(r,c,options);
-const frame=++l.serial;const ctx={id,card:{...c,fx:{...c.fx}},target:options.target??target,paid,suppress:!!options.suppress,forceExhaust:!!options.forceExhaust,folded:!!options.folded,guarantee:!!(c.fx.slot&&l.nextGuarantee),double:c.fx.slot?l.nextDouble||1:1,penalty:l.nextDouble?luckyBalanceNumber('double','penalty',1)*effectFactor(r):0};
+const frame=++l.serial;const ctx={id,card:{...c,fx:{...c.fx}},target:options.target??target,paid,suppress:!!options.suppress,forceExhaust:!!options.forceExhaust,folded:!!options.folded,guarantee:!!(c.fx.slot&&l.nextGuarantee),double:c.fx.slot?l.nextDouble||1:1,penalty:l.nextDouble?luckyBalanceNumber('double','penalty',0)*effectFactor(r):0};
 if(c.fx.slot){if(l.nextFree)l.nextFree--;if(l.nextGuarantee){l.nextGuarantee=0;l.guaranteeCost=0;}l.nextDouble=0;}
 if(isAttackCard50(c)){ctx.card.fx.attackBonus=r.nextAttackBonus||0;r.nextAttackBonus=0;}
 l.frames[frame]=ctx;luckyPush(r,[...luckyAttachFrame(luckyActions(r,ctx),frame),{op:'finish',frame}]);return true;}
@@ -132,7 +132,7 @@ case 'heal':healHP(r,t.n);break;
 case 'strength':r.str+=t.n;break;
 case 'guard':r.agility=(r.agility||0)+t.n;break;
 case 'stun':{const e=r.enemies[luckyTarget(r,ctx.target)];if(e)applyHunterStun(e);break;}
-case 'set':if(t.key==='nextDouble')l.nextDouble=(l.nextDouble||1)*t.n;else if(t.key==='nextGuarantee'){l.nextGuarantee=1;l.guaranteeCost=(l.guaranteeCost||0)+t.n;}else l[t.key]=(l[t.key]||0)+t.n;break;
+case 'set':if(t.key==='nextDouble')l.nextDouble=(l.nextDouble||1)*t.n;else if(t.key==='nextGuarantee')l.nextGuarantee=1;else l[t.key]=(l[t.key]||0)+t.n;break;
 case 'debt':l.debt=(l.debt||0)+t.n;l.drawDebt=(l.drawDebt||0)+t.n;break;
 case 'delay':l.delayedEnergy=(l.delayedEnergy||0)+t.n;break;
 case 'nextBlock':(r.nextBlockEffects??=[]).push(t.n);break;

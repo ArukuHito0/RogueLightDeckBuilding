@@ -7,7 +7,7 @@ const balanceScriptedEffects = {
     jackpot: {slotDamage:[12,'スロット1回あたりのダメージ']},
     free: {freeSlots:[1,'コストを0にするスロット回数']},
     retry: {retries:[1,'スロット再挑戦回数']},
-    double: {repeats:[2,'成功効果の発動回数'], penalty:[1,'失敗時に失うエナジー']},
+    double: {repeats:[2,'成功効果の発動回数'], penalty:[0,'失敗時に失うエナジー']},
     doubleDown: {energyMultiplier:[2,'エナジー倍率']},
     pickup: {recoverCount:[1,'捨札から回収する枚数']},
     swap: {returnCount:[3,'山札の上に戻す枚数']},
@@ -656,6 +656,10 @@ function balanceCardDescription({effects, detail}, overrides) {
     if(field.hidden)continue;
     const value = balanceEffectiveEffect(overrides,field);
     if (value === undefined || value === field.value) continue;
+    if (field.id === '199:script.penalty' && value > 0) {
+      detail += '失敗した場合、エナジーを'+value+'失う。';
+      continue;
+    }
     const pattern = balanceDescriptionPatterns[field.key];
     const scale = field.key==='lowHpOnly' ? 100 : 1;
     if (field.key === 'agility' && field.value < 0 && detail.includes(`守護を${-field.value}失う`)) {
