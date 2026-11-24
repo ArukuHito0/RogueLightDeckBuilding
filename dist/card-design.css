@@ -64,6 +64,14 @@ body:has(#app .arena) .hand .card:is([data-card],[data-card-preview])[data-card-
 .card.token[data-card-frame="defense"], .card.token[data-card-frame="neutral"] { --card-frame: url("card-frame-token-defense.webp"); }
 .card.token[data-card-frame="special"] { --card-frame: url("card-frame-token-special.webp"); }
 
+.card.common[data-card-evolution][data-card-frame="attack"] { --card-frame: url("evolution-common-attack.png"); }
+.card.common[data-card-evolution][data-card-frame="defense"] { --card-frame: url("evolution-common-defense.png"); }
+.card.common[data-card-evolution][data-card-frame="support"] { --card-frame: url("evolution-common-support.png"); }
+.card.rare[data-card-evolution][data-card-frame="attack"] { --card-frame: url("evolution-rare-attack.png"); }
+.card.rare[data-card-evolution][data-card-frame="defense"] { --card-frame: url("evolution-rare-defense.png"); }
+.card.rare[data-card-evolution][data-card-frame="support"] { --card-frame: url("evolution-rare-support.png"); }
+.card.epic[data-card-evolution][data-card-frame="attack"] { --card-frame: url("evolution-epic-attack.png"); }
+
 .card[data-card-frame] .card-illustration {
   flex: 0 0 auto;
   position: relative;
