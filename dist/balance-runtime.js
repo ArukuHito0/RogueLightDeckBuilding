@@ -43,6 +43,7 @@ const balanceCardConditions = {
 };
 
 const balanceEffectLabels = {
+  revengeDamage:'HP喪失1回あたりの追加ダメージ',
   attackDiscount:'手札の攻撃カードのコスト軽減',
   autoEvolvePlay:'自動使用する進化可能カードの枚数', beastHunt:'毎ターン開始時のHP喪失',
   bleedDecay:'敵の裂傷の追加減少量', evolutionStrengthInterval:'筋力を得るまでの進化回数',
@@ -88,7 +89,7 @@ const balanceSwitchEffects = new Set([
   'all','bleedHitCount','discardBreak','blockDamageIgnoresStrength',
   'doubleStr','doubleVulnerable','evolutionEnergy','evolveAll','ex',
   'fold','healOnHpDamage','heartbeat','lossAfterBlock','passion','poisonDouble',
-  'randomAttack','randomOne','retainBlock','revenge','stun','stunAttack',
+  'randomAttack','randomOne','retainBlock','stun','stunAttack',
   'temporary','temporaryBleed','unplayable','xHits',
 ]);
 
@@ -364,7 +365,7 @@ const cardTableRows = [
   [57,"落とし物","rare","補助","捨て札からランダムな1枚を手札に加える。"],
   [62,"殻破りな一撃","rare","攻撃","自身のブロック値と等しいダメージ（筋力を加算）。"],
   [69,"鍛え直し","rare","特殊","この戦闘中、斬撃のダメージ+3。特殊。"],
-  [72,"復讐","rare","攻撃","28ダメージ。この戦闘中、HPを失うたびコスト-1（最低1）。"],
+  [72,"復讐","rare","攻撃","10ダメージを与える。この戦闘中、HPを失うたびにダメージ+2。"],
   [76,"修繕","rare","補助","除外されたカードからランダムなカードを1枚、手札に加える。除外。"],
   [79,"緊急回避","rare","防御","14ブロックを得る。HPを7失う。除外。"],
   [81,"渇望","rare","補助","HPを3失う。カードを2枚引く。"],
@@ -407,7 +408,6 @@ const cardTableRows = [
   [17,"触媒の契約","epic","特殊","敵の毒が2回発動する。各発動後に毒を1消費。"],
   [19,"巨人の血","epic","特殊","ターン開始時、筋力1を得る。"],
   [20,"筋肉の極致","epic","補助","現在の筋力を2倍にする。除外。"],
-  [21,"圧壊","epic","攻撃","8ダメージ。この攻撃には筋力を通常の3倍加算。"],
   [24,"残火の大太刀","epic","攻撃","14ダメージ。この戦闘の除外済みカード1枚につきダメージ+2。除外。"],
   [37,"城塞の粉砕","epic","攻撃","対象に現在のブロック値の2倍のダメージ。除外。"],
   [54,"城壁","epic","特殊","ターン開始時にブロックを失わない。"],
@@ -476,7 +476,7 @@ const cardTableRows = [
 const cardTableEffectCorrections = {
   1:{b:5}, 5:{p:1}, 12:{d:21}, 13:{b:7}, 14:{p:4}, 15:{hpLoss:5},
   42:{draw:0}, 51:{d:6}, 53:{attackDiscount:1}, 55:{heartbeatThreshold:6}, 60:{s:2,agility:2},
-  69:{forge:3}, 72:{d:28}, 78:{plate:4}, 79:{b:14,hpLoss:7},
+  69:{forge:3}, 78:{plate:4}, 79:{b:14,hpLoss:7},
   37:{blockDamageIgnoresStrength:1}, 125:{bleed:2}, 138:{vulnerable:2}, 142:{b:6}, 156:{d:40},
   171:{d:8}, 175:{slot:2}, 176:{d:28}, 177:{randomAttack:0}, 182:{d:4},
   183:{d:5}, 184:{d:4}, 193:{slot:2}, 195:{draw:4}, 213:{slot:2}, 221:{b:4},
@@ -506,13 +506,13 @@ codexTypes = function (card) {
 const cardPoolByRarity = {
   basic: {
     common: [0, 1, 2, 3, 4, 23, 45, 46, 47, 51, 77, 78, 82, 125, 138, 140, 142, 144, 151, 155, 178, 183, 198, 219, 221],
-    rare: [5, 6, 7, 8, 9, 10, 50, 55, 56, 57, 62, 69, 72, 76, 79, 81, 145, 202, 204, 211, 212, 220, 229],
+    rare: [5, 6, 7, 8, 9, 10, 50, 55, 56, 57, 62, 69, 76, 79, 81, 145, 202, 204, 211, 212, 220, 229],
     epic: [11, 12, 13, 14, 15, 49, 89],
   },
   wanderer: {
     common: [25, 27, 30, 41, 60, 70, 71, 87],
-    rare: [22, 28, 34, 38, 42, 44, 53, 63, 73, 75, 86, 90, 91, 92],
-    epic: [16, 17, 19, 20, 21, 24, 37, 54],
+    rare: [22, 28, 34, 38, 42, 44, 53, 63, 72, 73, 75, 86, 90, 91, 92],
+    epic: [16, 17, 19, 20, 24, 37, 54],
   },
   hunter: {
     common: [93, 96, 99, 102, 111, 127, 128, 146, 152, 157, 168, 170],
@@ -547,6 +547,14 @@ for (const card of C) {
 for (const entry of S.run?.battleCards ?? []) hydrateBattleCard(entry);
 for (const entry of S.run?.generatedCards ?? []) hydrateGeneratedCard(entry);
 
+// 旧デッキの復讐は基礎枠から外し、所持数と進行中の探索は保持する。
+S.deck = cleanCards50(S.deck, true);
+S.deckSets = S.deckSets.map(ids => ids ? cleanCards50(ids, true) : ids);
+for (const profile of Object.values(S.characterProfiles ?? {})) {
+  profile.deck = cleanCards50(profile.deck, true);
+  profile.deckSets = profile.deckSets.map(ids => ids ? cleanCards50(ids, true) : ids);
+}
+
 const balanceDefaults = balanceCatalog();
 const balanceWeightGroups = balanceEncounterWeightGroups(balanceDefaults);
 const balanceEffectFields = new Map(balanceDefaults.cards.flatMap(row => row.effects.map(field => [field.id, field])));
@@ -575,6 +583,7 @@ function balanceValidate(input) {
       if (!row || !Number.isSafeInteger(value) || value < (row.min ?? min) || value > (row.max ?? max)) {
         throw Error('設定に無効なIDまたは数値があります。');
       }
+      if (group === 'cards' && id === '72' && value === 8) continue;
       settings[group][id] = value;
     }
   }
@@ -592,8 +601,10 @@ function balanceValidate(input) {
   if (!effectValues || typeof effectValues !== 'object' || Array.isArray(effectValues)) throw Error('カード効果の形式を確認してください。');
   settings.cardEffects = {};
   for (const [id, value] of Object.entries(effectValues)) {
+    if (C[id.split(':')[0]]?.retired) continue;
     if (!balanceNumberValid(balanceEffectFields.get(id), value)) throw Error('カード効果に無効な項目または数値があります。');
     // 旧版に保存された正々堂々の筋力2を現行値へ移行する。
+    if (id === '72:d' && (value === 28 || value === 30)) continue;
     settings.cardEffects[id] = id === '90:s' && value === 2 ? 3 : value;
   }
   return settings;
@@ -608,6 +619,7 @@ const balanceDescriptionPatterns = {
   beastHunt: /(?<=HPを)\d+(?=失い)/g,
   beastHuntBleed: /(?<=裂傷)\d+(?=を付与)/g,
   attackDiscount: /\d+(?=減らす)/g,
+  revengeDamage: /(?<=ダメージ\+)\d+/g,
   forge: /(?<=ダメージ\+)\d+/g,
   passionHp: /(?<=HPを)\d+(?=失い)/g,
   passionBlock: /\d+(?=ブロックを得る)/g,

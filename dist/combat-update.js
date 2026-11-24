@@ -14,7 +14,7 @@ const addedCards31=[
 ['鍛え直し',2,'⚒','この戦闘中、斬撃のダメージ+3。特殊。','rare',true,{forge:3},'筋力'],
 ['血の槍',1,'†','HPを4失う。14ダメージ。','common',true,{hpLoss:4,d:14},'HP喪失'],
 ['血の盾',1,'▱','HPを7失う。30ブロック。','rare',true,{hpLoss:7,b:30},'HP喪失'],
-['復讐',4,'⚔','30ダメージ。この戦闘中、HPを失うたびコスト-1（最低0）。','rare',true,{d:30,revenge:1},'HP喪失'],
+['復讐',3,'⚔','10ダメージを与える。この戦闘中、HPを失うたびにダメージ+2。','rare',true,{d:10,revengeDamage:2},'HP喪失'],
 ['灰の肉体',1,'♜','この戦闘中、カードを除外するたび筋力+1。除外。','epic',true,{exhaustStrength:1,ex:1},'除外'],
 ['付け焼刃',0,'†','6ダメージ。捨て札にこのカードのコピーを1枚加える。除外。','common',true,{d:6,copyDiscard:1,ex:1},'除外'],
 ['灰の一振り',0,'⚔','灰の剣を1枚手札に加える。除外。','rare',true,{tokenSword:1,ex:1},'除外'],
@@ -37,7 +37,7 @@ for(const e of S.run?.battleCards||[])hydrateBattleCard(e);
 for(const e of S.run?.generatedCards||[])hydrateGeneratedCard(e);
 keywords.棘='敵から攻撃されるたび、攻撃した敵にスタック数分のダメージを返します。ブロックで全て防いだ場合も発動し、連続攻撃は1発ごとに発動します。毒・HP喪失では発動しません。戦闘終了時に消えます。';
 keywords.除外='この戦闘の除外置き場へ移動します。通常の山札の再構築には戻りません。「修繕」などで回収できます。次の戦闘では元のデッキに戻ります。';
-keywords.HP喪失='「HPを失う」はブロックを無視します。復讐のコスト減少は発動しますが、激昂や棘のダメージ反応には含みません。';
+keywords.HP喪失='「HPを失う」はブロックを無視します。復讐のダメージ増加は発動しますが、激昂や棘のダメージ反応には含みません。';
 keywords.連鎖='焼身と激昂などの自動効果が連鎖する場合、同じ効果はひと続きの連鎖で1回まで発動します。別の攻撃やブロック獲得からは再び発動します。';
 const tips31=tips;tips=function(c){let s=tips31(c);if(c.fx.hpLoss)s+=`<div><strong>【HP喪失】</strong><p>${keywords.HP喪失}</p></div>`;if(c.fx.tokenSword||c.fx.tokenKnife){let t=TOKEN_DEFS[c.fx.tokenSword?'sword':'knife'];s+=`<div><strong>【${t.name}】 ${t.cost}コスト</strong><p>${rich(t.desc)}</p></div>`}return s};
 rich=s=>s.replace(/筋力|除外|ブロック|再生|毒|守護|プレート|鼓動|棘/g,x=>`<strong class="keyword">${x}</strong>`);
@@ -54,7 +54,7 @@ combatCard=function(id){let c=C[id],r=S.run;if(!c||!r)return c;let fx={...c.fx},
  }
  if(fx.p&&hasRelic('poison_boost',r)){fx.p++;desc=desc.replace(/(毒(?:を)?)\d+(?=付与|を与える|与える)/,(_,label)=>label+fx.p)}
  if(hasRelic('poison_boost',r)){if(fx.poisonAura)fx.poisonAura++;if(fx.poisonCoat)fx.poisonCoat++;if(fx.reinfect)fx.reinfectBonus=1;}
- if(fx.revenge)cost=Math.max(1,cost-(r.hpLossCount||0));
+ if(fx.revengeDamage)fx.d+=fx.revengeDamage*(r.hpLossCount||0);
  if(hasRelic('double_cards',r))cost++;
  if(r.attackCostDiscount&&r.hand.includes(id)&&cardCategories(c)[0]==='攻撃')cost=Math.max(0,cost-r.attackCostDiscount);
  if(c.id===0||c.origin===0){fx.d+=(r.strikeBonus||0);desc=desc.replace(/\d+ダメージ/,`${fx.d}ダメージ`)}
@@ -170,11 +170,11 @@ combatDesc=function(c,r){let d=descRelicsBase(c,r),f=c.fx,e=r.enemies[target];
  if(f.chooseExhaust&&f.exhaustDraw==null)d=`手札を${f.chooseExhaust}枚選び除外。その後${2*effectFactor(r)}枚引く。`;
  if(f.passion)d=`この戦闘中、ターン開始時にHPを${f.passionHp??1}失い、${f.passionBlock??5}ブロックを得る。特殊。`;
  if(f.poisonDraw)d=`毒を${f.p}付与。付与前から毒がある対象なら${f.poisonDraw}枚引く。`;
- if(f.revenge)d+=` 現在${c.cost}コスト（HP喪失${r.hpLossCount||0}回）。`;
+ if(f.revengeDamage)d+=` 現在${previewDamage(c,r,e)}ダメージ（HP喪失${r.hpLossCount||0}回）。`;
  if(f.exhaustStrength)d=`この戦闘中、カードを${f.exhaustStrengthInterval??3}枚除外するたび筋力+${f.exhaustStrength}。除外。`;if(f.poisonAura)d=`この戦闘中、ターン開始時に敵全体に毒${f.poisonAura}を付与。除外。`;if(f.poisonCoat)d=`このターン、カード攻撃1ヒットごとに毒${f.poisonCoat}を付与。`;if(f.reinfect)d=`対象がこの戦闘中に蓄積した毒を再付与。現在 <strong class="boost">${(e?.poisonTotal||0)*f.reinfect+(f.reinfectBonus||0)}</strong>。除外。`;if(f.poisonBlock)d=`敵全体の毒の合計分のブロック。現在 <strong class="boost">${cardBlockValue(r,r.enemies.filter(x=>x.hp>0).reduce((n,x)=>n+(x.poison||0),0)*f.poisonBlock)}ブロック</strong>。`;if(f.empathy)d=`対象の毒スタック分の筋力を得て、対象の毒を全て失わせる。現在 <strong class="boost">+${(e?.poison||0)*f.empathy}</strong>。`;return d
 };
 const chooseHand31=chooseHand;chooseHand=function(i){chooseHand31(i);let r=S.run;if(r?.mode==='battle'&&r.hp>0&&r.enemies.every(e=>e.hp<=0)){r.pendingChoice=null;victory()}};
-const bonus31=bonusReady;bonusReady=(c,r)=>bonus31(c,r)||!!(c.fx.poisonDraw&&(r.enemies[target]?.poison||0)>0)||!!(c.fx.revenge&&r.hpLossCount);
+const bonus31=bonusReady;bonusReady=(c,r)=>bonus31(c,r)||!!(c.fx.poisonDraw&&(r.enemies[target]?.poison||0)>0)||!!(c.fx.revengeDamage&&r.hpLossCount);
 const card31=card;card=function(id,action='',extra=''){let s=card31(id,action,extra);if(C[id]?.token)s=s.replace('TOKEN / 潜在','TOKEN / 戦闘限定');return s};
 const battle31=battle;battle=function(){let r=S.run,html=battle31(),status='';for(const [key,label,desc]of [
  ['poisonAura','汚染地域','ターン開始時、敵全体に表示値の毒を付与。'],['poisonCoat','毒纏い','このターン、カード攻撃1ヒットごとに表示値の毒を付与。'],['thorns','棘',keywords.棘],['burn','焼身','カードからブロック獲得時、ランダムな敵に表示値のダメージ。'],['rage','激昂','ダメージでHPが減った時、表示値のブロック。次の自分のターン開始まで。'],['thornShield','茨の盾','敵の攻撃をブロックで防ぐたび、表示値の反撃。次の自分のターン開始まで。'],['thornGarden','茨の園','ターン開始時に表示値の棘を得る。'],['strikeBonus','鍛え直し','この戦闘中、斬撃のダメージが表示値増加。'],['exhaustStrength','灰の肉体','カードを3枚除外するたび表示値の筋力。']])if(r[key])status+=`<span class="status-help" tabindex="0">${label} ${r[key]}<aside class="tooltip">${desc}</aside></span>`;
