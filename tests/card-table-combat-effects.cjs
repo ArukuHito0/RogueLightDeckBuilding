@@ -98,6 +98,17 @@ const vm = require('node:vm');
     assert.equal(luckyActions(r, {card:combatCard(203)})[0].n, 3);
 
     r.relics = [];
+    r.hand = [53, 175];
+    r.draw = [];
+    r.discard = [];
+    r.energy = 20;
+    base.play(0);
+    const discountedSlotCost = combatCard(175).cost;
+    const beforeSlotEnergy = r.energy;
+    base.play(0);
+    assert.equal(discountedSlotCost, C[175].cost - 1);
+    assert.equal(r.energy, beforeSlotEnergy - discountedSlotCost);
+
     r.hand = [206];
     r.discard = [0];
     r.energy = 20;

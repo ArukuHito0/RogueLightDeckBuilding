@@ -114,7 +114,7 @@ case 'role_five':add('playZeros');break;
 }
 return a;}
 function luckyAttachFrame(tasks,frame){return tasks.map(t=>({...t,frame}));}
-function luckyBegin(r,id,options={}){const l=luckyState(r),c=combatCard(id);if(c&&options.free&&typeof swampRejectAuto==='function'&&swampRejectAuto(r,c)){r.discard.push(id);return false;}if(!c||(!options.free&&r.energy<c.cost))return false;if(typeof forestCardUsed==='function')forestCardUsed(r,id);const paid=options.free?0:c.cost;if(!options.free)r.energy-=paid;
+function luckyBegin(r,id,options={},c=combatCard(id)){const l=luckyState(r);if(c&&options.free&&typeof swampRejectAuto==='function'&&swampRejectAuto(r,c)){r.discard.push(id);return false;}if(!c||(!options.free&&r.energy<c.cost))return false;if(typeof forestCardUsed==='function')forestCardUsed(r,id);const paid=options.free?0:c.cost;if(!options.free)r.energy-=paid;
 if(typeof swampCardUsed==='function')swampCardUsed(r,c,options);
 const frame=++l.serial;const ctx={id,card:{...c,fx:{...c.fx}},target:options.target??target,paid,suppress:!!options.suppress,forceExhaust:!!options.forceExhaust,folded:!!options.folded,guarantee:!!(c.fx.slot&&l.nextGuarantee),double:c.fx.slot?l.nextDouble||1:1,penalty:l.nextDouble?luckyBalanceNumber('double','penalty',1)*effectFactor(r):0};
 if(c.fx.slot){if(l.nextFree)l.nextFree--;if(l.nextGuarantee){l.nextGuarantee=0;l.guaranteeCost=0;}l.nextDouble=0;}
@@ -185,7 +185,7 @@ const luckyBasePlay=base.play;
 let luckySuppressPoker=false,luckyForceExhaustId=null,luckyExistingCall=false;
 function luckyPlayExistingAuto(r,t,aim){const previous=target;target=aim;r.hand.push(t.id);luckySuppressPoker=!!t.suppress||!!C[t.id]?.act6Junk;luckyForceExhaustId=t.forceExhaust?t.id:null;try{luckyCardDrawDepth++;luckyBasePlay(r.hand.length-1,{free:true});}finally{luckyCardDrawDepth--;target=previous;luckySuppressPoker=false;luckyForceExhaustId=null;}}
 base.play=function(i,options={}){const r=S.run;if(!usesLuckyCards(r))return luckyBasePlay(i,options);const l=luckyState(r);if(l.slotPresentation||l.choice||r.pendingChoice||r.hunterChoice||l.queue.length)return;const id=r.hand[i],c=combatCard(id);if(!c||(!options.free&&r.energy<c.cost)||!canPlayHunterCard(c,r,!!options.free))return;
-if(c.fx.luckyKey){r.hand.splice(i,1);luckyBegin(r,id,options);luckyPump(r);}else{luckyExistingCall=true;try{luckyCardDrawDepth++;luckyBasePlay(i,options);}finally{luckyCardDrawDepth--;luckyExistingCall=false;}luckyPump(r);}};
+if(c.fx.luckyKey){r.hand.splice(i,1);luckyBegin(r,id,options,c);luckyPump(r);}else{luckyExistingCall=true;try{luckyCardDrawDepth++;luckyBasePlay(i,options);}finally{luckyCardDrawDepth--;luckyExistingCall=false;}luckyPump(r);}};
 const luckyResolvedBase=onCardResolved;
 onCardResolved=function(r,c){luckyResolvedBase(r,c);if(isLucky(r)&&!c.fx.luckyKey)luckyPush(r,[{op:'poker',card:{id:c.id,origin:c.origin,cost:c.cost,xCost:c.xCost,role:c.role},suppress:luckySuppressPoker}]);};
 const luckyPileBase=resolvePlayedCardPile;
