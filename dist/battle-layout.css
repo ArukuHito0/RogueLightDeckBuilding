@@ -1,0 +1,128 @@
+/* 戦闘の左右に操作を置き、中央を敵と手札に使う。 */
+body:has(#app .arena) #app {
+  --battle-gutter: clamp(115px, 14vw, 180px);
+  --battle-hand-lane: clamp(185px, 30vh, 285px);
+  position: relative;
+}
+
+#app:has(.arena) .battle-top { margin-bottom: 0; }
+
+body:has(#app .arena) .arena {
+  align-items: start;
+  justify-content: center;
+}
+
+body:has(#app .arena) .arena > [data-entity="player"] {
+  margin-left: 0;
+  margin-right: clamp(12px, 13vw, 200px);
+}
+
+.arena .player-status { min-height: 2em; }
+
+#app:has(.arena) .lucky-table {
+  width: fit-content;
+  max-width: 100%;
+  margin-inline: auto;
+}
+
+.battle-poker-reference { position: relative; }
+
+.battle-poker-reference .lucky-role-reference {
+  display: none;
+  position: absolute;
+  inset: auto auto 100% 50%;
+  transform: translateX(-50%);
+  width: min(270px, 85vw);
+  zoom: 1;
+  max-height: 35dvh;
+  opacity: 1;
+}
+
+.battle-poker-reference:is(:hover, :focus-within) .lucky-role-reference { display: block; }
+
+@media (min-width: 850px) {
+  body:has(#app .arena) #game-shell > header { position: relative; }
+
+  #game-shell:has(#app .arena) .battle-floor {
+    position: absolute;
+    inset-inline-start: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+  }
+
+  #app:has(.arena) .combat-controls {
+    position: relative;
+    display: block;
+    height: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  #app:has(.arena) .combat-controls > :is(.energy, .energy-stack, button) {
+    position: absolute;
+    z-index: 8;
+  }
+
+  .combat-controls > :is(.energy, .energy-stack) {
+    inset: 0 auto auto 0;
+  }
+
+  .combat-controls > .energy,
+  .combat-controls > .energy-stack > .energy {
+    display: inline-block;
+    padding: 8px 13px;
+    border: 1px solid currentColor;
+    border-radius: 8px;
+  }
+
+  .combat-controls > button[onclick="endTurn()"] {
+    inset: 0 0 auto auto;
+  }
+
+  .combat-controls > button[onclick^="showPile("] {
+    top: calc(var(--battle-hand-lane) - 42px);
+    white-space: nowrap;
+  }
+
+  .combat-controls > button[onclick="showPile('draw')"] { left: 0; }
+  .combat-controls > button[onclick="showPile('discard')"] { right: 5.6em; }
+  .combat-controls > button[onclick="showPile('exhausted')"] { right: 0; }
+
+  body:has(#app .arena) #app .cards.hand {
+    width: auto;
+    min-height: var(--battle-hand-lane);
+    margin: 12px var(--battle-gutter) 0;
+    padding: 0;
+    justify-content: center;
+    flex-wrap: nowrap !important;
+    overflow: visible;
+  }
+
+  #app .cards.hand:not(.is-overlapping) > .card-wrap + .card-wrap {
+    margin-left: clamp(-42px, -3vw, -18px);
+  }
+
+  #app .cards.hand > .card-wrap {
+    rotate: var(--hand-angle, 0deg);
+    translate: 0 var(--hand-drop, 0px);
+    transform-origin: center bottom;
+    transition: rotate 150ms ease, translate 150ms ease;
+  }
+
+  #app .cards.hand > .card-wrap:is(:hover, :focus-within) {
+    rotate: 0deg;
+    translate: 0 -24px;
+    z-index: 20 !important;
+  }
+}
+
+@media (max-width: 849px) {
+  body:has(#app .arena) .arena > [data-entity="player"] {
+    margin-right: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #app .cards.hand > .card-wrap { transition: none; }
+}
