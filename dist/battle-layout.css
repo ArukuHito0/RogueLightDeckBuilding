@@ -43,7 +43,7 @@ body:has(#app .arena) .arena > [data-entity="player"] {
 @media (min-width: 850px) {
   body:has(#app .arena) #game-shell > header { position: relative; }
 
-  #game-shell:has(#app .arena) .battle-floor {
+  #game-shell:has(#app .arena) #wallet > small {
     position: absolute;
     inset-inline-start: 50%;
     transform: translateX(-50%);
