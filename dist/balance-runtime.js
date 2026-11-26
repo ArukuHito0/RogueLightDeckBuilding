@@ -476,18 +476,18 @@ for (const [id, name, rarity, type, desc] of cardTableRows) {
   const card = C[id];
   if (!card || card.retired) continue;
   Object.assign(card, {name, rarity, desc});
-  cardTableTypes.set(id, type.split('・'));
+  cardTableTypes.set(id, type.split('・').slice(0, 1));
 }
 
 const originalCardCategories = cardCategories;
 cardCategories = function (card) {
   const types = cardTableTypes.get(card?.origin ?? card?.id);
-  if (!types) return originalCardCategories(card);
-  return card.evolution ? [...types, '進化'] : [...types];
+  if (!types) return originalCardCategories(card).slice(0, 1);
+  return [...types];
 };
 const originalCodexTypes = codexTypes;
 codexTypes = function (card) {
-  return cardTableTypes.has(card.origin ?? card.id) ? cardCategories(card) : originalCodexTypes(card);
+  return cardTableTypes.has(card.origin ?? card.id) ? cardCategories(card) : originalCodexTypes(card).slice(0, 1);
 };
 
 // シート12のカードID付き明細を、基礎・潜在の入手先として使用する。
