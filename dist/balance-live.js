@@ -3,6 +3,7 @@ if (S.run?.balanceSettings) {
   try { balanceApply(S.run.balanceSettings); }
   catch { balanceApply(defaultRunBalance); }
   for (const entry of S.run.battleCards ?? []) hydrateBattleCard(entry);
+  for (const entry of S.run.generatedCards ?? []) hydrateGeneratedCard(entry);
   render();
 }
 if (S.run?.kind === 'boss' && S.run.mode === 'battle') {

@@ -29,7 +29,7 @@ C[63].desc='この戦闘中、カードからブロックを得るたびラン�
 const removed50=new Set([26,83,88,...C.filter(c=>c.fx.thorns||c.fx.thornGarden).map(c=>c.id)]);
 for(const id of removed50)C[id].retired=true;
 for(const [name,cost,desc,fx,special,icon] of [
- ['正々堂々',2,'4ダメージを2回。筋力+2。攻撃対象に筋力+1。',{d:4,h:2,s:2,enemyStrength:1},false,'⚔'],
+ ['正々堂々',2,'4ダメージを2回。筋力3を得る。攻撃対象に筋力1を与える。',{d:4,h:2,s:3,enemyStrength:1},false,'⚔'],
  ['捕食',1,'手札のカード1枚を選び除外。筋力+1。',{chooseExhaust:1,exhaustDraw:0,s:1},false,'◈'],
  ['血の恵み',1,'この戦闘中、自身の各ターンで初めてHPを失うたび筋力+1。特殊。',{bloodBlessing:1},true,'♥']
 ])C.push({id:C.length,name,cost,desc,fx,special,icon,rarity:'rare',runOnly:true,axis:'筋力'});
