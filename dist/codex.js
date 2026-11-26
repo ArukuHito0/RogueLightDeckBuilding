@@ -2,7 +2,17 @@
 let codexCharacterId=null;
 const codexFilters={keyword:'all',cost:'all',axis:'all',type:'all',query:''};
 function codexCharacter(){return CHARACTERS[codexCharacterId]||selectedCharacter();}
-function codexPool(characterId=codexCharacter().id){return C.filter(c=>c.runOnly&&!c.retired&&!c.outsideCardPool&&!c.token&&!c.generated&&!c.battleCopy&&c.devolveTo==null&&(c.characterId||'wanderer')===characterId);}
+function codexPool(characterId=codexCharacter().id) {
+  const pool = C.filter(c => c.runOnly && !c.retired && !c.outsideCardPool && !c.token && !c.generated && !c.battleCopy && (c.characterId || 'wanderer') === characterId);
+  const candidates = new Set(pool.map(c => c.id));
+  const visible = new Set(pool.filter(c => c.devolveTo == null).map(c => c.id));
+  // Set iteration also visits each evolution stage added along the way.
+  for (const id of visible) {
+    const next = C[id].evolveTo;
+    if (candidates.has(next)) visible.add(next);
+  }
+  return pool.filter(c => visible.has(c.id));
+}
 function evolutionNames(){return [...new Set(C.filter(c=>c.evolveTo!=null||c.evolveName).map(c=>C[c.evolveTo]?.name||c.evolveName).filter(Boolean))].sort((a,b)=>b.length-a.length);}
 function codexKeywords(c){return Object.keys(keywords).filter(k=>c.desc.includes(k));}
 function codexCost(c){return c.xCost?'X':String(c.cost);}

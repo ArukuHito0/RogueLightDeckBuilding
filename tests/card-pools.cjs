@@ -20,7 +20,12 @@ const vm = require('node:vm');
       const r = {characterId, deck:[], relics:[]};
       assert.equal(expected(characterId).length, 30);
       assert.deepEqual(ids(runPackPool(r)), expected(characterId));
-      assert.deepEqual(ids(codexPool(characterId)), expected(characterId));
+      const codex = codexPool(characterId);
+      assert.deepEqual(ids(codex.filter(c => c.devolveTo == null)), expected(characterId));
+      const evolutions = ids(codex.filter(c => c.devolveTo != null));
+      assert.deepEqual(evolutions, characterId === 'hunter'
+        ? [94,95,97,98,100,101,103,104,106,107,109,110,112,113,115,116,160,161]
+        : []);
       assert(!allowedRunCard(C[183],r));
     }
 
