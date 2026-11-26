@@ -63,7 +63,7 @@ if(a.every((n,i)=>n===[1,0,1,0,1][i]))roles.add('blackjack');
 if(a.every(n=>n===3))roles.add('three');if(a.every(n=>n===0))roles.add('five');}
 function visit(a,i){if(i===numbers.length){check(a);return;}if(numbers[i]==='X')for(let n=0;n<=3;n++)visit([...a,n],i+1);else visit([...a,numbers[i]],i+1);}
 if(numbers.length===5)visit([],0);return [...roles];}
-function luckyRecordPoker(r,c,suppress=false){if(!isLucky(r)||suppress||c.role)return;const l=luckyState(r);l.hand.push(luckyNumber(c));if(l.hand.length<5)return;const snapshot=l.hand.splice(0,5),roles=luckyRoles(snapshot);l.lastHand=snapshot;l.lastRoles=roles;
+function luckyRecordPoker(r,c,suppress=false){if(!isLucky(r)||suppress||c.role)return;const l=luckyState(r);ensurePokerQuest(r);l.hand.push(luckyNumber(c));if(l.hand.length<5)return;const snapshot=l.hand.splice(0,5),roles=luckyRoles(snapshot);l.lastHand=snapshot;l.lastRoles=roles;const questWon=explorationSkill(r)?.id==='questPoker'&&roles.includes(l.questRole);l.questRole=null;ensurePokerQuest(r);if(questWon)luckyPush(r,[{op:'questRole'}]);
 if(roles.length){if(l.powers.royal){for(const e of r.enemies.filter(e=>e.hp>0))cardAttack(e,luckyBalanceNumber('royal','pokerDamage',7)*l.powers.royal);}if(l.powers.master){gainEnergy(r,luckyBalanceNumber('master','pokerEnergy',1)*l.powers.master);r.str+=luckyBalanceNumber('master','pokerStrength',1)*l.powers.master;}if(roles.length===1)luckyAddHand(r,luckyInstance(r,LUCKY_ROLE_IDS[roles[0]]));else luckyPush(r,[{op:'roleChoice',roles}]);}}
 function luckySlot(r,ctx){const l=luckyState(r),f=ctx.card.fx,threshold=f.slot,seen=[];const total=5+luckyBalanceNumber('custom','revealBonus',2)*(l.powers.custom||0);for(let i=0;i<total;i++){if(!r.draw.length&&r.discard.length){r.draw=shuffle(r.discard);r.discard=[];}if(!r.draw.length)break;seen.push(r.draw.pop());}r.draw.push(...seen);r.draw=shuffle(r.draw);
 const kind=ctx.card.types[0],matches=seen.filter(id=>cardCategories(C[id]).includes(kind)).length;const forced=!!ctx.guarantee,success=forced||matches>=threshold;l.slotCount++;
@@ -113,7 +113,7 @@ case 'role_five':add('playZeros');break;
 }
 return a;}
 function luckyAttachFrame(tasks,frame){return tasks.map(t=>({...t,frame}));}
-function luckyBegin(r,id,options={}){const l=luckyState(r),c=combatCard(id);if(c&&options.free&&typeof swampRejectAuto==='function'&&swampRejectAuto(r,c)){r.discard.push(id);return false;}if(!c||(!options.free&&r.energy<c.cost))return false;if(typeof forestCardUsed==='function')forestCardUsed(r,id);const paid=options.free?0:c.cost;if(!options.free)r.energy-=paid;
+function luckyBegin(r,id,options={}){const l=luckyState(r),c=combatCard(id);if(c&&options.free&&typeof swampRejectAuto==='function'&&swampRejectAuto(r,c)){r.discard.push(id);return false;}if(!c||(!options.free&&r.energy<c.cost))return false;if(typeof forestCardUsed==='function')forestCardUsed(r,id);const paid=options.free?0:c.cost;if(!options.free)r.energy-=paid;const types=unusedRoamTypes(r,c);if(types.length)(r.roamTypes??=[]).push(...types);
 if(typeof swampCardUsed==='function')swampCardUsed(r,c,options);
 const frame=++l.serial;const ctx={id,card:{...c,fx:{...c.fx}},target:options.target??target,paid,suppress:!!options.suppress,forceExhaust:!!options.forceExhaust,folded:!!options.folded,guarantee:!!(c.fx.slot&&l.nextGuarantee),double:c.fx.slot?l.nextDouble||1:1,penalty:l.nextDouble?luckyBalanceNumber('double','penalty',1)*effectFactor(r):0};
 if(c.fx.slot){if(l.nextFree)l.nextFree--;if(l.nextGuarantee){l.nextGuarantee=0;l.guaranteeCost=0;}l.nextDouble=0;}
@@ -159,6 +159,9 @@ case 'auto':{if(t.suppress&&t.forceExhaust&&!t.presented&&canPresentBattleCards(
 case 'generateStraight':{const pool=luckyPotentialPool();for(let cost=0;cost<=3;cost++){const choices=pool.filter(x=>!x.xCost&&x.cost===cost);if(choices.length)luckyAddHand(r,luckyInstance(r,rand(choices).id));}break;}
 case 'playZeros':{const pool=luckyPotentialPool().filter(c=>!c.xCost&&c.cost===0),ids=Array.from({length:pool.length?luckyBalanceNumber('role_five','autoCount',5):0},()=>luckyInstance(r,rand(pool).id));luckyPush(r,ids.map(id=>({op:'auto',id,suppress:true,forceExhaust:true})));break;}
 case 'poker':luckyRecordPoker(r,t.card,t.suppress);break;
+case 'questRole':luckyChoice(r,'role','クエスト達成：好きな役を1つ選ぶ',Object.entries(LUCKY_ROLE_IDS).map(([role,id])=>({id,role})),1);break;
+case 'fortunePlay':{const i=r.hand.indexOf(t.id),c=combatCard(t.id);if(i<0||!c||!canPlayHunterCard(c,r))break;r.hand.splice(i,1);luckyPush(r,[{op:'auto',id:t.id}]);break;}
+case 'fortuneDraw':draw(5);break;
 case 'roleChoice':luckyChoice(r,'role','成立した役を1つ選ぶ',t.roles.map(role=>({id:LUCKY_ROLE_IDS[role],role})),1);break;
 case 'finish':{if(ctx.forceExhaust||c.role)exhaustCard(r,ctx.id);else resolvePlayedCardPile(r,c);
 if(r.heartbeat){const total=(r.heartbeatCount||0)+ctx.paid;gainEnergy(r,Math.floor(total/(r.heartbeatThreshold??4))*(r.heartbeatRefund||1));r.heartbeatCount=total%(r.heartbeatThreshold??4);}
@@ -223,3 +226,26 @@ function luckyCloseRoles(){if(S.run?.lucky)S.run.lucky.inspectRoles=false;render
 const luckyBookBase=book;book=function(){let html=luckyBookBase();if(bookType==='run'&&codexCharacter().id==='lucky')html+='<section class="lucky-role-codex"><h3>ポーカーの役</h3><p>役が成立すると生成されるトークンカードです。通常の報酬には出現しません。</p>'+luckyRolesHTML()+'</section>';return html;};
 const luckyBattleRolesBase=battle;battle=function(){let html=luckyBattleRolesBase();if(!isLucky(S.run))return html;html=html.replace('<strong>ポーカー</strong>','<strong>ポーカー</strong><button class="lucky-role-help" onclick="luckyShowRoles()">役を見る</button>');if(S.run.lucky?.inspectRoles)html+='<div class="lucky-choice-overlay" role="dialog" aria-modal="true" aria-label="ポーカーの役"><section class="lucky-choice-panel"><div class="toolbar"><h2>ポーカーの役</h2><button onclick="luckyCloseRoles()">閉じる</button></div>'+luckyRolesHTML()+'</section></div>';return html;};
 if(!globalThis.ASHBOUND_HEADLESS)render();
+
+function ensurePokerQuest(r) {
+  if (explorationSkill(r)?.id !== 'questPoker') return;
+  const lucky = luckyState(r);
+  if (!lucky.questRole) lucky.questRole = rand(Object.keys(LUCKY_ROLE_IDS));
+}
+function queueFortuneHand(r) {
+  if (explorationSkill(r)?.id !== 'fortuneHand' || r.hp <= 0) return;
+  const lucky = luckyState(r);
+  if (lucky.fortuneTurn === r.turn) return;
+  lucky.fortuneTurn = r.turn;
+  const total = r.hand.reduce((sum, id) => sum + (combatCard(id)?.cost ?? 0), 0);
+  if (total !== 7) return;
+  luckyPush(r, [...r.hand.map(id => ({op:'fortunePlay', id})), {op:'fortuneDraw'}]);
+}
+const pokerQuestBattleBase = battle;
+battle = function () {
+  const html = pokerQuestBattleBase();
+  const r = S.run;
+  if (explorationSkill(r)?.id !== 'questPoker' || !r.lucky?.questRole) return html;
+  const card = C[LUCKY_ROLE_IDS[r.lucky.questRole]];
+  return html.replace('<div class="player-status">', '<div class="player-status"><span class="tag">指定役：' + card.name + '</span>');
+};
