@@ -12,10 +12,15 @@ const vm = require('node:vm');
     const expected = pool => Object.values(cardPoolByRarity[pool]).flat().sort((a,b) => a-b);
     assert.equal(packPool().length, 55);
     assert.deepEqual(ids(packPool()), expected('basic'));
+    for (const [id, rarity] of [[202,'rare'],[145,'rare'],[138,'common'],[89,'epic']]) {
+      assert(cardPoolByRarity.basic[rarity].includes(id));
+      assert.equal(C[id].rarity, rarity);
+    }
     for (const characterId of ['wanderer','hunter','lucky']) {
       const r = {characterId, deck:[], relics:[]};
       assert.equal(expected(characterId).length, 30);
       assert.deepEqual(ids(runPackPool(r)), expected(characterId));
+      assert.deepEqual(ids(codexPool(characterId)), expected(characterId));
       assert(!allowedRunCard(C[183],r));
     }
 
