@@ -86,6 +86,11 @@ const vm = require('node:vm');
     assert.equal(combatCard(8).cost, C[8].cost);
     assert.equal(combatCard(0).fx.d, 9);
 
+    assert.equal(C[72].cost, 8);
+    r.hpLossCount = 0;
+    assert.equal(combatCard(72).cost, 8);
+    r.hpLossCount = 2;
+    assert.equal(combatCard(72).cost, 6);
     r.hpLossCount = 100;
     assert.equal(combatCard(72).cost, 1);
     r.block = 7;
@@ -122,6 +127,32 @@ const vm = require('node:vm');
     assert.equal(r.enemies[0].hp, hpBeforePickup - strikeDamage);
     assert.equal(r.energy, energyAfterPickup);
     assert(!r.hand.includes(0));
+
+    r.attackCostDiscount = 0;
+    r.hand = [200, 175];
+    r.draw = [];
+    r.discard = [];
+    r.energy = 20;
+    base.play(0);
+    assert.equal(combatCard(175).cost, C[175].cost);
+    base.play(0);
+    assert.equal(lucky.lastSlot.success, true);
+
+    r.hand = [199, 175];
+    r.draw = [];
+    r.discard = [];
+    r.energy = 20;
+    base.play(0);
+    const beforeFailedSlot = r.energy;
+    base.play(0);
+    assert.equal(lucky.lastSlot.success, false);
+    assert.equal(r.energy, beforeFailedSlot - C[175].cost);
+
+    r.carriedRelic = {effects:['poison_boost']};
+    const venom = combatCard(5);
+    assert.equal(venom.fx.p, 2);
+    assert.match(venom.desc, /毒を2与える/);
+    r.carriedRelic = null;
 
     r.mode = 'map';
     page = 'map';

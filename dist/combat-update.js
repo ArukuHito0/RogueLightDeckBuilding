@@ -52,7 +52,7 @@ combatCard=function(id){let c=C[id],r=S.run;if(!c||!r)return c;let fx={...c.fx},
   .replace(/(守護を)(\d+)(?=失う)|(筋力)(\d+)(?=を得る)/g,(_,guard,loss,strength,gain)=>guard?`${guard}${+loss*2}`:`${strength}${+gain*2}`);
  desc+=' 【遺物：ダメージ・ブロック以外2倍／コスト+1】';
  }
- if(fx.p&&hasRelic('poison_boost',r)){fx.p++;desc=desc.replace(/毒を\d+付与/,`毒を${fx.p}付与`)}
+ if(fx.p&&hasRelic('poison_boost',r)){fx.p++;desc=desc.replace(/(毒(?:を)?)\d+(?=付与|を与える|与える)/,(_,label)=>label+fx.p)}
  if(hasRelic('poison_boost',r)){if(fx.poisonAura)fx.poisonAura++;if(fx.poisonCoat)fx.poisonCoat++;if(fx.reinfect)fx.reinfectBonus=1;}
  if(fx.revenge)cost=Math.max(1,cost-(r.hpLossCount||0));
  if(hasRelic('double_cards',r))cost++;

@@ -23,7 +23,7 @@ for(const e of S.run?.generatedCards||[])hydrateGeneratedCard(e);
 // v50 balance and potential cards. IDs remain stable, retired definitions are tombstones.
 function isAttackCard50(c){const f=c.fx||{};return !!c.types?.includes('攻撃')||f.d!=null||!!(f.equalPoison||f.totalPoison||f.exactBlock);}
 C[79].runOnly=true;C[37].cost=2;C[37].fx.ex=1;C[37].desc+='除外。';
-C[61].name='装甲看破';C[72].cost=5;C[10].cost=2;
+C[61].name='装甲看破';C[72].cost=8;C[10].cost=2;
 reviseNamed('鍛錬の一撃','8ダメージ。次の攻撃カードのダメージを+3。',{d:8,nextAttack:3});
 C[63].desc='この戦闘中、カードからブロックを得るたびランダムな敵に4ダメージ。特殊。';
 const removed50=new Set([26,83,88,...C.filter(c=>c.fx.thorns||c.fx.thornGarden).map(c=>c.id)]);
