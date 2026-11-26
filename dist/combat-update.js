@@ -120,7 +120,7 @@ base.play=function(i,options={}){let r=S.run,c=combatCard(r?.hand[i]);if(c&&opti
  if(f.draw)draw(f.draw);if(f.poisonDraw&&hadPoison)draw(f.poisonDraw);
  if(f.discard&&r.hand.length)r.pendingChoice={kind:'discard',remaining:f.discard};
  if(f.discardBreak){if(r.hand.length)r.pendingChoice={kind:'discard',breakTarget:target,remaining:f.discardCount||1};else if(r.enemies[target]){r.enemies[target].block=0;if(typeof clearArchiveReading==='function')clearArchiveReading(r.enemies[target]);}}
- if(f.chooseExhaust){let n=f.exhaustDraw==null?2*effectFactor(r):f.exhaustDraw*effectFactor(r);if(r.hand.length)r.pendingChoice={kind:'exhaust',remaining:f.chooseExhaust,draw:n};else draw(n)}
+ if(f.chooseExhaust){let n=f.exhaustDraw==null?2*effectFactor(r):f.exhaustDraw*effectFactor(r);if(r.hand.length)r.pendingChoice={kind:'exhaust',remaining:f.chooseExhaust,draw:n,searchDraw:f.searchDrawAfterExhaust};else draw(n)}
  for(let j=0;j<(f.copyDiscard||0);j++)addBattleCard(r,{origin:c.origin??c.id},'discard');
  for(let j=0;j<(f.tokenSword||0);j++)addBattleCard(r,{token:'sword'});
  for(let j=0;j<(f.tokenKnife||0);j++)addBattleCard(r,{token:'knife'});

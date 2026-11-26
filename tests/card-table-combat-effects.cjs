@@ -6,6 +6,7 @@ const vm = require('node:vm');
   const h = workerHarness();
   await h.run('card-table-combat-effects');
   h.context.assert = assert;
+  h.context.importScripts('balance-settings.js','balance-runtime.js');
   await vm.runInContext(`(async () => {
     render = () => {};
     animateEntity = async () => {};
@@ -48,6 +49,32 @@ const vm = require('node:vm');
     assert.equal(r.str, 6);
     await endTurn();
     assert.equal(r.str, 8);
+
+    r.hand = [60];
+    const beforeStrength = r.str;
+    const beforeGuard = r.agility;
+    base.play(0);
+    assert.equal(r.str, beforeStrength + 2);
+    assert.equal(r.agility, beforeGuard + 2);
+    assert(r.exhausted.includes(60));
+    await endTurn();
+    assert.equal(r.str, beforeStrength + 2); // temporary +2 expires, then two Giant Blood effects trigger
+    assert.equal(r.agility, beforeGuard);
+
+    r.hand = [229, 0];
+    r.draw = [3, 4];
+    base.play(0);
+    assert.equal(r.pendingChoice.remaining, 1);
+    chooseHand(0);
+    assert.equal(r.hunterChoice.kind, 'search');
+    chooseHunterCard(0);
+    assert(r.hand.includes(3));
+    assert.deepEqual(Array.from(r.draw), [4]);
+
+    const lucky = luckyState(r);
+    lucky.slotCount = 5;
+    lucky.failures = 2;
+    assert.equal(luckyActions(r, {card:combatCard(203)})[0].n, 3);
 
     r.mode = 'map';
     page = 'map';

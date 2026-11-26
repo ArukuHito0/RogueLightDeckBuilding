@@ -17,26 +17,26 @@ const vm = require('node:vm');
       discard:[], exhausted:[], deck:[0,1], relics:[], battleCards:[],
       generatedCards:[], potions:[], enemies:[{hp:100,max:100,block:0}],
       mode:'battle', kind:'fight',
-      balanceSettings:{...ASHBOUND_BALANCE_SETTINGS,cardEffects:{[LUCKY_IDS.draw+':draw']:4}}
+      balanceSettings:{...ASHBOUND_BALANCE_SETTINGS,cardEffects:{[LUCKY_IDS.draw+':draw']:5}}
     };
     page = 'battle';
     target = 0;
     busy = false;
     const drawCopy = luckyInstance(S.run, LUCKY_IDS.draw);
-    assert.equal(C[drawCopy].fx.draw, 3);
+    assert.equal(C[drawCopy].fx.draw, 4);
     S.run.hand.push(drawCopy);
   `, h.context);
   h.context.importScripts('balance-live.js');
   vm.runInContext(`
-    assert.equal(C[LUCKY_IDS.draw].desc, 'スロット3。カードを4枚引く。');
+    assert.equal(C[LUCKY_IDS.draw].desc, 'スロット3。カードを5枚引く。');
     assert.equal(combatDesc(combatCard(drawCopy), S.run), C[LUCKY_IDS.draw].desc);
     const drawPileBefore = S.run.draw.length;
     base.play(0);
-    assert.equal(S.run.hand.length, 4);
-    assert.equal(drawPileBefore - S.run.draw.length, 4);
+    assert.equal(S.run.hand.length, 5);
+    assert.equal(drawPileBefore - S.run.draw.length, 5);
     balanceApply(ASHBOUND_BALANCE_SETTINGS);
-    assert.equal(C[LUCKY_IDS.draw].fx.draw, 3);
-    assert.match(C[LUCKY_IDS.draw].desc, /カードを3枚引く/);
+    assert.equal(C[LUCKY_IDS.draw].fx.draw, 4);
+    assert.match(C[LUCKY_IDS.draw].desc, /カードを4枚引く/);
   `, h.context);
   console.log('PASS published draw count, resumed card copy, successful slot and default restoration');
 })().catch(error => { console.error(error); process.exitCode = 1; });

@@ -1,10 +1,10 @@
 const balanceScriptedEffects = {
   lucky: {
-    hit: {baseDamage:[7,'スロットに関係なく与えるダメージ']},
-    stand: {successBlock:[8,'スロット成功時の追加ブロック']},
+    hit: {baseDamage:[5,'スロットに関係なく与えるダメージ']},
+    stand: {successBlock:[6,'スロット成功時の追加ブロック']},
     streakAttack: {hitDamage:[9,'成功時の1ヒットあたりダメージ']},
     streakBlock: {matchBlock:[7,'一致1枚あたりのブロック']},
-    jackpot: {slotDamage:[10,'スロット1回あたりのダメージ']},
+    jackpot: {slotDamage:[12,'スロット1回あたりのダメージ']},
     free: {freeSlots:[1,'コストを0にするスロット回数']},
     retry: {retries:[1,'スロット再挑戦回数']},
     double: {repeats:[2,'成功効果の発動回数'], penalty:[1,'失敗時に失うエナジー']},
@@ -15,12 +15,12 @@ const balanceScriptedEffects = {
     trick: {returnCount:[2,'山札の上に戻す枚数']},
     hold: {retainCount:[2,'手札に保持する枚数']},
     role_five: {autoCount:[5,'自動使用する0コストカードの枚数']},
-    royal: {pokerDamage:[7,'役成立時に敵全体へ与えるダメージ']},
+    royal: {pokerDamage:[12,'役成立時に敵全体へ与えるダメージ']},
     master: {pokerEnergy:[1,'役成立時のエナジー'], pokerStrength:[1,'役成立時の筋力']},
     mental: {failBlock:[5,'スロット失敗時のブロック']},
-    tension: {successStrength:[1,'スロット成功時の筋力']},
-    throw: {foldBlock:[4,'フォールド時のブロック']},
-    custom: {drawPenalty:[1,'ターン開始時のドロー減少枚数'], revealBonus:[2,'スロット公開枚数の増加']},
+    tension: {successStrength:[2,'スロット成功時の筋力']},
+    throw: {foldBlock:[8,'フォールド時のブロック']},
+    custom: {drawPenalty:[0,'ターン開始時のドロー減少枚数'], revealBonus:[2,'スロット公開枚数の増加']},
     startup: {extraDraw:[2,'ターン開始時の追加ドロー枚数'], exhaustCount:[1,'ターン開始時の除外枚数']},
     force: {drawThreshold:[4,'筋力発動に必要なドロー枚数'], drawStrength:[1,'ドローで得る筋力']},
   },
@@ -471,11 +471,22 @@ const cardTableRows = [
   [190,"スタートアップ","epic","特殊","ターン開始時に追加でカードを2枚引き、手札から1枚を選び除外する。"],
   [207,"ダブルダウン","epic","補助","フォールド。エナジーを2倍。除外。"],
 ];
+// 戦闘の既定値をカード表の効果文に合わせてから、調整用カタログを作る。
+const cardTableEffectCorrections = {
+  1:{b:5}, 5:{p:1}, 12:{d:21}, 13:{b:7}, 14:{p:4}, 15:{hpLoss:5},
+  42:{draw:0}, 51:{d:6}, 55:{heartbeatThreshold:6}, 60:{s:2,agility:2},
+  72:{d:28}, 78:{plate:4}, 79:{b:14,hpLoss:7}, 90:{s:3},
+  125:{bleed:2}, 138:{vulnerable:2}, 142:{b:6}, 156:{d:40},
+  171:{d:8}, 175:{slot:2}, 176:{d:28}, 177:{randomAttack:0}, 182:{d:4},
+  183:{d:5}, 184:{d:4}, 193:{slot:2}, 195:{draw:4}, 213:{slot:2}, 221:{b:4},
+  229:{chooseExhaust:1,exhaustDraw:0,searchDrawAfterExhaust:1},
+};
 const cardTableTypes = new Map();
 for (const [id, name, rarity, type, desc] of cardTableRows) {
   const card = C[id];
   if (!card || card.retired) continue;
   Object.assign(card, {name, rarity, desc});
+  Object.assign(card.fx, cardTableEffectCorrections[id]);
   cardTableTypes.set(id, type.split('・').slice(0, 1));
 }
 
