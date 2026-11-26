@@ -93,7 +93,7 @@ case 'loan':energy(f.energy);add('debt',{n:factor});break;
 case 'cash':drawN(Math.max(0,(l.slotCount||0)-(l.failures||0)));break;
 case 'gather':drawN(f.draw);break;
 case 'push':energy(f.energy);break;
-case 'pickup':select('recover',luckyBalanceNumber(k,'recoverCount',1)*factor,{pile:'discard'});break;
+case 'pickup':select('recover',luckyBalanceNumber(k,'recoverCount',1)*factor,{pile:'discard',autoPlay:true});break;
 case 'doubleDown':add('multiplyEnergy',{n:luckyBalanceNumber(k,'energyMultiplier',2)*factor});break;
 case 'swap':drawN(f.draw);select('top',luckyBalanceNumber(k,'returnCount',3)*factor);break;
 case 'deal':select('deckTop',luckyBalanceNumber(k,'topCount',5)*factor);break;
@@ -114,7 +114,7 @@ case 'role_five':add('playZeros');break;
 }
 return a;}
 function luckyAttachFrame(tasks,frame){return tasks.map(t=>({...t,frame}));}
-function luckyBegin(r,id,options={}){const l=luckyState(r),c=combatCard(id);if(c&&options.free&&typeof swampRejectAuto==='function'&&swampRejectAuto(r,c)){r.discard.push(id);return false;}if(!c||(!options.free&&r.energy<c.cost))return false;if(typeof forestCardUsed==='function')forestCardUsed(r,id);const paid=options.free?0:c.cost;if(!options.free)r.energy-=paid;
+function luckyBegin(r,id,options={},c=combatCard(id)){const l=luckyState(r);if(c&&options.free&&typeof swampRejectAuto==='function'&&swampRejectAuto(r,c)){r.discard.push(id);return false;}if(!c||(!options.free&&r.energy<c.cost))return false;if(typeof forestCardUsed==='function')forestCardUsed(r,id);const paid=options.free?0:c.cost;if(!options.free)r.energy-=paid;
 if(typeof swampCardUsed==='function')swampCardUsed(r,c,options);
 const frame=++l.serial;const ctx={id,card:{...c,fx:{...c.fx}},target:options.target??target,paid,suppress:!!options.suppress,forceExhaust:!!options.forceExhaust,folded:!!options.folded,guarantee:!!(c.fx.slot&&l.nextGuarantee),double:c.fx.slot?l.nextDouble||1:1,penalty:l.nextDouble?luckyBalanceNumber('double','penalty',1)*effectFactor(r):0};
 if(c.fx.slot){if(l.nextFree)l.nextFree--;if(l.nextGuarantee){l.nextGuarantee=0;l.guaranteeCost=0;}l.nextDouble=0;}
@@ -173,18 +173,19 @@ if(!l.queue.length&&!l.choice&&!r.pendingChoice&&!r.hunterChoice&&r.enemies.ever
 function luckyChoose(index){const r=S.run,l=r?.lucky,p=l?.choice;if(!p||busy||r.pendingChoice?.inspect)return;if(p.kind==='top'){luckyTopPrepare(r);const item=p.candidates[index],slot=p.topSlots.indexOf(null);if(item&&slot>=0)luckyTopPlace(item.id,slot);return;}const item=p.candidates[index];if(!item)return;
 if(p.kind==='role'){luckyAddHand(r,luckyInstance(r,item.id));l.choice=null;luckyPump(r);return;}
 const pile=r[item.pile],at=pile?.indexOf(item.id);if(at==null||at<0)return;
-if(p.kind==='hold'){l.hold.push(item.id);}else{pile.splice(at,1);p.selected.push(item.id);if(p.kind==='recover'||p.kind==='take'){luckyAddHand(r,item.id);if(p.kind==='take')(l.freeCosts??={})[item.id]=r.turn;}else if(p.kind==='exhaust')exhaustCard(r,item.id);}
-p.candidates.splice(index,1);p.remaining--;if(p.kind==='deckTop'&&(p.remaining<=0||!p.candidates.length)){p.kind='top';p.topPool=p.selected.splice(0);p.topSlots=Array(p.topPool.length).fill(null);p.remaining=p.topPool.length;render();return;}if(p.kind==='discard'&&r.pendingChoice?.luckyDiscard)r.pendingChoice.remaining=p.remaining;if(p.remaining<=0||!p.candidates.length||(['recover','take'].includes(p.kind)&&r.hand.length>=10))luckyFinishChoice(r);else render();}
+if(p.kind==='hold'){l.hold.push(item.id);}else{pile.splice(at,1);p.selected.push(item.id);if((p.kind==='recover'&&!p.autoPlay)||p.kind==='take'){luckyAddHand(r,item.id);if(p.kind==='take')(l.freeCosts??={})[item.id]=r.turn;}else if(p.kind==='exhaust')exhaustCard(r,item.id);}
+p.candidates.splice(index,1);p.remaining--;if(p.kind==='deckTop'&&(p.remaining<=0||!p.candidates.length)){p.kind='top';p.topPool=p.selected.splice(0);p.topSlots=Array(p.topPool.length).fill(null);p.remaining=p.topPool.length;render();return;}if(p.kind==='discard'&&r.pendingChoice?.luckyDiscard)r.pendingChoice.remaining=p.remaining;if(p.remaining<=0||!p.candidates.length||(!p.autoPlay&&['recover','take'].includes(p.kind)&&r.hand.length>=10))luckyFinishChoice(r);else render();}
 function luckyFinishChoice(r=S.run){const l=r?.lucky,p=l?.choice;if(!p||r.pendingChoice?.inspect)return;
 if(p.kind==='top'){luckyTopPrepare(r);if(p.topSlots.some(id=>id==null))return;p.selected=[...p.topSlots];if(r.pendingChoice?.luckyTop)r.pendingChoice=null;for(const id of [...p.selected].reverse())r.draw.push(id);}
 if(p.kind==='discard'&&r.pendingChoice?.luckyDiscard)r.pendingChoice=null;
+if(p.autoPlay)luckyPush(r,p.selected.map(id=>({op:'auto',id})));
 if(p.kind==='discard')luckyPush(r,[...luckyDiscardTasks(r,p.selected),...(p.redraw?[{op:'draw',n:p.selected.length}]:[])]);
 l.choice=null;luckyPump(r);}
 const luckyBasePlay=base.play;
 let luckySuppressPoker=false,luckyForceExhaustId=null,luckyExistingCall=false;
 function luckyPlayExistingAuto(r,t,aim){const previous=target;target=aim;r.hand.push(t.id);luckySuppressPoker=!!t.suppress||!!C[t.id]?.act6Junk;luckyForceExhaustId=t.forceExhaust?t.id:null;try{luckyCardDrawDepth++;luckyBasePlay(r.hand.length-1,{free:true});}finally{luckyCardDrawDepth--;target=previous;luckySuppressPoker=false;luckyForceExhaustId=null;}}
 base.play=function(i,options={}){const r=S.run;if(!usesLuckyCards(r))return luckyBasePlay(i,options);const l=luckyState(r);if(l.slotPresentation||l.choice||r.pendingChoice||r.hunterChoice||l.queue.length)return;const id=r.hand[i],c=combatCard(id);if(!c||(!options.free&&r.energy<c.cost)||!canPlayHunterCard(c,r,!!options.free))return;
-if(c.fx.luckyKey){r.hand.splice(i,1);luckyBegin(r,id,options);luckyPump(r);}else{luckyExistingCall=true;try{luckyCardDrawDepth++;luckyBasePlay(i,options);}finally{luckyCardDrawDepth--;luckyExistingCall=false;}luckyPump(r);}};
+if(c.fx.luckyKey){r.hand.splice(i,1);luckyBegin(r,id,options,c);luckyPump(r);}else{luckyExistingCall=true;try{luckyCardDrawDepth++;luckyBasePlay(i,options);}finally{luckyCardDrawDepth--;luckyExistingCall=false;}luckyPump(r);}};
 const luckyResolvedBase=onCardResolved;
 onCardResolved=function(r,c){luckyResolvedBase(r,c);if(isLucky(r)&&!c.fx.luckyKey)luckyPush(r,[{op:'poker',card:{id:c.id,origin:c.origin,cost:c.cost,xCost:c.xCost,role:c.role},suppress:luckySuppressPoker}]);};
 const luckyPileBase=resolvePlayedCardPile;

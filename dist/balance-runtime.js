@@ -43,6 +43,7 @@ const balanceCardConditions = {
 };
 
 const balanceEffectLabels = {
+  attackDiscount:'手札の攻撃カードのコスト軽減',
   autoEvolvePlay:'自動使用する進化可能カードの枚数', beastHunt:'毎ターン開始時のHP喪失',
   bleedDecay:'敵の裂傷の追加減少量', evolutionStrengthInterval:'筋力を得るまでの進化回数',
   beastHuntBleed:'毎ターン開始時の裂傷付与量', forge:'斬撃のダメージ上昇量',
@@ -84,7 +85,7 @@ const balanceEffectLabels = {
   tokenKnife:'生成するナイフの枚数', tokenSword:'生成する剣の枚数',
 };
 const balanceSwitchEffects = new Set([
-  'all','bleedHitCount','discardBreak',
+  'all','bleedHitCount','discardBreak','blockDamageIgnoresStrength',
   'doubleStr','doubleVulnerable','evolutionEnergy','evolveAll','ex',
   'fold','healOnHpDamage','heartbeat','lossAfterBlock','passion','poisonDouble',
   'randomAttack','randomOne','retainBlock','revenge','stun','stunAttack',
@@ -362,7 +363,7 @@ const cardTableRows = [
   [56,"探索","rare","補助","カードを2枚引く。"],
   [57,"落とし物","rare","補助","捨て札からランダムな1枚を手札に加える。"],
   [62,"殻破りな一撃","rare","攻撃","自身のブロック値と等しいダメージ（筋力を加算）。"],
-  [69,"鍛え直し","rare","特殊","『斬撃』の効果を『10ダメージ。カードを1枚引く。』に変化させる。"],
+  [69,"鍛え直し","rare","特殊","この戦闘中、斬撃のダメージ+3。特殊。"],
   [72,"復讐","rare","攻撃","28ダメージ。この戦闘中、HPを失うたびコスト-1（最低1）。"],
   [76,"修繕","rare","補助","除外されたカードからランダムなカードを1枚、手札に加える。除外。"],
   [79,"緊急回避","rare","防御","14ブロックを得る。HPを7失う。除外。"],
@@ -474,9 +475,9 @@ const cardTableRows = [
 // 戦闘の既定値をカード表の効果文に合わせてから、調整用カタログを作る。
 const cardTableEffectCorrections = {
   1:{b:5}, 5:{p:1}, 12:{d:21}, 13:{b:7}, 14:{p:4}, 15:{hpLoss:5},
-  42:{draw:0}, 51:{d:6}, 55:{heartbeatThreshold:6}, 60:{s:2,agility:2},
-  72:{d:28}, 78:{plate:4}, 79:{b:14,hpLoss:7}, 90:{s:3},
-  125:{bleed:2}, 138:{vulnerable:2}, 142:{b:6}, 156:{d:40},
+  42:{draw:0}, 51:{d:6}, 53:{attackDiscount:1}, 55:{heartbeatThreshold:6}, 60:{s:2,agility:2},
+  69:{forge:3}, 72:{d:28}, 78:{plate:4}, 79:{b:14,hpLoss:7}, 90:{s:3},
+  37:{blockDamageIgnoresStrength:1}, 125:{bleed:2}, 138:{vulnerable:2}, 142:{b:6}, 156:{d:40},
   171:{d:8}, 175:{slot:2}, 176:{d:28}, 177:{randomAttack:0}, 182:{d:4},
   183:{d:5}, 184:{d:4}, 193:{slot:2}, 195:{draw:4}, 213:{slot:2}, 221:{b:4},
   229:{chooseExhaust:1,exhaustDraw:0,searchDrawAfterExhaust:1},
@@ -605,6 +606,7 @@ const balanceDescriptionPatterns = {
   evolutionStrength: /(?<=筋力)\d+/g,
   beastHunt: /(?<=HPを)\d+(?=失い)/g,
   beastHuntBleed: /(?<=裂傷)\d+(?=を付与)/g,
+  attackDiscount: /\d+(?=減らす)/g,
   forge: /(?<=ダメージ\+)\d+/g,
   passionHp: /(?<=HPを)\d+(?=失い)/g,
   passionBlock: /\d+(?=ブロックを得る)/g,
