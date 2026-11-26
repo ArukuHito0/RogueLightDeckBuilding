@@ -8,7 +8,12 @@ function skillHTML(skill){return skill?`<span class="exploration-skill status-he
 function checkDangerSense(r){if(!r||r.mode!=='battle'||r.hp<=0||r.hp>r.max*.3||r.dangerSenseUsed||explorationSkill(r)?.id!=='danger')return;r.dangerSenseUsed=true;gainBlock(r,30,'exploration');}
 const dangerLoseHPBase=loseHP;loseHP=function(r,n){const lost=dangerLoseHPBase(r,n);if(lost>0){reviveFromExplorationSkill(r);updateWoundedStrength(r);checkDangerSense(r);}return lost;};
 const skillBattleBase=battle;
-battle=function(){return skillBattleBase().replace('<div class="player-status">','<div class="player-status">'+skillHTML(explorationSkill()));};
+battle=function(){
+  const r = S.run;
+  const skill = explorationSkill(r);
+  const consumed = skill?.id === 'secondChance' && r?.secondChanceUsed;
+  return skillBattleBase().replace('<div class="player-status">','<div class="player-status">'+skillHTML(consumed ? null : skill));
+};
 // Battle-local evolution discount applies to existing and subsequently evolved forms.
 const explorationCardBase=combatCard;
 combatCard=function(id){const c=explorationCardBase(id),r=S.run;if(!c||!r)return c;const f={...c.fx};for(const key of ['evolutionDiscount','autoEvolvePlay'])if(f[key])f[key]*=effectFactor(r);return {...c,fx:f,cost:unusedRoamTypes(r,c).length?0:Math.max(0,c.cost-(c.evolution?(r.evolutionDiscount||0):0))};};
