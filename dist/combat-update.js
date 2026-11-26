@@ -11,7 +11,7 @@ const addedCards31=[
 ['茨の盾',1,'♧','このターンの間、敵の攻撃をブロックで防ぐたび、攻撃した敵に4ダメージ。','rare',true,{thornShield:4},'棘'],
 ['針山',1,'♠','棘3を得る。除外。','common',true,{thorns:3,ex:1},'棘'],
 ['茨の園',2,'♧','この戦闘中、ターン開始時に棘1を得る。除外。','epic',true,{thornGarden:1,ex:1},'棘'],
-['鍛え直し',2,'⚒','この戦闘中、斬撃を使うたび、この戦闘のすべての斬撃のダメージ+1。除外。','rare',true,{forge:1,ex:1},'筋力'],
+['鍛造',2,'⚒','この戦闘中、斬撃を使うたび、この戦闘のすべての斬撃のダメージ+1。除外。','rare',true,{forge:1,ex:1},'筋力'],
 ['血の槍',1,'†','HPを4失う。14ダメージ。','common',true,{hpLoss:4,d:14},'HP喪失'],
 ['血の盾',1,'▱','HPを7失う。30ブロック。','rare',true,{hpLoss:7,b:30},'HP喪失'],
 ['復讐',4,'⚔','30ダメージ。この戦闘中、HPを失うたびコスト-1（最低0）。','rare',true,{d:30,revenge:1},'HP喪失'],
@@ -176,7 +176,7 @@ const chooseHand31=chooseHand;chooseHand=function(i){chooseHand31(i);let r=S.run
 const bonus31=bonusReady;bonusReady=(c,r)=>bonus31(c,r)||!!(c.fx.poisonDraw&&(r.enemies[target]?.poison||0)>0)||!!(c.fx.revenge&&r.hpLossCount);
 const card31=card;card=function(id,action='',extra=''){let s=card31(id,action,extra);if(C[id]?.token)s=s.replace('TOKEN / 潜在','TOKEN / 戦闘限定');return s};
 const battle31=battle;battle=function(){let r=S.run,html=battle31(),status='';for(const [key,label,desc]of [
- ['poisonAura','汚染地域','ターン開始時、敵全体に表示値の毒を付与。'],['poisonCoat','毒纏い','このターン、カード攻撃1ヒットごとに表示値の毒を付与。'],['thorns','棘',keywords.棘],['burn','焼身','カードからブロック獲得時、ランダムな敵に表示値のダメージ。'],['rage','激昂','ダメージでHPが減った時、表示値のブロック。次の自分のターン開始まで。'],['thornShield','茨の盾','敵の攻撃をブロックで防ぐたび、表示値の反撃。次の自分のターン開始まで。'],['thornGarden','茨の園','ターン開始時に表示値の棘を得る。'],['forge','鍛え直し','斬撃を使うごとに、以後の斬撃のダメージが表示値増加。'],['exhaustStrength','灰の肉体','カードを3枚除外するたび表示値の筋力。']])if(r[key])status+=`<span class="status-help" tabindex="0">${label} ${r[key]}<aside class="tooltip">${desc}</aside></span>`;
+ ['poisonAura','汚染地域','ターン開始時、敵全体に表示値の毒を付与。'],['poisonCoat','毒纏い','このターン、カード攻撃1ヒットごとに表示値の毒を付与。'],['thorns','棘',keywords.棘],['burn','焼身','カードからブロック獲得時、ランダムな敵に表示値のダメージ。'],['rage','激昂','ダメージでHPが減った時、表示値のブロック。次の自分のターン開始まで。'],['thornShield','茨の盾','敵の攻撃をブロックで防ぐたび、表示値の反撃。次の自分のターン開始まで。'],['thornGarden','茨の園','ターン開始時に表示値の棘を得る。'],['forge','鍛造','斬撃を使うごとに、以後の斬撃のダメージが表示値増加。'],['exhaustStrength','灰の肉体','カードを3枚除外するたび表示値の筋力。']])if(r[key])status+=`<span class="status-help" tabindex="0">${label} ${r[key]}<aside class="tooltip">${desc}</aside></span>`;
  if(hasRelic('three_damage',r))status+=`<span class="status-help" tabindex="0">連戦の鼓舞 ${r.damageCount%3||0}/3<aside class="tooltip">${hitRelic.text}</aside></span>`;
  html=html.replace('<div class="player-status">','<div class="player-status">'+status);
  let p=r.pendingChoice;if(p?.kind==='recoverExcluded'){html+=`<div class="pile-overlay recovery-overlay" role="dialog" aria-modal="true" aria-label="除外されたカードを選択"><div class="pile-panel"><h2>除外されたカードを手札へ</h2><p>残り${p.remaining}枚を選んでください。手札が10枚になった時点で終了します。</p><div class="cards">${p.eligible.map((id,i)=>card(id,`recoverExcludedCard(${i})`)).join('')}</div></div></div>`}return html};
