@@ -12,9 +12,22 @@ document.querySelectorAll=()=>[];bindCodexQuery(input);input.oncompositionstart(
 results.innerHTML='not-yet';input.value='牙';input.oninput({isComposing:false});assert.notEqual(results.innerHTML,'not-yet');assert(results.innerHTML.includes('牙'));assert.equal(renders,0);
 // Fixed-position preview is outside the hand, appears to the left, and is inert.
 const source={dataset:{card:String(HUNTER_IDS['牙'])},getBoundingClientRect:()=>({left:600,top:200})},wrap={querySelector:()=>source};let attrsRemoved=0,disabled=false;
-document.createElement=()=>({style:{},offsetWidth:166,offsetHeight:245,setAttribute(){},remove(){removed++;preview=null;},querySelectorAll(selector){return selector==='[data-card]'?[{removeAttribute(){attrsRemoved++;}}]:selector==='button'?[{setAttribute(){disabled=true;},classList:{remove(){}}}]:[];}});
+document.createElement=()=>({style:{},offsetWidth:166,offsetHeight:245,setAttribute(){},remove(){removed++;preview=null;},querySelectorAll(selector){return selector==='[data-card]'?[{setAttribute(){},removeAttribute(){attrsRemoved++;}}]:selector==='button'?[{setAttribute(){disabled=true;},classList:{remove(){}}}]:[];}});
 document.body.appendChild=n=>{preview=n;};window.innerWidth=1440;window.innerHeight=1000;document.querySelectorAll=selector=>selector==='.card-wrap'?[wrap]:[];
 wireEvolutionPreviews();assert.equal(typeof wrap.onmouseenter,'function');assert.equal(typeof wrap.onfocusin,'function');wrap.onmouseenter();assert(preview.innerHTML.includes('噛みつき'));assert(preview.innerHTML.includes('evolution-badge'));assert.equal(preview.style.left,'422px');assert.equal(preview.style.top,'200px');assert.equal(attrsRemoved,1);assert(disabled);wrap.onmouseleave();assert.equal(preview,null);assert(removed>0);
+for (const [effect,name] of [['tokenSword','灰の剣'],['tokenKnife','灰の投擲剣'],['copyDiscard','付け焼刃']]) {
+  source.dataset.card=String(C.find(c=>c?.fx?.[effect]>0).id);
+  const cardsBefore=Object.keys(C).join(',');
+  const runBefore=JSON.stringify(S.run);
+  wireEvolutionPreviews();
+  wrap.onfocusin();
+  assert(preview.innerHTML.includes(name));
+  if(effect!=='copyDiscard')assert(/class="card token\\b/.test(preview.innerHTML));
+  assert.equal(Object.keys(C).join(','),cardsBefore);
+  assert.equal(JSON.stringify(S.run),runBefore);
+  wrap.onfocusout();
+  assert.equal(preview,null);
+}
 const small=evolutionPreviewPosition({left:20,top:900},166,245,390,900);assert.equal(small.left,8);assert.equal(small.top,647);
 document.getElementById=get;document.querySelectorAll=query;document.createElement=create;document.body.appendChild=append;
 }`,h.context);console.log('PASS v54: keyword exclusion, evolution badge/description, IME composition without input replacement, noninteractive left hover/focus preview and viewport bounds');})().catch(e=>{console.error(e);process.exit(1)});
